@@ -3,8 +3,6 @@ title: useDictTree
 description: Fetch, translate, and path-trace tree-structured dictionary data with unlimited depth.
 ---
 
-# useDictTree
-
 **Goal**: Master tree-structured dictionaries (like regions, organizational charts) — fetching, translating, and path lookup.
 
 ## When do you need this?

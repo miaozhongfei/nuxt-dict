@@ -3,8 +3,6 @@ title: Nuxt Dict
 description: A Nuxt module for convenient dictionary data management based on Element Plus and Vant dictionaries.
 ---
 
-# Nuxt Dict
-
 Nuxt Dict is a Nuxt 4 module that helps you manage **dictionary data** (also called data dictionaries, code tables, or enumeration values) in your projects.
 
 ## What is dictionary data?

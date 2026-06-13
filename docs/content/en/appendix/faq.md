@@ -3,8 +3,6 @@ title: FAQ
 description: Most common issues encountered when using the dictionary module and their solutions.
 ---
 
-# FAQ
-
 ## Page shows raw codes instead of translated text
 
 Possible causes:

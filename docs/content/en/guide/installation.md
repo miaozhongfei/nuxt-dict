@@ -3,8 +3,6 @@ title: Installation
 description: Install @lacqjs/nuxt-dict into your Nuxt project.
 ---
 
-# Installation
-
 **Goal**: Install the Nuxt Dict module into the Nuxt project created in the previous chapter and verify the installation.
 
 ## Step 1: Install the dependency

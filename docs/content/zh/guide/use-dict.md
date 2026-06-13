@@ -3,8 +3,6 @@ title: useDict
 description: useDict 完整用法详解 —— 获取字典数据并翻译。
 ---
 
-# useDict
-
 **本章目标**：掌握 `useDict` 的所有用法，包括基础翻译、loading/error 处理、手动刷新和指定存储库。
 
 ## 什么时候需要这个功能？

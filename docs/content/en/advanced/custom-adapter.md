@@ -3,8 +3,6 @@ title: Custom Adapter
 description: Connect to any dictionary data source format — GraphQL, Firestore, local JSON files, and more.
 ---
 
-# Custom Adapter
-
 **Goal**: Write custom adapters to connect the dictionary module to non-standard REST APIs or other data sources.
 
 ## Adapter Interface

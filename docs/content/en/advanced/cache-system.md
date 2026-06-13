@@ -3,8 +3,6 @@ title: Cache System
 description: Deep dive into the three-tier cache architecture — memory, IndexedDB, API — with version detection and auto-invalidation.
 ---
 
-# Cache System
-
 **Goal**: Understand the three-tier cache architecture, read/write flow, and configuration tuning.
 
 ## Three-tier Architecture

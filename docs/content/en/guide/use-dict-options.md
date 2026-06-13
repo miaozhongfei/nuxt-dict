@@ -3,8 +3,6 @@ title: useDict
 description: Directly output { value, label } format dictionary data for seamless integration with Element Plus, Vant, etc.
 ---
 
-# useDict
-
 **Goal**: Learn to use `useDict` to quickly integrate with Element Plus, Vant, and other UI library components.
 
 ## When do you need this?

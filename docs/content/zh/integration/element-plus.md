@@ -3,8 +3,6 @@ title: Element Plus 集成
 description: 将字典模块与 Element Plus 组件配合使用的完整示例。
 ---
 
-# Element Plus 集成
-
 本章提供 6 个完整示例，展示字典模块与 Element Plus 常用组件的配合用法。
 
 **前提**：项目中已安装 Element Plus。
