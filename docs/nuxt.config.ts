@@ -34,7 +34,8 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/'],
+      // 三个语言各一个入口，crawlLinks 会递归爬取各语言下所有页面
+      routes: ['/', '/en', '/fa'],
     },
   },
 })
