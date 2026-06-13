@@ -1,4 +1,4 @@
----
+﻿---
 title: 纯 Vue 集成
 description: 不依赖任何 UI 库，用原生 HTML 元素使用字典数据。
 ---
@@ -22,7 +22,7 @@ description: 不依赖任何 UI 库，用原生 HTML 元素使用字典数据。
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('gender')
+const { options, loading } = useDict('gender')
 const selected = ref('')
 </script>
 ```
@@ -64,18 +64,18 @@ const users = [
 ```vue
 <template>
   <ul v-if="tree" style="list-style:none;padding-left:0;">
-    <li v-for="node in tree" :key="node.code">
+    <li v-for="node in tree" :key="node.value">
       <details>
-        <summary>{{ node.label }} ({{ node.code }})</summary>
+        <summary>{{ node.label }} ({{ node.value }})</summary>
         <ul v-if="node.children" style="list-style:none;padding-left:20px;">
-          <li v-for="child in node.children" :key="child.code">
+          <li v-for="child in node.children" :key="child.value">
             <details v-if="child.children?.length">
-              <summary>{{ child.label }} ({{ child.code }})</summary>
+              <summary>{{ child.label }} ({{ child.value }})</summary>
               <ul style="list-style:none;padding-left:20px;">
-                <li v-for="leaf in child.children" :key="leaf.code">{{ leaf.label }} ({{ leaf.code }})</li>
+                <li v-for="leaf in child.children" :key="leaf.value">{{ leaf.label }} ({{ leaf.value }})</li>
               </ul>
             </details>
-            <span v-else>{{ child.label }} ({{ child.code }})</span>
+            <span v-else>{{ child.label }} ({{ child.value }})</span>
           </li>
         </ul>
       </details>

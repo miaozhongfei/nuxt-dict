@@ -1,4 +1,4 @@
----
+﻿---
 title: Vant Integration
 description: Complete examples of using the dictionary module with Vant mobile components.
 ---
@@ -20,7 +20,7 @@ Full examples of using the dictionary module with Vant mobile components.
 </template>
 
 <script setup lang="ts">
-const { options } = useDictOptions('gender')
+const { options } = useDict('gender')
 const showPicker = ref(false)
 const selectedText = ref('')
 
@@ -46,8 +46,8 @@ function onConfirm({ selectedOptions }: any) {
 </template>
 
 <script setup lang="ts">
-const { options: statusOptions } = useDictOptions('status')
-const { options: genderOptions } = useDictOptions('gender')
+const { options: statusOptions } = useDict('status')
+const { options: genderOptions } = useDict('gender')
 
 const statusCols = computed(() => statusOptions.value.map(o => ({ text: o.label, value: o.value })))
 const genderCols = computed(() => genderOptions.value.map(o => ({ text: o.label, value: o.value })))
@@ -69,7 +69,7 @@ const { tree } = useDictTree('region')
 
 const vantTree = computed(() => {
   if (!tree.value) return []
-  return tree.value.map(n => ({ text: n.label, value: n.code, children: n.children?.length ? n.children.map(c => ({ text: c.label, value: c.code })) : undefined }))
+  return tree.value.map(n => ({ text: n.label, value: n.value, children: n.children?.length ? n.children.map(c => ({ text: c.label, value: c.code })) : undefined }))
 })
 </script>
 ```
@@ -84,7 +84,7 @@ const vantTree = computed(() => {
 </template>
 
 <script setup lang="ts">
-const { options } = useDictOptions('gender')
+const { options } = useDict('gender')
 const radio = ref('')
 </script>
 ```

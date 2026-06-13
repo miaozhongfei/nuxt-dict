@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h2>useDictTree — 树形字典 + 路径回溯</h2>
     <p style="color:#666;">支持任意深度树形数据，findPath 可求叶子节点的完整祖先路径</p>
@@ -9,12 +9,12 @@
         <div style="flex:1;">
           <h4>region 树形结构</h4>
           <div style="font-size:14px;line-height:1.8;">
-            <template v-for="node in tree" :key="node.code">
-              <div :style="{ marginLeft: '0' }">{{ node.label }} ({{ node.code }})</div>
-              <template v-for="child in node.children" :key="child.code">
-                <div :style="{ marginLeft: '16px' }">{{ child.label }} ({{ child.code }})</div>
-                <template v-for="grandchild in child.children" :key="grandchild.code">
-                  <div :style="{ marginLeft: '32px', color: '#666' }">{{ grandchild.label }} ({{ grandchild.code }})</div>
+            <template v-for="node in tree" :key="node.value">
+              <div :style="{ marginLeft: '0' }">{{ node.label }} ({{ node.value }})</div>
+              <template v-for="child in node.children" :key="child.value">
+                <div :style="{ marginLeft: '16px' }">{{ child.label }} ({{ child.value }})</div>
+                <template v-for="grandchild in child.children" :key="grandchild.value">
+                  <div :style="{ marginLeft: '32px', color: '#666' }">{{ grandchild.label }} ({{ grandchild.value }})</div>
                 </template>
               </template>
             </template>

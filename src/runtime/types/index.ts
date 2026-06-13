@@ -1,4 +1,4 @@
-import type { ShallowRef, Ref, ComputedRef } from 'vue'
+import type { ShallowRef, Ref } from 'vue'
 
 /** 仓库名字面量联合类型，由 addTypeTemplate 根据 stores 配置动态生成 */
 import type { StoreKey } from '#build/types/nuxt-dict-store-names'
@@ -6,7 +6,7 @@ export type { StoreKey }
 
 /** 字典项 */
 export interface DictItem {
-  code: string | number
+  value: string | number
   label: string
   [key: string]: unknown
 }
@@ -156,24 +156,17 @@ export interface ResolvedModuleOptions {
 /** useDict 返回类型 */
 export interface UseDictReturn {
   data: ShallowRef<DictItem[] | null>
-  translate: (code: string | number) => string
+  translate: (value: string | number) => string
   loading: Ref<boolean>
   error: Ref<string | null>
-  refresh: () => Promise<void>
-}
-
-/** useDictOptions 返回类型 */
-export interface UseDictOptionsReturn {
-  options: ComputedRef<{ label: string; value: string | number }[]>
-  loading: Ref<boolean>
   refresh: () => Promise<void>
 }
 
 /** useDictTree 返回类型 */
 export interface UseDictTreeReturn {
   tree: ShallowRef<TreeNode[] | null>
-  translate: (code: string | number) => string
-  findPath: (code: string | number) => string[]
+  translate: (value: string | number) => string
+  findPath: (value: string | number) => string[]
   loading: Ref<boolean>
   refresh: () => Promise<void>
 }

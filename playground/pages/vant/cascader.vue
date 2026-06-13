@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h2>van-cascader + useDictTree</h2>
     <p style="color:#666;">级联选择器，options 来自 useDictTree 数据转换</p>
@@ -40,7 +40,7 @@ function toVantCascader(nodes: TreeNode[] | null): any[] {
   if (!nodes) return []
   return nodes.map((n) => ({
     text: n.label,
-    value: n.code,
+    value: n.value,
     children: n.children?.length ? toVantCascader(n.children) : undefined,
   }))
 }

@@ -1,4 +1,4 @@
----
+﻿---
 title: 自定义适配器
 description: 对接任意格式的字典数据源 —— GraphQL、Firestore、本地 JSON 文件等。
 ---
@@ -84,7 +84,7 @@ interface DictAdapter {
           for (const item of json.payload) {
             data[item.dictType] = {
               type: item.dictType,
-              items: item.options.map((opt: any) => ({ code: opt.dictCode, label: opt.dictName })),
+              items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
             }
           }
           return { version: json.dataVersion || '1.0.0', data }

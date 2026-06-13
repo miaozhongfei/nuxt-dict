@@ -1,34 +1,35 @@
----
-title: useDictOptions
-description: Directly output { label, value } format dictionary data for seamless integration with Element Plus, Vant, etc.
+﻿---
+title: useDict
+description: Directly output { value, label } format dictionary data for seamless integration with Element Plus, Vant, etc.
 ---
 
-# useDictOptions
+# useDict
 
-**Goal**: Learn to use `useDictOptions` to quickly integrate with Element Plus, Vant, and other UI library components.
+**Goal**: Learn to use `useDict` to quickly integrate with Element Plus, Vant, and other UI library components.
 
 ## When do you need this?
 
-- You use Element Plus and `<el-select>` needs `:options="[{ label, value }]"` format
+- You use Element Plus and `<el-select>` needs `[{ value, label }]` format
 - You use Vant and `<van-picker>` needs `columns` data
-- You don't want to manually map `{ code, label }` to `{ value, label }`
+- You need dictionary data directly bindable to UI components
 
 ## Full Signature
 
 ```ts
-useDictOptions(type: string): UseDictOptionsReturn
-useDictOptions(storeName: string, type: string): UseDictOptionsReturn
+useDict(type: string): useDictReturn
+useDict(storeName: string, type: string): useDictReturn
 ```
 
 ## Return Values
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `options` | `ComputedRef<{ label: string; value: string \| number }[]>` | Computed property that automatically maps `code` to `value` |
+| `data` | `ShallowRef<DictItem[] \| null>` | Dictionary data array, each item is `{ value, label, ...extensions }` |
+| `translate` | `(value: string \| number) => string` | Synchronous translation function |
 | `loading` | `Ref<boolean>` | Loading state |
 | `refresh` | `() => Promise<void>` | Manual refresh |
 
-`useDictOptions` internally calls `useDict`, so caching and loading behavior are identical.
+`DictItem.value` naturally matches UI component libraries' `value` field — no manual mapping needed.
 
 ## Usage Examples
 
@@ -36,13 +37,13 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   ```vue [Element Plus]
   <template>
     <el-select v-model="selected" placeholder="Select industry" :loading="loading">
-      <el-option v-for="opt in options" :key="opt.value" :label="opt.label" :value="opt.value" />
+      <el-option v-for="opt in data" :key="opt.value" :label="opt.label" :value="opt.value" />
     </el-select>
     <p>Selected: {{ selected }}</p>
   </template>
 
   <script setup lang="ts">
-  const { options, loading } = useDictOptions('industry')
+  const { data, loading } = useDict('industry')
   const selected = ref('')
   </script>
   ```
@@ -51,14 +52,14 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   <template>
     <select v-model="selected">
       <option value="">Select</option>
-      <option v-for="opt in options" :key="opt.value" :value="opt.value">
+      <option v-for="opt in data" :key="opt.value" :value="opt.value">
         {{ opt.label }}
       </option>
     </select>
   </template>
 
   <script setup lang="ts">
-  const { options } = useDictOptions('gender')
+  const { data } = useDict('gender')
   const selected = ref('')
   </script>
   ```
@@ -66,13 +67,12 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
 
 ## Notes
 
-> `options` is a computed property — it updates automatically when dictionary data changes. No manual watching needed.
+> `data` contains `DictItem` items with a native `value` field, directly matching UI component libraries — no manual `map` needed.
 
-> Extension fields don't appear in `options`. Use `useDict` for raw `data` if you need extra fields like `color`.
+> Extension fields (like `color`) are preserved in each `data` item and can be used directly in component props. e.g. `<el-tag :color="item.color">`.
 
 ## What You Learned
 
-- [ ] Use `useDictOptions` for `{ label, value }` formatted options
+- [ ] Use `useDict` for `{ value, label }` formatted dictionary data
 - [ ] Integrate with Element Plus `<el-select>`
 - [ ] Integrate with native `<select>`
-- [ ] Understand that `options` auto-updates

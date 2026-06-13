@@ -1,4 +1,4 @@
----
+﻿---
 title: FAQ
 description: Most common issues encountered when using the dictionary module and their solutions.
 ---
@@ -22,7 +22,7 @@ Call the `refresh()` function returned by the composable.
 
 ## Dictionary doesn't update after language switch?
 
-`setLocale()` clears the memory cache. Components using `useDict` / `useDictTree` / `useDictOptions` **auto-reload** dictionary data for the new language — no manual refresh or extra `watch` code needed.
+`setLocale()` clears the memory cache. Components using `useDict` / `useDictTree` / `useDict` **auto-reload** dictionary data for the new language — no manual refresh or extra `watch` code needed.
 
 ## How to use with @nuxtjs/i18n?
 

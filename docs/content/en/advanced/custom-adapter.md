@@ -1,4 +1,4 @@
----
+﻿---
 title: Custom Adapter
 description: Connect to any dictionary data source format — GraphQL, Firestore, local JSON files, and more.
 ---
@@ -77,7 +77,7 @@ Four adapter examples covering common scenarios — GraphQL, local JSON, format 
           for (const item of json.payload) {
             data[item.dictType] = {
               type: item.dictType,
-              items: item.options.map((opt: any) => ({ code: opt.dictCode, label: opt.dictName })),
+              items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
             }
           }
           return { version: json.dataVersion || '1.0.0', data }

@@ -1,4 +1,4 @@
----
+﻿---
 title: 多仓库
 description: 一个页面同时对接多个后端字典数据源。
 ---
@@ -39,8 +39,8 @@ export default defineNuxtConfig({
               version: 'static-1.0',
               data: {
                 priority: { type: 'priority', items: [
-                  { code: 'high', label: `高优先级 (${locale})` },
-                  { code: 'low', label: `低优先级 (${locale})` },
+                  { value: 'high', label: `高优先级 (${locale})` },
+                  { value: 'low', label: `低优先级 (${locale})` },
                 ] },
               },
             }
@@ -86,7 +86,7 @@ export default defineNuxtConfig({
 
 <script setup lang="ts">
 // static 仓库走自定义适配器，不发起网络请求
-const { options: staticOptions } = useDictOptions('static', 'priority')
+const { options: staticOptions } = useDict('static', 'priority')
 
 const priority = ref('')
 </script>
@@ -111,9 +111,9 @@ const priority = ref('')
 
 <script setup lang="ts">
 // 默认仓库
-const { options: orderOptions } = useDictOptions('order_status')
+const { options: orderOptions } = useDict('order_status')
 // payment 仓库
-const { options: payOptions } = useDictOptions('payment', 'pay_method')
+const { options: payOptions } = useDict('payment', 'pay_method')
 
 const orderStatus = ref('')
 const payMethod = ref('')

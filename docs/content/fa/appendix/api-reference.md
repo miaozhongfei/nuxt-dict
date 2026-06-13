@@ -1,4 +1,4 @@
----
+﻿---
 title: مرجع API
 description: تمام امضاهای متد composable و $dict و مقادیر بازگشتی در یک نگاه.
 ---
@@ -14,23 +14,10 @@ useDict(storeName: string, type: string): UseDictReturn
 
 | بازگشت | نوع | توضیح |
 |--------|------|-----------|
-| `data` | `ShallowRef<DictItem[] \| null>` | داده‌های خام دیکشنری |
-| `translate` | `(code: string \| number) => string` | تابع ترجمه همزمان |
+| `data` | `ShallowRef<DictItem[] \| null>` | داده‌های خام دیکشنری، هر آیتم `{ value, label, ... }` |
+| `translate` | `(value: string \| number) => string` | تابع ترجمه همزمان |
 | `loading` | `Ref<boolean>` | وضعیت بارگذاری |
 | `error` | `Ref<string \| null>` | اطلاعات خطا |
-| `refresh` | `() => Promise<void>` | بازنشانی دستی |
-
-## useDictOptions
-
-```ts
-useDictOptions(type: string): UseDictOptionsReturn
-useDictOptions(storeName: string, type: string): UseDictOptionsReturn
-```
-
-| بازگشت | نوع | توضیح |
-|--------|------|-----------|
-| `options` | `ComputedRef<{ label: string; value: string \| number }[]>` | گزینه‌های فرمت UI |
-| `loading` | `Ref<boolean>` | وضعیت بارگذاری |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی |
 
 ## useDictTree
@@ -43,8 +30,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | بازگشت | نوع | توضیح |
 |--------|------|-----------|
 | `tree` | `ShallowRef<TreeNode[] \| null>` | داده‌های دیکشنری درختی |
-| `translate` | `(code: string \| number) => string` | ترجمه هر گره |
-| `findPath` | `(code: string \| number) => string[]` | بازگشت مسیر |
+| `translate` | `(value: string \| number) => string` | ترجمه هر گره |
+| `findPath` | `(value: string \| number) => string[]` | بازگشت مسیر |
 | `loading` | `Ref<boolean>` | وضعیت بارگذاری |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی |
 
@@ -64,14 +51,14 @@ useLocale(): { locale, setLocale, locales }
 
 | متد | امضا |
 |------|------|
-| `translate` | `$dict.translate(type, code)` / `$dict.translate(store, type, code)` |
-| `translatePath` | `$dict.translatePath(type, code)` / `$dict.translatePath(store, type, code, separator?)` |
+| `translate` | `$dict.translate(type, value)` / `$dict.translate(store, type, value)` |
+| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(store, type, value, separator?)` |
 
 ## تعاریف نوع
 
 ```ts
 interface DictItem {
-  code: string | number
+  value: string | number
   label: string
   [key: string]: unknown
 }

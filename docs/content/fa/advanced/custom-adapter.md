@@ -1,4 +1,4 @@
----
+﻿---
 title: سفارشی آداپتور
 description: اتصال به هر فرمت منبع داده دیکشنری — GraphQL، Firestore، فایل‌های JSON محلی و غیره.
 ---
@@ -47,7 +47,7 @@ interface DictEntry {
 }
 
 interface DictItem {
-  code: string | number
+  value: string | number
   label: string
   [key: string]: unknown  // فیلدهای اضافی
 }
@@ -136,7 +136,7 @@ interface TreeNode extends DictItem {
             data[item.dictType] = {
               type: item.dictType,
               items: item.options.map((opt: any) => ({
-                code: opt.dictCode,
+                value: opt.dictCode,
                 label: opt.dictName,
               })),
             }

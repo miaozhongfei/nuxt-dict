@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>van-dropdown-menu + useDictOptions</h2>
+    <h2>van-dropdown-menu + useDict</h2>
     <p style="color:#666;">下拉菜单筛选，选项来自字典数据</p>
 
     <ClientOnly>
@@ -21,8 +21,8 @@
 </template>
 
 <script setup lang="ts">
-const { options: genderOpts, loading } = useDictOptions('gender')
-const { options: statusOpts } = useDictOptions('status')
+const { data: genderOpts, loading } = useDict('gender')
+const { data: statusOpts } = useDict('status')
 
 const genderColumns = computed(() => genderOpts.value.map((o) => ({ text: o.label, value: o.value })))
 const statusColumns = computed(() => statusOpts.value.map((o) => ({ text: o.label, value: o.value })))

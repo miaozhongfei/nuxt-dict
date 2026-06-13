@@ -26,15 +26,15 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
   const tree = shallowRef<TreeNode[] | null>(null)
   const loading = ref(false)
 
-  /** 翻译树中任意节点的 code → label */
-  function translate(code: string | number): string {
-    return manager.translate(dictType, code, storeName)
+  /** 翻译树中任意节点的 value → label */
+  function translate(value: string | number): string {
+    return manager.translate(dictType, value, storeName)
   }
 
-  /** 在已加载的树数据中查找 code 对应的层级路径 */
-  function findPath(code: string | number): string[] {
+  /** 在已加载的树数据中查找 value 对应的层级路径 */
+  function findPath(value: string | number): string[] {
     if (!tree.value) return []
-    return findPathInTree(tree.value, code)
+    return findPathInTree(tree.value, value)
   }
 
   async function load(): Promise<void> {
@@ -72,7 +72,7 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
  */
 function findPathInTree(nodes: TreeNode[], targetCode: string | number): string[] {
   for (const node of nodes) {
-    if (node.code === targetCode) {
+    if (node.value === targetCode) {
       return [node.label]
     }
     if (node.children && node.children.length > 0) {

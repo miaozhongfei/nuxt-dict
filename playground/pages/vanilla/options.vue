@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>useDictOptions — 选项生成</h2>
-    <p style="color:#666;">用于 el-select / van-picker 等组件，返回 [{label, value}] 格式</p>
+    <h2>useDict — 选项生成</h2>
+    <p style="color:#666;">用于 el-select / van-picker 等组件，直接返回 [{value, label}] 格式</p>
 
     <div v-if="loading" style="padding:40px;text-align:center;color:#999;">加载中...</div>
     <div v-else>
@@ -23,6 +23,6 @@
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('industry')
+const { data: options, loading } = useDict('industry')
 const selected = ref('')
 </script>

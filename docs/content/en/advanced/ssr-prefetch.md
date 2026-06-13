@@ -1,4 +1,4 @@
----
+﻿---
 title: SSR Prefetch
 description: Prefetch dictionary data during server-side rendering to accelerate first-screen display.
 ---

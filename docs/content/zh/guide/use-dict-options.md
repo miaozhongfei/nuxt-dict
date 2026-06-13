@@ -1,34 +1,35 @@
----
-title: useDictOptions
-description: 直接输出 { label, value } 格式的字典数据，无缝对接 Element Plus / Vant 等 UI 库。
+﻿---
+title: useDict
+description: 直接输出 { value, label } 格式的字典数据，无缝对接 Element Plus / Vant 等 UI 库。
 ---
 
-# useDictOptions
+# useDict
 
-**本章目标**：学会用 `useDictOptions` 快速对接 Element Plus、Vant 等 UI 库的组件。
+**本章目标**：学会用 `useDict` 快速对接 Element Plus、Vant 等 UI 库的组件。
 
 ## 什么时候需要这个功能？
 
-- 用了 Element Plus，`<el-select>` 需要 `:options="[{ label, value }]"` 格式
+- 用了 Element Plus，`<el-select>` 需要数据格式为 `[{ value, label }]`
 - 用了 Vant，`<van-picker>` 需要 `columns` 数据
-- 不想手动把 `{ code, label }` 转成 `{ value, label }`
+- 需要一次性获得可绑定 UI 组件的字典数据
 
 ## 完整签名
 
 ```ts
-useDictOptions(type: string): UseDictOptionsReturn
-useDictOptions(storeName: string, type: string): UseDictOptionsReturn
+useDict(type: string): useDictReturn
+useDict(storeName: string, type: string): useDictReturn
 ```
 
 ## 返回值
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `options` | `ComputedRef<{ label: string; value: string \| number }[]>` | 计算属性，自动将 `code` 映射为 `value` |
+| `data` | `ShallowRef<DictItem[] \| null>` | 字典数据数组，每项为 `{ value, label, ...扩展字段 }` |
+| `translate` | `(value: string \| number) => string` | 同步翻译函数 |
 | `loading` | `Ref<boolean>` | 是否正在加载 |
 | `refresh` | `() => Promise<void>` | 手动刷新 |
 
-`useDictOptions` 内部调用的是 `useDict`，所以缓存、loading 等行为完全一致。区别只在于 `options` 包装了 `{ label, value }` 格式。
+`DictItem` 的 `value` 字段天然对应 UI 组件库的 `value`，无需额外映射即可直接绑定。
 
 ## 使用示例
 
@@ -36,13 +37,13 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   ```vue [Element Plus]
   <template>
     <el-select v-model="selected" placeholder="请选择行业" :loading="loading">
-      <el-option v-for="opt in options" :key="opt.value" :label="opt.label" :value="opt.value" />
+      <el-option v-for="opt in data" :key="opt.value" :label="opt.label" :value="opt.value" />
     </el-select>
     <p>选中的值：{{ selected }}</p>
   </template>
 
   <script setup lang="ts">
-  const { options, loading } = useDictOptions('industry')
+  const { data, loading } = useDict('industry')
   const selected = ref('')
   </script>
   ```
@@ -51,14 +52,14 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   <template>
     <select v-model="selected">
       <option value="">请选择</option>
-      <option v-for="opt in options" :key="opt.value" :value="opt.value">
+      <option v-for="opt in data" :key="opt.value" :value="opt.value">
         {{ opt.label }}
       </option>
     </select>
   </template>
 
   <script setup lang="ts">
-  const { options } = useDictOptions('gender')
+  const { data } = useDict('gender')
   const selected = ref('')
   </script>
   ```
@@ -66,13 +67,12 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
 
 ## 注意事项
 
-> `options` 是计算属性，当字典数据变化时自动重新计算。不需要手动 watch 数据后重新 map。
+> `data` 中的 `DictItem` 自带 `value` 字段，直接与 UI 组件库的 `value` 字段一致，无需手动 `map` 转换。
 
-> 扩展字段不会出现在 `options` 中。如果你需要字典项的扩展字段（如 `color`），请使用 `useDict` 获取原始 `data`。
+> 扩展字段（如 `color`）都保留在 `data` 的每项中，可以直接用于组件属性。例如 `<el-tag :color="item.color">`。
 
 ## 本章你学会了
 
-- [ ] 用 `useDictOptions` 获取 `{ label, value }` 格式的选项数据
+- [ ] 用 `useDict` 获取 `{ value, label }` 格式的字典数据
 - [ ] 对接 Element Plus 的 `<el-select>` 组件
 - [ ] 对接原生 `<select>` 元素
-- [ ] 理解 `options` 是计算属性，随数据自动更新

@@ -80,8 +80,8 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
 
   trackInstance(trackKey, instanceId)
 
-  function translate(code: string | number): string {
-    return manager.translate(dictType, code, storeName)
+  function translate(value: string | number): string {
+    return manager.translate(dictType, value, storeName)
   }
 
   async function refresh(): Promise<void> {

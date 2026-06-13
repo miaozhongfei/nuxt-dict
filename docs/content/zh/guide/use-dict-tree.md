@@ -1,4 +1,4 @@
----
+﻿---
 title: useDictTree
 description: 树形字典数据的获取、翻译和路径回溯，支持无限层级深度。
 ---
@@ -25,8 +25,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | 属性 | 类型 | 说明 |
 |------|------|------|
 | `tree` | `ShallowRef<TreeNode[] \| null>` | 完整的树形字典数据 |
-| `translate` | `(code: string \| number) => string` | 翻译任意层级的节点 |
-| `findPath` | `(code: string \| number) => string[]` | 路径回溯。输入叶子节点 code，返回从根到该节点的 label 数组 |
+| `translate` | `(value: string \| number) => string` | 翻译任意层级的节点 |
+| `findPath` | `(value: string \| number) => string[]` | 路径回溯。输入叶子节点 code，返回从根到该节点的 label 数组 |
 | `loading` | `Ref<boolean>` | 是否正在加载 |
 | `refresh` | `() => Promise<void>` | 手动刷新 |
 
@@ -66,7 +66,7 @@ const { findPath } = useDictTree('region')
   <el-cascader
     v-model="selected"
     :options="tree || []"
-    :props="{ value: 'code', label: 'label', children: 'children' }"
+    :props="{ value: 'value', label: 'label', children: 'children' }"
     placeholder="请选择区域"
     clearable
   />

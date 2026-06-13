@@ -1,4 +1,4 @@
----
+﻿---
 title: useLocale
 description: 多语言管理 —— 获取当前语言、切换语言并持久化到 Cookie。
 ---
@@ -72,7 +72,7 @@ const { locale, setLocale } = useLocale()
 
 ## 注意事项
 
-> 语言切换后，使用 `useDict` / `useDictTree` / `useDictOptions` 的组件**会自动重取**对应语言的字典数据，无需手动刷新或额外写 watch 代码。
+> 语言切换后，使用 `useDict` / `useDictTree` / `useDict` 的组件**会自动重取**对应语言的字典数据，无需手动刷新或额外写 watch 代码。
 
 > 如果你使用的是 `@nuxtjs/i18n`，两个模块通过共享同一个 cookie（默认 `i18n_redirected`）自动同步语言。详见 [i18n 国际化](/integration/i18n)。
 

@@ -1,4 +1,4 @@
----
+﻿---
 title: Cache System
 description: Deep dive into the three-tier cache architecture — memory, IndexedDB, API — with version detection and auto-invalidation.
 ---
@@ -10,7 +10,7 @@ description: Deep dive into the three-tier cache architecture — memory, Indexe
 ## Three-tier Architecture
 
 ```
-Component calls useDict / useDictOptions / useDictTree
+Component calls useDict / useDict / useDictTree
   ↓
 Tier 1: Memory Cache (Map) ← Fastest, returns immediately on hit
   ↓ Miss
@@ -45,7 +45,7 @@ Write-back: Update both IndexedDB + Memory Cache
 
 ## Version Detection
 
-On first access to a store's dictionary data (when calling `useDict` / `useDictTree` / `useDictOptions`), the module lazily calls `fetchVersion()` and compares against the version stored in localStorage:
+On first access to a store's dictionary data (when calling `useDict` / `useDictTree` / `useDict`), the module lazily calls `fetchVersion()` and compares against the version stored in localStorage:
 - Match → Cache is valid
 - Mismatch → Clear all caches for that store
 - Failure → Ignore error, continue using cache

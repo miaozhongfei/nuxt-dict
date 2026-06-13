@@ -6,7 +6,7 @@
       <h4 style="margin-bottom: 8px; color: #666;">原生 HTML</h4>
       <nav style="display:flex;flex-direction:column;gap:2px;margin-bottom:20px;">
         <NuxtLink to="/vanilla/basic" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useDict 基础翻译</NuxtLink>
-        <NuxtLink to="/vanilla/options" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useDictOptions 选项</NuxtLink>
+        <NuxtLink to="/vanilla/options" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useDict 选项</NuxtLink>
         <NuxtLink to="/vanilla/tree" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useDictTree 树形</NuxtLink>
         <NuxtLink to="/vanilla/locale" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useLocale 语言切换</NuxtLink>
         <NuxtLink to="/vanilla/multi-store" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">多存储库 Multi-Store</NuxtLink>

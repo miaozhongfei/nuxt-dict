@@ -81,7 +81,7 @@ export default defineNuxtModule<ModuleOptions>().with({
     // 注册插件
     addPlugin({ src: resolver.resolve(runtimeDir, 'plugins', 'dict.ts') });
 
-    // 注册 composables 目录，自动导入 useDict / useDictTree / useDictOptions / useLocale
+    // 注册 composables 目录，自动导入 useDict / useDictTree / useLocale
     addImportsDir(resolver.resolve(runtimeDir, 'composables'));
 
     registerTypeTemplates(resolver, _options.stores);

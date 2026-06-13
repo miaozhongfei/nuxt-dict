@@ -1,4 +1,4 @@
----
+﻿---
 title: 配置全解
 description: nuxt.config.ts 中 dict 配置项的完整参考，含每个字段的类型、默认值和说明。
 ---

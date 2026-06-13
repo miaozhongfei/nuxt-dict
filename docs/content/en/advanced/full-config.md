@@ -1,4 +1,4 @@
----
+﻿---
 title: Full Config Reference
 description: Complete reference for all dict configuration options in nuxt.config.ts, with type, default, and description for each field.
 ---

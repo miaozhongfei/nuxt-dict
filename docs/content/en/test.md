@@ -1,4 +1,4 @@
-# Welcome to Nuxt Content starter
+﻿# Welcome to Nuxt Content starter
 
 ## Manage your contents
 

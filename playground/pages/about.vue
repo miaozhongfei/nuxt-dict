@@ -16,12 +16,11 @@
     <table style="border-collapse:collapse;">
       <thead><tr><th style="padding:6px 12px;text-align:left;">Composable</th><th style="padding:6px 12px;text-align:left;">说明</th></tr></thead>
       <tbody>
-      <tr><td style="padding:6px 12px;"><code>useDict(type)</code></td><td style="padding:6px 12px;">响应式字典数据 + 翻译函数</td></tr>
-      <tr><td style="padding:6px 12px;"><code>useDictOptions(type)</code></td><td style="padding:6px 12px;">生成 [{label, value}] 选项数组</td></tr>
+      <tr><td style="padding:6px 12px;"><code>useDict(type)</code></td><td style="padding:6px 12px;">响应式字典数据 + 翻译函数，直接返回 [{value, label}] 格式</td></tr>
       <tr><td style="padding:6px 12px;"><code>useDictTree(type)</code></td><td style="padding:6px 12px;">树形字典 + findPath 路径回溯</td></tr>
       <tr><td style="padding:6px 12px;"><code>useLocale()</code></td><td style="padding:6px 12px;">语言获取与切换</td></tr>
-      <tr><td style="padding:6px 12px;"><code>$dict.translate(type, code)</code></td><td style="padding:6px 12px;">同步翻译（非响应式）</td></tr>
-      <tr><td style="padding:6px 12px;"><code>$dict.translatePath(type, code)</code></td><td style="padding:6px 12px;">树形路径翻译</td></tr>
+      <tr><td style="padding:6px 12px;"><code>$dict.translate(type, value)</code></td><td style="padding:6px 12px;">同步翻译（非响应式）</td></tr>
+      <tr><td style="padding:6px 12px;"><code>$dict.translatePath(type, value)</code></td><td style="padding:6px 12px;">树形路径翻译</td></tr>
       </tbody>
     </table>
   </div>

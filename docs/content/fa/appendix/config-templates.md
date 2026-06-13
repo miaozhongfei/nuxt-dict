@@ -1,4 +1,4 @@
----
+﻿---
 title: قالب‌های تنظیمات
 description: قالب‌های پیکربندی nuxt.config.ts برای سناریوهای رایج، کپی و استفاده کنید.
 ---
@@ -91,8 +91,8 @@ description: قالب‌های پیکربندی nuxt.config.ts برای سنار
                 version: 'static-1.0',
                 data: {
                   priority: { type: 'priority', items: [
-                    { code: 'high', label: `بالا (${locale})` },
-                    { code: 'low', label: `پایین (${locale})` },
+                    { value: 'high', label: `بالا (${locale})` },
+                    { value: 'low', label: `پایین (${locale})` },
                   ] },
                 },
               }

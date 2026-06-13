@@ -1,4 +1,4 @@
----
+﻿---
 title: چند مخزنی
 description: اتصال یک صفحه به چندین منبع داده دیکشنری backend به طور همزمان.
 ---
@@ -46,8 +46,8 @@ export default defineNuxtConfig({
               version: 'static-1.0',
               data: {
                 priority: { type: 'priority', items: [
-                  { code: 'high', label: `اولویت بالا (${locale})` },
-                  { code: 'low', label: `اولویت پایین (${locale})` },
+                  { value: 'high', label: `اولویت بالا (${locale})` },
+                  { value: 'low', label: `اولویت پایین (${locale})` },
                 ] },
               },
             }
@@ -98,7 +98,7 @@ export default defineNuxtConfig({
 
 <script setup lang="ts">
 // مخزن static از آداپتور سفارشی استفاده می‌کند، بدون درخواست شبکه
-const { options: staticOptions } = useDictOptions('static', 'priority')
+const { options: staticOptions } = useDict('static', 'priority')
 
 const priority = ref('')
 </script>
@@ -127,10 +127,10 @@ const priority = ref('')
 
 <script setup lang="ts">
 // مخزن پیش‌فرض: استفاده از پیکربندی api سراسری
-const { options: orderOptions } = useDictOptions('order_status')
+const { options: orderOptions } = useDict('order_status')
 
 // مخزن payment: https://pay-api.example.com/v1/dictionary
-const { options: payOptions } = useDictOptions('payment', 'pay_method')
+const { options: payOptions } = useDict('payment', 'pay_method')
 
 const orderStatus = ref('')
 const payMethod = ref('')

@@ -1,4 +1,4 @@
----
+﻿---
 title: Element Plus Integration
 description: Complete examples of using the dictionary module with Element Plus components.
 ---
@@ -19,7 +19,7 @@ Full examples of using the dictionary module with common Element Plus components
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('gender')
+const { options, loading } = useDict('gender')
 const value = ref('')
 </script>
 ```
@@ -48,8 +48,8 @@ const value = ref('')
 <script setup lang="ts">
 const { data: statusData } = useDict('status')
 
-function getStatusColor(code: number) {
-  return (statusData.value?.find(i => i.code === code) as any)?.color
+function getStatusColor(value: number) {
+  return (statusData.value?.find(i => i.value === code) as any)?.color
 }
 
 const tableData = ref([
@@ -66,7 +66,7 @@ const tableData = ref([
   <el-cascader
     v-model="selected"
     :options="tree || []"
-    :props="{ value: 'code', label: 'label', children: 'children' }"
+    :props="{ value: 'value', label: 'label', children: 'children' }"
     placeholder="Select region"
     clearable
   />
@@ -88,7 +88,7 @@ const selected = ref<string[]>([])
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('gender')
+const { options, loading } = useDict('gender')
 const radio = ref('')
 </script>
 ```
@@ -105,8 +105,8 @@ const radio = ref('')
 <script setup lang="ts">
 const { data, options } = useDict('industry')
 
-function getColor(code: string | number) {
-  return (data.value?.find(i => i.code === code) as any)?.color
+function getColor(value: string | number) {
+  return (data.value?.find(i => i.value === code) as any)?.color
 }
 </script>
 ```
@@ -115,8 +115,8 @@ function getColor(code: string | number) {
 
 ```vue
 <script setup lang="ts">
-const { options: gOpts, loading: gLoading } = useDictOptions('gender')
-const { options: iOpts, loading: iLoading } = useDictOptions('industry')
+const { options: gOpts, loading: gLoading } = useDict('gender')
+const { options: iOpts, loading: iLoading } = useDict('industry')
 const { tree: rTree } = useDictTree('region')
 
 const form = reactive({ gender: '', industry: '', region: [] })
