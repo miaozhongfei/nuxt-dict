@@ -1,4 +1,4 @@
-﻿---
+---
 title: Vant 集成
 description: 将字典模块与 Vant 移动端组件配合使用的完整示例。
 ---

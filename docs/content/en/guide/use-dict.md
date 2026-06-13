@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDict
 description: Complete useDict usage guide — fetch dictionary data and translate.
 ---

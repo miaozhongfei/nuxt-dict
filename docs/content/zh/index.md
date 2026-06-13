@@ -1,4 +1,4 @@
-﻿---
+---
 title: Nuxt Dict
 description: 基于 Element Plus、Vant 字典的 Nuxt 模块，提供便捷的字典数据管理和使用功能。
 ---

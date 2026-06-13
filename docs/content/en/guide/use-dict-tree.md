@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDictTree
 description: Fetch, translate, and path-trace tree-structured dictionary data with unlimited depth.
 ---

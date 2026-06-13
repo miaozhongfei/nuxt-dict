@@ -1,4 +1,4 @@
-﻿---
+---
 title: 第一个字典功能
 description: 从零开始，用 useDict 写出你的第一个字典下拉框。
 ---

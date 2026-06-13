@@ -1,4 +1,4 @@
-﻿---
+---
 title: useLocale
 description: Multi-language management — get current language, switch language, and persist to cookie.
 ---

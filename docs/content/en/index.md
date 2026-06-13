@@ -1,4 +1,4 @@
-﻿---
+---
 title: Nuxt Dict
 description: A Nuxt module for convenient dictionary data management based on Element Plus and Vant dictionaries.
 ---

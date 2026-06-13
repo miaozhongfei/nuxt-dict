@@ -1,4 +1,4 @@
-﻿---
+---
 title: Element Plus 集成
 description: 将字典模块与 Element Plus 组件配合使用的完整示例。
 ---

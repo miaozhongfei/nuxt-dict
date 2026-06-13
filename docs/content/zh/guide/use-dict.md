@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDict
 description: useDict 完整用法详解 —— 获取字典数据并翻译。
 ---

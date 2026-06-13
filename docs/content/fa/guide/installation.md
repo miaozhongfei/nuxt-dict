@@ -1,4 +1,4 @@
-﻿---
+---
 title: نصب ماژول
 description: نصب @lacqjs/nuxt-dict در پروژه Nuxt.
 ---

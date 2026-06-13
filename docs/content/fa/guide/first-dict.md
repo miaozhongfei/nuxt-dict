@@ -1,4 +1,4 @@
-﻿---
+---
 title: اولین دیکشنری
 description: از صفر، اولین dropdown دیکشنری خود را با useDict بنویسید.
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Config Templates
 description: Copy-paste nuxt.config.ts config templates for common scenarios.
 ---

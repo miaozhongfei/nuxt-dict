@@ -1,4 +1,4 @@
-﻿---
+---
 title: $dict 同步翻译
 description: 在模板中直接调用 $dict.translate() 做同步翻译，无需组件挂载。
 ---
