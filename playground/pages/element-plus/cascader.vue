@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h2>el-cascader + useDictTree</h2>
     <p style="color:#666;">useDictTree 数据转换为 el-cascader 的 options 格式</p>
@@ -21,7 +21,7 @@ const { tree, loading } = useDictTree('region')
 function toCascaderOptions(nodes: TreeNode[] | null): any[] {
   if (!nodes) return []
   return nodes.map((n) => ({
-    value: n.code,
+    value: n.value,
     label: n.label,
     children: n.children ? toCascaderOptions(n.children) : undefined,
   }))

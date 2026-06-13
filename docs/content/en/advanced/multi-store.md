@@ -1,4 +1,4 @@
----
+﻿---
 title: Multi-Store
 description: Connect one page to multiple backend dictionary data sources simultaneously.
 ---
@@ -33,8 +33,8 @@ export default defineNuxtConfig({
               version: 'static-1.0',
               data: {
                 priority: { type: 'priority', items: [
-                  { code: 'high', label: `High Priority (${locale})` },
-                  { code: 'low', label: `Low Priority (${locale})` },
+                  { value: 'high', label: `High Priority (${locale})` },
+                  { value: 'low', label: `Low Priority (${locale})` },
                 ] },
               },
             }
@@ -80,7 +80,7 @@ Stores with custom adapters are used in composables exactly the same way as othe
 
 <script setup lang="ts">
 // static store uses custom adapter, no network requests
-const { options: staticOptions } = useDictOptions('static', 'priority')
+const { options: staticOptions } = useDict('static', 'priority')
 
 const priority = ref('')
 </script>
@@ -90,10 +90,10 @@ const priority = ref('')
 
 ```ts
 // Default store
-const { options: orderOptions } = useDictOptions('order_status')
+const { options: orderOptions } = useDict('order_status')
 
 // payment store
-const { options: payOptions } = useDictOptions('payment', 'pay_method')
+const { options: payOptions } = useDict('payment', 'pay_method')
 
 // useDict / useDictTree / $dict all support store parameter
 const { data } = useDict('payment', 'pay_status')

@@ -1,4 +1,4 @@
----
+﻿---
 title: API 速查表
 description: 所有 composable 和 $dict 的方法签名与返回值一览。
 ---
@@ -14,23 +14,10 @@ useDict(storeName: string, type: string): UseDictReturn
 
 | 返回值 | 类型 | 说明 |
 |--------|------|------|
-| `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据 |
-| `translate` | `(code: string \| number) => string` | 同步翻译函数 |
+| `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据，每项为 `{ value, label, ... }` |
+| `translate` | `(value: string \| number) => string` | 同步翻译函数 |
 | `loading` | `Ref<boolean>` | 加载状态 |
 | `error` | `Ref<string \| null>` | 错误信息 |
-| `refresh` | `() => Promise<void>` | 手动刷新 |
-
-## useDictOptions
-
-```
-useDictOptions(type: string): UseDictOptionsReturn
-useDictOptions(storeName: string, type: string): UseDictOptionsReturn
-```
-
-| 返回值 | 类型 | 说明 |
-|--------|------|------|
-| `options` | `ComputedRef<{ label: string; value: string \| number }[]>` | UI 选项格式 |
-| `loading` | `Ref<boolean>` | 加载状态 |
 | `refresh` | `() => Promise<void>` | 手动刷新 |
 
 ## useDictTree
@@ -43,8 +30,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | 返回值 | 类型 | 说明 |
 |--------|------|------|
 | `tree` | `ShallowRef<TreeNode[] \| null>` | 树形字典数据 |
-| `translate` | `(code: string \| number) => string` | 翻译任意节点 |
-| `findPath` | `(code: string \| number) => string[]` | 路径回溯 |
+| `translate` | `(value: string \| number) => string` | 翻译任意节点 |
+| `findPath` | `(value: string \| number) => string[]` | 路径回溯 |
 | `loading` | `Ref<boolean>` | 加载状态 |
 | `refresh` | `() => Promise<void>` | 手动刷新 |
 
@@ -64,14 +51,14 @@ useLocale(): { locale, setLocale, locales }
 
 | 方法 | 签名 |
 |------|------|
-| `translate` | `$dict.translate(type, code)` / `$dict.translate(store, type, code)` |
-| `translatePath` | `$dict.translatePath(type, code)` / `$dict.translatePath(store, type, code, separator?)` |
+| `translate` | `$dict.translate(type, value)` / `$dict.translate(store, type, value)` |
+| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(store, type, value, separator?)` |
 
 ## 类型定义
 
 ```ts
 interface DictItem {
-  code: string | number
+  value: string | number
   label: string
   [key: string]: unknown
 }

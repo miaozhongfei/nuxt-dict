@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h2>多存储库 Multi-Store</h2>
     <p style="color:#666;">同一字典类型可从不同的 IndexedDB 对象存储库加载，实现数据隔离。</p>
@@ -8,12 +8,12 @@
     <template v-else>
       <h3>默认存储库 <code>'dicts'</code> — gender</h3>
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
-        <thead><tr><th>code</th><th>label（useDict 翻译）</th><th>$dict.translate</th></tr></thead>
+        <thead><tr><th>value</th><th>label（useDict 翻译）</th><th>$dict.translate</th></tr></thead>
         <tbody>
-          <tr v-for="item in defaultData" :key="item.code">
-            <td>{{ item.code }}</td>
-            <td>{{ defaultTranslate(item.code) }}</td>
-            <td>{{ $dict.translate('gender', item.code) }}</td>
+          <tr v-for="item in defaultData" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ defaultTranslate(item.value) }}</td>
+            <td>{{ $dict.translate('gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>
@@ -29,10 +29,10 @@
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
         <thead><tr><th>code</th><th>label（useDict 翻译）</th><th>$dict.translate（3 参）</th></tr></thead>
         <tbody>
-          <tr v-for="item in store2Data" :key="item.code">
-            <td>{{ item.code }}</td>
-            <td>{{ store2Translate(item.code) }}</td>
-            <td>{{ $dict.translate('dicts2', 'gender', item.code) }}</td>
+          <tr v-for="item in store2Data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ store2Translate(item.value) }}</td>
+            <td>{{ $dict.translate('dicts2', 'gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>
@@ -44,14 +44,14 @@
 
       <hr style="margin:24px 0;" />
 
-      <h3>自定义存储库 <code>'dicts3'</code> — useDictOptions + useDictTree</h3>
+      <h3>自定义存储库 <code>'dicts3'</code> — useDict + useDictTree</h3>
 
       <div style="display:flex;gap:40px;">
         <div>
-          <h4>useDictOptions('dicts3', 'status')</h4>
+          <h4>useDict('dicts3', 'status')</h4>
           <div v-if="store3OptionsLoading">加载中...</div>
           <ul v-else>
-            <li v-for="opt in store3Options" :key="opt.value">
+            <li v-for="opt in store3Data" :key="opt.value">
               {{ opt.label }} ({{ opt.value }})
             </li>
           </ul>
@@ -61,8 +61,8 @@
           <h4>useDictTree('dicts3', 'region')</h4>
           <div v-if="store3TreeLoading">加载中...</div>
           <ul v-else>
-            <li v-for="node in store3Tree" :key="node.code">
-              {{ node.label }} ({{ node.code }})
+            <li v-for="node in store3Tree" :key="node.value">
+              {{ node.label }} ({{ node.value }})
               <span v-if="node.children" style="color:#999;">
                 — {{ node.children.length }} 个子节点
               </span>
@@ -76,12 +76,12 @@
       <h3>自定义存储库 <code>'payment'</code> — 自定义 Adapter（不走 HTTP）</h3>
       <p style="color:#666;">该仓库在 nuxt.config.ts 中通过 <code>stores.payment.adapter</code> 配置了自定义适配器，数据直接由函数返回，不发起网络请求。</p>
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
-        <thead><tr><th>code</th><th>label（useDict 翻译）</th><th>$dict.translate</th></tr></thead>
+        <thead><tr><th>value</th><th>label（useDict 翻译）</th><th>$dict.translate</th></tr></thead>
         <tbody>
-          <tr v-for="item in paymentData" :key="item.code">
-            <td>{{ item.code }}</td>
-            <td>{{ paymentTranslate(item.code) }}</td>
-            <td>{{ $dict.translate('payment', 'status', item.code) }}</td>
+          <tr v-for="item in paymentData" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ paymentTranslate(item.value) }}</td>
+            <td>{{ $dict.translate('payment', 'status', item.value) }}</td>
           </tr>
         </tbody>
       </table>
@@ -108,11 +108,11 @@ const {
   loading: store2Loading,
 } = useDict('dicts2', 'gender')
 
-// 自定义存储库 'dicts3' —— useDictOptions + useDictTree
+// 自定义存储库 'dicts3' —— useDict + useDictTree
 const {
-  options: store3Options,
+  data: store3Data,
   loading: store3OptionsLoading,
-} = useDictOptions('dicts3', 'status')
+} = useDict('dicts3', 'status')
 
 const {
   tree: store3Tree,

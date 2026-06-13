@@ -1,4 +1,4 @@
----
+﻿---
 title: Environment Setup
 description: Install Node.js and pnpm, then create your first Nuxt project.
 ---

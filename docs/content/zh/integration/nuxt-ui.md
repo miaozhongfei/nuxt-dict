@@ -1,4 +1,4 @@
----
+﻿---
 title: Nuxt UI 集成
 description: 将字典模块与 Nuxt UI 组件配合使用的完整示例。
 ---
@@ -11,7 +11,7 @@ description: 将字典模块与 Nuxt UI 组件配合使用的完整示例。
 
 ## USelect 下拉选择器
 
-`useDictOptions` 返回的 `{ label, value }[]` 与 Nuxt UI 的 `items` prop 直接兼容，无需转换。
+`useDict` 返回的 `{ label, value }[]` 与 Nuxt UI 的 `items` prop 直接兼容，无需转换。
 
 ```vue
 <template>
@@ -24,7 +24,7 @@ description: 将字典模块与 Nuxt UI 组件配合使用的完整示例。
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('gender')
+const { options, loading } = useDict('gender')
 const value = ref('')
 </script>
 ```
@@ -39,8 +39,8 @@ const value = ref('')
 <script setup lang="ts">
 const { data: statusData } = useDict('status')
 
-function getStatusColor(code: number) {
-  return (statusData.value?.find(i => i.code === code) as any)?.color
+function getStatusColor(value: number) {
+  return (statusData.value?.find(i => i.value === code) as any)?.color
 }
 
 const columns = computed(() => [
@@ -87,7 +87,7 @@ const cascaderItems = computed(() => {
   function convert(nodes: any[]): any[] {
     return nodes.map(n => ({
       label: n.label,
-      value: n.code,
+      value: n.value,
       children: n.children && n.children.length > 0 ? convert(n.children) : undefined,
     }))
   }
@@ -109,7 +109,7 @@ const selected = ref('')
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('gender')
+const { options, loading } = useDict('gender')
 const radio = ref('')
 const checkbox = ref<string[]>([])
 </script>
@@ -133,8 +133,8 @@ const checkbox = ref<string[]>([])
 <script setup lang="ts">
 const { data, options } = useDict('status')
 
-function getBadgeColor(code: string | number) {
-  return (data.value?.find(i => i.code === code) as any)?.color ?? 'neutral'
+function getBadgeColor(value: string | number) {
+  return (data.value?.find(i => i.value === code) as any)?.color ?? 'neutral'
 }
 </script>
 ```
@@ -157,9 +157,9 @@ function getBadgeColor(code: string | number) {
 </template>
 
 <script setup lang="ts">
-const { options: gOpts, loading: gLoading } = useDictOptions('gender')
-const { options: iOpts, loading: iLoading } = useDictOptions('industry')
-const { options: sOpts, loading: sLoading } = useDictOptions('status')
+const { options: gOpts, loading: gLoading } = useDict('gender')
+const { options: iOpts, loading: iLoading } = useDict('industry')
+const { options: sOpts, loading: sLoading } = useDict('status')
 
 const form = reactive({ gender: '', industry: '', status: '' })
 </script>

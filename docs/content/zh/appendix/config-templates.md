@@ -1,4 +1,4 @@
----
+﻿---
 title: 配置模板
 description: 常用场景的 nuxt.config.ts 配置模板，复制即用。
 ---
@@ -79,8 +79,8 @@ description: 常用场景的 nuxt.config.ts 配置模板，复制即用。
                 version: 'static-1.0',
                 data: {
                   priority: { type: 'priority', items: [
-                    { code: 'high', label: `高 (${locale})` },
-                    { code: 'low', label: `低 (${locale})` },
+                    { value: 'high', label: `高 (${locale})` },
+                    { value: 'low', label: `低 (${locale})` },
                   ] },
                 },
               }

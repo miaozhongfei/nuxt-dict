@@ -1,4 +1,4 @@
----
+﻿---
 title: Config Templates
 description: Copy-paste nuxt.config.ts config templates for common scenarios.
 ---
@@ -79,8 +79,8 @@ description: Copy-paste nuxt.config.ts config templates for common scenarios.
                 version: 'static-1.0',
                 data: {
                   priority: { type: 'priority', items: [
-                    { code: 'high', label: `High (${locale})` },
-                    { code: 'low', label: `Low (${locale})` },
+                    { value: 'high', label: `High (${locale})` },
+                    { value: 'low', label: `Low (${locale})` },
                   ] },
                 },
               }

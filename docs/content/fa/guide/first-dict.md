@@ -1,6 +1,6 @@
----
+﻿---
 title: اولین دیکشنری
-description: از صفر، اولین dropdown دیکشنری خود را با useDictOptions بنویسید.
+description: از صفر، اولین dropdown دیکشنری خود را با useDict بنویسید.
 ---
 
 # اولین دیکشنری
@@ -29,9 +29,9 @@ description: از صفر، اولین dropdown دیکشنری خود را با u
         gender: {
           type: 'gender',
           items: [
-            { code: 'male', label: 'مرد' },
-            { code: 'female', label: 'زن' },
-            { code: 'other', label: 'سایر' },
+            { value: 'male', label: 'مرد' },
+            { value: 'female', label: 'زن' },
+            { value: 'other', label: 'سایر' },
           ],
         },
       },
@@ -93,8 +93,8 @@ description: از صفر، اولین dropdown دیکشنری خود را با u
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// فراخوانی useDictOptions برای دریافت گزینه‌های دیکشنری
-const { options, loading, error } = useDictOptions('gender')
+// فراخوانی useDict برای دریافت گزینه‌های دیکشنری
+const { options, loading, error } = useDict('gender')
 
 // مقدار انتخاب شده توسط کاربر
 const selected = ref('')
@@ -126,14 +126,14 @@ pnpm dev
 
 ### بخش اسکریپت (`<script setup>`)
 
-`useDictOptions('gender')` به ماژول می‌گوید: "من به داده‌های دیکشنری با نوع gender نیاز دارم"
+`useDict('gender')` به ماژول می‌گوید: "من به داده‌های دیکشنری با نوع gender نیاز دارم"
 
 سه مقدار بازگشتی:
 - `options`: داده‌های دیکشنری با فرمت `[{ label: 'مرد', value: 'male' }, ...]` که مستقیماً برای dropdown قابل استفاده است
 - `loading`: آیا در حال بارگذاری است (`true` / `false`)
 - `error`: پیام خطا در صورت شکست بارگذاری
 
-`useDictOptions` در داخل این کارها را انجام می‌دهد:
+`useDict` در داخل این کارها را انجام می‌دهد:
 1. ابتدا بررسی می‌کند آیا داده‌های `gender` در کش حافظه وجود دارد
 2. اگر نه، IndexedDB (پایگاه داده مرورگر) را بررسی می‌کند
 3. اگر باز هم پیدا نشد، به `/api/dict/list?types=gender` درخواست ارسال می‌کند
@@ -147,6 +147,6 @@ pnpm dev
 
 - [ ] ایجاد یک API دیکشنری آزمایشی در `server/api/`
 - [ ] پیکربندی `dict.api` در `nuxt.config.ts` برای اشاره به API
-- [ ] استفاده از `useDictOptions()` برای دریافت داده‌ها و رندر dropdown
+- [ ] استفاده از `useDict()` برای دریافت داده‌ها و رندر dropdown
 - [ ] درک کاربرد `loading`، `error` و `options`
 - [ ] دریافت مقدار انتخاب شده توسط کاربر از طریق `v-model`

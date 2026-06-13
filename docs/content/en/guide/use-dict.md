@@ -1,4 +1,4 @@
----
+﻿---
 title: useDict
 description: Complete useDict usage guide — fetch dictionary data and translate.
 ---
@@ -27,8 +27,8 @@ useDict(storeName: string, type: string): UseDictReturn
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `data` | `ShallowRef<DictItem[] \| null>` | Raw dictionary data array. Starts as `null`, becomes `[{ code: 0, label: 'Disabled' }, ...]` after loading |
-| `translate` | `(code: string \| number) => string` | Synchronous translation function. Input code, output the corresponding label. Falls back to the code as a string if not found |
+| `data` | `ShallowRef<DictItem[] \| null>` | Raw dictionary data array. Starts as `null`, becomes `[{ value: 0, label: 'Disabled' }, ...]` after loading |
+| `translate` | `(value: string \| number) => string` | Synchronous translation function. Input code, output the corresponding label. Falls back to the code as a string if not found |
 | `loading` | `Ref<boolean>` | Whether data is loading |
 | `error` | `Ref<string \| null>` | Error message on failure |
 | `refresh` | `() => Promise<void>` | Force refresh, skipping cache |
@@ -50,10 +50,10 @@ useDict(storeName: string, type: string): UseDictReturn
         <tr><th>Code</th><th>Label</th><th>Translate Check</th></tr>
       </thead>
       <tbody>
-        <tr v-for="item in data" :key="item.code">
-          <td>{{ item.code }}</td>
+        <tr v-for="item in data" :key="item.value">
+          <td>{{ item.value }}</td>
           <td>{{ item.label }}</td>
-          <td>{{ translate(item.code) }}</td>
+          <td>{{ translate(item.value) }}</td>
         </tr>
       </tbody>
     </table>
@@ -69,7 +69,7 @@ function doRefresh() { refresh() }
 
 ## Translation Function Details
 
-`translate(code)` is synchronous and only looks up data already loaded into the memory cache. No network request needed:
+`translate(value)` is synchronous and only looks up data already loaded into the memory cache. No network request needed:
 
 ```vue
 <template>

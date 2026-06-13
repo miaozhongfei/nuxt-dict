@@ -7,16 +7,16 @@ import type { DictManager } from '../core/dict-manager'
  *
  * @example
  * // 默认存储库 'dicts'
- * $dict.translate('gender', code)
- * $dict.translatePath('region', code)
+ * $dict.translate('gender', value)
+ * $dict.translatePath('region', value)
  *
  * // 指定存储库，storeName 作为第一个参数
- * $dict.translate('dicts2', 'gender', code)
- * $dict.translatePath('dicts2', 'region', code)
- * $dict.translatePath('dicts2', 'region', code, ' -> ')
+ * $dict.translate('dicts2', 'gender', value)
+ * $dict.translatePath('dicts2', 'region', value)
+ * $dict.translatePath('dicts2', 'region', value, ' -> ')
  *
  * // 注意：默认存储库 + 自定义分隔符需显式传 storeName
- * $dict.translatePath('dicts', 'region', code, ' -> ')
+ * $dict.translatePath('dicts', 'region', value, ' -> ')
  */
 export function createDictTranslator(manager: DictManager) {
   return {
@@ -24,10 +24,10 @@ export function createDictTranslator(manager: DictManager) {
      * 通过字典类型和编码获取翻译文本。
      * 2 参：默认存储库；3 参：指定存储库（storeName 为第一个参数）
      */
-    translate(storeOrType: string, codeOrType: string | number, code?: string | number): string {
-      if (code !== undefined) {
-        // 3 args: storeName, type, code
-        return manager.translate(codeOrType as string, code, storeOrType)
+    translate(storeOrType: string, codeOrType: string | number, value?: string | number): string {
+      if (value !== undefined) {
+        // 3 args: storeName, type, value
+        return manager.translate(codeOrType as string, value, storeOrType)
       }
       // 2 args: type, code
       return manager.translate(storeOrType, codeOrType)

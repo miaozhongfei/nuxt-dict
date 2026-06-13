@@ -40,7 +40,7 @@ test('mock dict API returns correct data', async ({ request }) => {
   const data = await response.json()
   expect(data.version).toBe('1.0.0')
   expect(data.data.gender.items).toHaveLength(3)
-  expect(data.data.gender.items[0]).toEqual({ code: 'male', label: '男' })
+  expect(data.data.gender.items[0]).toEqual({ value: 'male', label: '男' })
 })
 
 test('mock version API returns version', async ({ request }) => {

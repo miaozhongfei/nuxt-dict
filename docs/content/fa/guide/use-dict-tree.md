@@ -1,4 +1,4 @@
----
+﻿---
 title: useDictTree
 description: دریافت، ترجمه و بازگشت مسیر داده‌های دیکشنری درختی با عمق نامحدود.
 ---
@@ -25,8 +25,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | ویژگی | نوع | توضیح |
 |--------|------|-----------|
 | `tree` | `ShallowRef<TreeNode[] \| null>` | داده‌های کامل درختی دیکشنری |
-| `translate` | `(code: string \| number) => string` | ترجمه گره در هر عمقی |
-| `findPath` | `(code: string \| number) => string[]` | بازگشت مسیر. کد گره برگ را دریافت کرده و آرایه label از ریشه تا آن گره را برمی‌گرداند |
+| `translate` | `(value: string \| number) => string` | ترجمه گره در هر عمقی |
+| `findPath` | `(value: string \| number) => string[]` | بازگشت مسیر. کد گره برگ را دریافت کرده و آرایه label از ریشه تا آن گره را برمی‌گرداند |
 | `loading` | `Ref<boolean>` | آیا در حال بارگذاری است |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی |
 
@@ -66,7 +66,7 @@ const { findPath } = useDictTree('region')
   <el-cascader
     v-model="selected"
     :options="cascaderOptions"
-    :props="{ value: 'code', label: 'label', children: 'children' }"
+    :props="{ value: 'value', label: 'label', children: 'children' }"
     placeholder="منطقه را انتخاب کنید"
     clearable
   />

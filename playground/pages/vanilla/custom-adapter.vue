@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h2>自定义 Adapter 调试 — storeName 参数</h2>
 
@@ -24,10 +24,10 @@
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
         <thead><tr><th>code</th><th>useDict 翻译</th><th>$dict.translate</th></tr></thead>
         <tbody>
-          <tr v-for="item in defaultData" :key="item.code">
-            <td>{{ item.code }}</td>
-            <td>{{ defaultTranslate(item.code) }}</td>
-            <td>{{ $dict.translate('gender', item.code) }}</td>
+          <tr v-for="item in defaultData" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ defaultTranslate(item.value) }}</td>
+            <td>{{ $dict.translate('gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>
@@ -43,10 +43,10 @@
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
         <thead><tr><th>code</th><th>useDict 翻译</th><th>$dict.translate</th></tr></thead>
         <tbody>
-          <tr v-for="item in store2Data" :key="item.code">
-            <td>{{ item.code }}</td>
-            <td>{{ store2Translate(item.code) }}</td>
-            <td>{{ $dict.translate('dicts2', 'gender', item.code) }}</td>
+          <tr v-for="item in store2Data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ store2Translate(item.value) }}</td>
+            <td>{{ $dict.translate('dicts2', 'gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>

@@ -1,4 +1,4 @@
----
+﻿---
 title: useDict
 description: useDict 完整用法详解 —— 获取字典数据并翻译。
 ---
@@ -27,8 +27,8 @@ useDict(storeName: string, type: string): UseDictReturn
 
 | 属性 | 类型 | 说明 |
 |------|------|------|
-| `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据数组。初始为 `null`，加载完成后变成 `[{ code: 0, label: '禁用' }, ...]` |
-| `translate` | `(code: string \| number) => string` | 同步翻译函数。输入 code，输出对应的 label。如果 code 不存在，返回 code 本身的字符串形式 |
+| `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据数组。初始为 `null`，加载完成后变成 `[{ value: 0, label: '禁用' }, ...]` |
+| `translate` | `(value: string \| number) => string` | 同步翻译函数。输入 code，输出对应的 label。如果 code 不存在，返回 code 本身的字符串形式 |
 | `loading` | `Ref<boolean>` | 是否正在加载 |
 | `error` | `Ref<string \| null>` | 加载失败时的错误信息 |
 | `refresh` | `() => Promise<void>` | 手动刷新，强制跳过缓存 |
@@ -50,10 +50,10 @@ useDict(storeName: string, type: string): UseDictReturn
         <tr><th>编码 (code)</th><th>显示文字 (label)</th><th>翻译验证</th></tr>
       </thead>
       <tbody>
-        <tr v-for="item in data" :key="item.code">
-          <td>{{ item.code }}</td>
+        <tr v-for="item in data" :key="item.value">
+          <td>{{ item.value }}</td>
           <td>{{ item.label }}</td>
-          <td>{{ translate(item.code) }}</td>
+          <td>{{ translate(item.value) }}</td>
         </tr>
       </tbody>
     </table>
@@ -69,7 +69,7 @@ function doRefresh() { refresh() }
 
 ## 翻译函数详解
 
-`translate(code)` 是同步函数，它只查找**当前已加载到内存缓存中的数据**，不需要等网络请求：
+`translate(value)` 是同步函数，它只查找**当前已加载到内存缓存中的数据**，不需要等网络请求：
 
 ```vue
 <template>

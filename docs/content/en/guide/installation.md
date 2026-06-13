@@ -1,4 +1,4 @@
----
+﻿---
 title: Installation
 description: Install @lacqjs/nuxt-dict into your Nuxt project.
 ---

@@ -11,7 +11,7 @@
       <!-- 原生 HTML -->
       <div style="border:1px solid #e0e0e0; border-radius:8px; padding:20px; background:#fff;">
         <h3 style="margin-top:0; border-bottom:2px solid #67C23A; padding-bottom:8px; color:#67C23A;">原生 HTML</h3>
-        <p style="color:#666;font-size:14px;">零第三方 UI 依赖，纯 useDict / useDictOptions / useDictTree / useLocale</p>
+        <p style="color:#666;font-size:14px;">零第三方 UI 依赖，纯 useDict / useDictTree / useLocale</p>
         <NuxtLink to="/vanilla/basic" style="display:block;margin-top:12px;color:#409EFF;">→ 基础翻译</NuxtLink>
         <NuxtLink to="/vanilla/options" style="display:block;color:#409EFF;">→ 选项生成</NuxtLink>
         <NuxtLink to="/vanilla/tree" style="display:block;color:#409EFF;">→ 树形字典</NuxtLink>

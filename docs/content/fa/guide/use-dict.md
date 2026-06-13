@@ -1,4 +1,4 @@
----
+﻿---
 title: useDict
 description: راهنمای کامل useDict — دریافت داده‌های دیکشنری و ترجمه.
 ---
@@ -27,8 +27,8 @@ useDict(storeName: string, type: string): UseDictReturn
 
 | ویژگی | نوع | توضیح |
 |--------|------|-----------|
-| `data` | `ShallowRef<DictItem[] \| null>` | آرایه داده‌های خام دیکشنری. در ابتدا `null`، پس از بارگذاری `[{ code: 0, label: 'غیرفعال' }, ...]` می‌شود |
-| `translate` | `(code: string \| number) => string` | تابع ترجمه همزمان. کد را دریافت کرده و label متناظر را برمی‌گرداند. در صورت عدم وجود، کد را به صورت رشته برمی‌گرداند |
+| `data` | `ShallowRef<DictItem[] \| null>` | آرایه داده‌های خام دیکشنری. در ابتدا `null`، پس از بارگذاری `[{ value: 0, label: 'غیرفعال' }, ...]` می‌شود |
+| `translate` | `(value: string \| number) => string` | تابع ترجمه همزمان. کد را دریافت کرده و label متناظر را برمی‌گرداند. در صورت عدم وجود، کد را به صورت رشته برمی‌گرداند |
 | `loading` | `Ref<boolean>` | آیا در حال بارگذاری است |
 | `error` | `Ref<string \| null>` | پیام خطا در صورت شکست |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی، کش را نادیده می‌گیرد |
@@ -53,10 +53,10 @@ useDict(storeName: string, type: string): UseDictReturn
         <tr><th>کد</th><th>برچسب</th><th>بررسی ترجمه</th></tr>
       </thead>
       <tbody>
-        <tr v-for="item in data" :key="item.code">
-          <td>{{ item.code }}</td>
+        <tr v-for="item in data" :key="item.value">
+          <td>{{ item.value }}</td>
           <td>{{ item.label }}</td>
-          <td>{{ translate(item.code) }}</td>
+          <td>{{ translate(item.value) }}</td>
         </tr>
       </tbody>
     </table>
@@ -74,7 +74,7 @@ function doRefresh() { refresh() }
 
 ## جزئیات تابع ترجمه
 
-`translate(code)` یک تابع همزمان است که فقط در **داده‌های بارگذاری شده در کش حافظه** جستجو می‌کند. نیازی به انتظار برای درخواست شبکه ندارد:
+`translate(value)` یک تابع همزمان است که فقط در **داده‌های بارگذاری شده در کش حافظه** جستجو می‌کند. نیازی به انتظار برای درخواست شبکه ندارد:
 
 ```vue
 <template>

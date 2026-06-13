@@ -1,4 +1,4 @@
----
+﻿---
 title: 常见问题
 description: 使用字典模块时遇到的最常见问题及解决方法。
 ---
@@ -22,7 +22,7 @@ description: 使用字典模块时遇到的最常见问题及解决方法。
 
 ## 切换语言后字典没变？
 
-`setLocale()` 会清空内存缓存，使用 `useDict` / `useDictTree` / `useDictOptions` 的组件会**自动重新加载**对应语言的字典数据，无需手动刷新或额外写 watch 代码。
+`setLocale()` 会清空内存缓存，使用 `useDict` / `useDictTree` / `useDict` 的组件会**自动重新加载**对应语言的字典数据，无需手动刷新或额外写 watch 代码。
 
 ## 如何与 @nuxtjs/i18n 一起使用？
 

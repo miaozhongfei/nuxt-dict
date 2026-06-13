@@ -1,4 +1,4 @@
----
+﻿---
 title: $dict 同步翻译
 description: 在模板中直接调用 $dict.translate() 做同步翻译，无需组件挂载。
 ---
@@ -23,14 +23,14 @@ description: 在模板中直接调用 $dict.translate() 做同步翻译，无需
 
 ```ts
 // 默认存储库
-$dict.translate(type: string, code: string | number): string
+$dict.translate(type: string, value: string | number): string
 // 指定存储库
-$dict.translate(storeName: string, type: string, code: string | number): string
+$dict.translate(storeName: string, type: string, value: string | number): string
 
 // 默认存储库 + 默认分隔符 ' / '
-$dict.translatePath(type: string, code: string | number): string
+$dict.translatePath(type: string, value: string | number): string
 // 指定存储库 + 自定义分隔符
-$dict.translatePath(storeName: string, type: string, code: string | number, separator: string): string
+$dict.translatePath(storeName: string, type: string, value: string | number, separator: string): string
 ```
 
 ## 使用示例

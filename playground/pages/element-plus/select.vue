@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>el-select + useDictOptions</h2>
-    <p style="color:#666;">直接绑定 useDictOptions 返回的 options</p>
+    <h2>el-select + useDict</h2>
+    <p style="color:#666;">直接绑定 useDict 返回的 data</p>
 
     <div v-if="loading" style="padding:40px;text-align:center;color:#999;">加载中...</div>
     <div v-else style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('gender')
-const { translate } = useDict('gender')
+const { data: options, translate, loading } = useDict('gender')
 const value = ref('')
 </script>

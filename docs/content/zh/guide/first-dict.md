@@ -1,6 +1,6 @@
----
+﻿---
 title: 第一个字典功能
-description: 从零开始，用 useDictOptions 写出你的第一个字典下拉框。
+description: 从零开始，用 useDict 写出你的第一个字典下拉框。
 ---
 
 # 第一个字典功能
@@ -22,9 +22,9 @@ description: 从零开始，用 useDictOptions 写出你的第一个字典下拉
         gender: {
           type: 'gender',
           items: [
-            { code: 'male', label: '男' },
-            { code: 'female', label: '女' },
-            { code: 'other', label: '其他' },
+            { value: 'male', label: '男' },
+            { value: 'female', label: '女' },
+            { value: 'other', label: '其他' },
           ],
         },
       },
@@ -76,7 +76,7 @@ description: 从零开始，用 useDictOptions 写出你的第一个字典下拉
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const { options, loading, error } = useDictOptions('gender')
+const { options, loading, error } = useDict('gender')
 const selected = ref('')
 </script>
 ```
@@ -96,11 +96,11 @@ pnpm dev
 - `<select>` 是 HTML 原生的下拉框
 - `v-model="selected"` 双向绑定：用户选什么，`selected` 就变成什么
 - `v-for="opt in options"` 遍历字典选项，每个渲染一个 `<option>`
-- `useDictOptions('gender')` 告诉模块："我需要 gender 这个字典类型的数据"
+- `useDict('gender')` 告诉模块："我需要 gender 这个字典类型的数据"
 - `options` 返回 `[{ label: '男', value: 'male' }, ...]`，直接喂给下拉框
 - `loading` / `error` 分别表示加载中 / 加载失败
 
-`useDictOptions` 内部做了这些事：
+`useDict` 内部做了这些事：
 1. 先检查内存缓存中有没有 `gender` 的数据
 2. 没有的话检查 IndexedDB（浏览器数据库）
 3. 再没有的话向后端 `/api/dict/list?types=gender` 发请求
@@ -114,5 +114,5 @@ pnpm dev
 
 - [ ] 在 `server/api/` 下创建一个模拟字典接口
 - [ ] 配置 `nuxt.config.ts` 中的 `dict.api` 指向字典接口
-- [ ] 用 `useDictOptions()` 获取字典数据并渲染下拉框
+- [ ] 用 `useDict()` 获取字典数据并渲染下拉框
 - [ ] 理解 `loading`、`error`、`options` 的各自用途

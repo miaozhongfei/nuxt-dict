@@ -1,4 +1,4 @@
----
+﻿---
 title: useLocale
 description: Multi-language management — get current language, switch language, and persist to cookie.
 ---
@@ -68,7 +68,7 @@ If none is detected, uses `locale.default` (default `'zh-CN'`).
 
 ## Notes
 
-> After switching language, components using `useDict` / `useDictTree` / `useDictOptions` **auto-reload** dictionary data for the new language — no manual refresh or extra `watch` code needed.
+> After switching language, components using `useDict` / `useDictTree` / `useDict` **auto-reload** dictionary data for the new language — no manual refresh or extra `watch` code needed.
 
 > If you're using `@nuxtjs/i18n`, both modules auto-sync via a shared cookie (default `i18n_redirected`). See [i18n](/integration/i18n).
 

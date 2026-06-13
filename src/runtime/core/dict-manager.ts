@@ -222,30 +222,30 @@ export class DictManager {
     return entry
   }
 
-  /** 翻译 code → label，未命中时回退原样 */
-  translate(type: string, code: string | number, storeName = DEFAULT_STORE_NAME): string {
+  /** 翻译 value → label，未命中时回退原样 */
+  translate(type: string, value: string | number, storeName = DEFAULT_STORE_NAME): string {
     const key = this.buildKey(type, storeName)
     const entry = this.memoryCache.get(key)
-    if (!entry) return String(code)
+    if (!entry) return String(value)
 
-    const item = entry.data.items.find((i: DictItem) => this.codeMatch(i.code, code))
-    return item?.label ?? String(code)
+    const item = entry.data.items.find((i: DictItem) => this.codeMatch(i.value, value))
+    return item?.label ?? String(value)
   }
 
-  /** 树形字典中查找 code 的完整层级路径 */
-  translatePath(type: string, code: string | number, separator = ' / ', storeName = DEFAULT_STORE_NAME): string {
+  /** 树形字典中查找 value 的完整层级路径 */
+  translatePath(type: string, value: string | number, separator = ' / ', storeName = DEFAULT_STORE_NAME): string {
     const key = this.buildKey(type, storeName)
     const entry = this.memoryCache.get(key)
-    if (!entry || !entry.data.tree) return String(code)
+    if (!entry || !entry.data.tree) return String(value)
 
-    const path = this.findPathInTree(entry.data.tree, code)
-    return path.length > 0 ? path.join(separator) : String(code)
+    const path = this.findPathInTree(entry.data.tree, value)
+    return path.length > 0 ? path.join(separator) : String(value)
   }
 
   /** DFS 在树形字典中查找目标编码的路径 */
   private findPathInTree(nodes: TreeNode[], targetCode: string | number): string[] {
     for (const node of nodes) {
-      if (this.codeMatch(node.code, targetCode)) {
+      if (this.codeMatch(node.value, targetCode)) {
         return [node.label]
       }
       if (node.children && node.children.length > 0) {

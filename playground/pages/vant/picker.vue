@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>van-picker + useDictOptions</h2>
-    <p style="color:#666;">单列选择器，columns 来自 useDictOptions</p>
+    <h2>van-picker + useDict</h2>
+    <p style="color:#666;">单列选择器，columns 来自 useDict</p>
 
     <ClientOnly>
       <div v-if="loading" style="padding:40px;text-align:center;color:#999;">加载中...</div>
@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDictOptions('industry')
+const { data: options, loading } = useDict('industry')
 
 const columns = computed(() => options.value.map((o) => ({ text: o.label, value: o.value })))
 const confirmedValue = ref('')

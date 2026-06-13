@@ -1,4 +1,4 @@
----
+﻿---
 title: Nuxt Dict
 description: یک ماژول Nuxt برای مدیریت آسان داده‌های دیکشنری بر پایه Element Plus و Vant.
 ---
@@ -20,8 +20,8 @@ Nuxt Dict یک ماژول Nuxt 4 است که به شما کمک می‌کند **
 
 ## این ماژول چه کاری می‌تواند انجام دهد؟
 
-- **useDict** — دریافت داده‌های دیکشنری بر اساس نوع، با رابط ترجمه `translate(code)`
-- **useDictOptions** — خروجی مستقیم با فرمت `{ label, value }[]`، یکپارچه‌سازی بی‌دردسر با Element Plus / Vant
+- **useDict** — دریافت داده‌های دیکشنری بر اساس نوع، با رابط ترجمه `translate(value)`
+- **useDict** — خروجی مستقیم با فرمت `{ label, value }[]`، یکپارچه‌سازی بی‌دردسر با Element Plus / Vant
 - **useDictTree** — پشتیبانی از دیکشنری درختی، با `findPath` برای بازگشت مسیر
 - **useLocale** — مدیریت چند زبانه، با تشخیص زبان از cookie / header / query
 - **کش سه سطحی** — حافظه → IndexedDB → API، با تشخیص خودکار نسخه و ابطال

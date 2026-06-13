@@ -1,6 +1,6 @@
----
+﻿---
 title: Your First Dictionary
-description: From scratch, write your first dictionary dropdown using useDictOptions.
+description: From scratch, write your first dictionary dropdown using useDict.
 ---
 
 # Your First Dictionary
@@ -22,9 +22,9 @@ Create a file at `server/api/dict/list.get.ts`:
         gender: {
           type: 'gender',
           items: [
-            { code: 'male', label: 'Male' },
-            { code: 'female', label: 'Female' },
-            { code: 'other', label: 'Other' },
+            { value: 'male', label: 'Male' },
+            { value: 'female', label: 'Female' },
+            { value: 'other', label: 'Other' },
           ],
         },
       },
@@ -72,7 +72,7 @@ Open `pages/index.vue` and replace the content:
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const { options, loading, error } = useDictOptions('gender')
+const { options, loading, error } = useDict('gender')
 const selected = ref('')
 </script>
 ```
@@ -89,11 +89,11 @@ Open `http://localhost:3000/`, you should see:
 
 ## How it works
 
-- `useDictOptions('gender')` tells the module: "I need the gender dictionary type data"
+- `useDict('gender')` tells the module: "I need the gender dictionary type data"
 - `options` returns `[{ label: 'Male', value: 'male' }, ...]`, ready to feed into dropdowns
 - `loading` / `error` represent the loading state
 
-Internally, `useDictOptions`:
+Internally, `useDict`:
 1. Checks memory cache for `gender` data
 2. Falls back to IndexedDB (browser database)
 3. Falls back to fetching `/api/dict/list?types=gender`
@@ -103,5 +103,5 @@ Internally, `useDictOptions`:
 
 - [ ] Create a mock dictionary API in `server/api/`
 - [ ] Configure `dict.api` to point to the API
-- [ ] Use `useDictOptions()` to fetch dictionary data and render a dropdown
+- [ ] Use `useDict()` to fetch dictionary data and render a dropdown
 - [ ] Understand `loading`, `error`, and `options`

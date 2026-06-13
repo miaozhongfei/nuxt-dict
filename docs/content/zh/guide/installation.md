@@ -1,4 +1,4 @@
----
+﻿---
 title: 安装模块
 description: 将 @lacqjs/nuxt-dict 安装到你的 Nuxt 项目中。
 ---

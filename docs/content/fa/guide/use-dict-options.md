@@ -1,34 +1,35 @@
----
-title: useDictOptions
-description: خروجی مستقیم با فرمت { label, value } برای یکپارچه‌سازی بی‌دردسر با Element Plus، Vant و غیره.
+﻿---
+title: useDict
+description: خروجی مستقیم با فرمت { value, label } برای یکپارچه‌سازی بی‌دردسر با Element Plus، Vant و غیره.
 ---
 
-# useDictOptions
+# useDict
 
-**هدف**: یادگیری استفاده از `useDictOptions` برای یکپارچه‌سازی سریع با کامپوننت‌های Element Plus و Vant.
+**هدف**: یادگیری استفاده از `useDict` برای یکپارچه‌سازی سریع با کامپوننت‌های Element Plus و Vant.
 
 ## چه زمانی به این ویژگی نیاز دارید؟
 
-- از Element Plus استفاده می‌کنید و `<el-select>` به `:options="[{ label, value }]"` نیاز دارد
+- از Element Plus استفاده می‌کنید و `<el-select>` به فرمت `[{ value, label }]` نیاز دارد
 - از Vant استفاده می‌کنید و `<van-picker>` به `columns` نیاز دارد
-- نمی‌خواهید به صورت دستی `{ code, label }` را به `{ value, label }` تبدیل کنید
+- به داده‌های دیکشنری مستقیماً قابل اتصال به کامپوننت‌های UI نیاز دارید
 
 ## امضای کامل
 
 ```ts
-useDictOptions(type: string): UseDictOptionsReturn
-useDictOptions(storeName: string, type: string): UseDictOptionsReturn
+useDict(type: string): useDictReturn
+useDict(storeName: string, type: string): useDictReturn
 ```
 
 ## مقادیر بازگشتی
 
 | ویژگی | نوع | توضیح |
 |--------|------|-----------|
-| `options` | `ComputedRef<{ label: string; value: string \| number }[]>` | ویژگی محاسباتی که به طور خودکار `code` را به `value` نگاشت می‌کند |
+| `data` | `ShallowRef<DictItem[] \| null>` | آرایه داده‌های دیکشنری، هر آیتم `{ value, label, ...فیلدهای اضافی }` |
+| `translate` | `(value: string \| number) => string` | تابع ترجمه همزمان |
 | `loading` | `Ref<boolean>` | آیا در حال بارگذاری است |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی |
 
-`useDictOptions` در داخل `useDict` را فراخوانی می‌کند، بنابراین رفتار کش و loading یکسان است. تفاوت فقط در `options` با فرمت `{ label, value }` است.
+فیلد `value` در `DictItem` به طور طبیعی با فیلد `value` کتابخانه‌های UI مطابقت دارد — بدون نیاز به نگاشت دستی.
 
 ## مثال‌های استفاده
 
@@ -37,7 +38,7 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   <template>
     <el-select v-model="selected" placeholder="نوع صنعت را انتخاب کنید" :loading="loading">
       <el-option
-        v-for="opt in options"
+        v-for="opt in data"
         :key="opt.value"
         :label="opt.label"
         :value="opt.value"
@@ -47,7 +48,7 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   </template>
 
   <script setup lang="ts">
-  const { options, loading } = useDictOptions('industry')
+  const { data, loading } = useDict('industry')
   const selected = ref('')
   </script>
   ```
@@ -56,14 +57,14 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
   <template>
     <select v-model="selected">
       <option value="">لطفاً انتخاب کنید</option>
-      <option v-for="opt in options" :key="opt.value" :value="opt.value">
+      <option v-for="opt in data" :key="opt.value" :value="opt.value">
         {{ opt.label }}
       </option>
     </select>
   </template>
 
   <script setup lang="ts">
-  const { options } = useDictOptions('gender')
+  const { data } = useDict('gender')
   const selected = ref('')
   </script>
   ```
@@ -71,13 +72,12 @@ useDictOptions(storeName: string, type: string): UseDictOptionsReturn
 
 ## نکات
 
-> `options` یک ویژگی محاسباتی است و با تغییر داده‌های دیکشنری به طور خودکار به‌روز می‌شود. نیازی به watch دستی داده‌ها نیست.
+> `data` شامل آیتم‌های `DictItem` با فیلد `value` اصلی است که مستقیماً با کتابخانه‌های UI مطابقت دارد — بدون نیاز به `map` دستی.
 
-> فیلدهای اضافی در `options` ظاهر نمی‌شوند. اگر به فیلدهای اضافی مانند `color` نیاز دارید، از `useDict` برای دریافت `data` خام استفاده کنید.
+> فیلدهای اضافی (مانند `color`) در هر آیتم `data` حفظ می‌شوند و می‌توانند مستقیماً در props کامپوننت استفاده شوند. مثال: `<el-tag :color="item.color">`.
 
 ## آنچه در این فصل آموختید
 
-- [ ] استفاده از `useDictOptions` برای دریافت گزینه‌های با فرمت `{ label, value }`
+- [ ] استفاده از `useDict` برای داده‌های با فرمت `{ value, label }`
 - [ ] یکپارچه‌سازی با کامپوننت `<el-select>` در Element Plus
 - [ ] یکپارچه‌سازی با عنصر `<select>` بومی
-- [ ] درک اینکه `options` یک ویژگی محاسباتی است و با داده‌ها به طور خودکار به‌روز می‌شود

@@ -35,7 +35,7 @@ useDict('gender')
 useDict('industry')
 
 function statusColor(code: number) {
-  return (statusData.value?.find((i: any) => i.code === code) as any)?.color
+  return (statusData.value?.find((i: any) => i.value === code) as any)?.color
 }
 
 const tableData = [

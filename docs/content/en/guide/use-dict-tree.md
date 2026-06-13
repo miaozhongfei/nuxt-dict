@@ -1,4 +1,4 @@
----
+﻿---
 title: useDictTree
 description: Fetch, translate, and path-trace tree-structured dictionary data with unlimited depth.
 ---
@@ -25,8 +25,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | Property | Type | Description |
 |----------|------|-------------|
 | `tree` | `ShallowRef<TreeNode[] \| null>` | Complete tree data |
-| `translate` | `(code: string \| number) => string` | Translate any node at any depth |
-| `findPath` | `(code: string \| number) => string[]` | Path backtracking. Input a leaf node code, output label array from root to leaf |
+| `translate` | `(value: string \| number) => string` | Translate any node at any depth |
+| `findPath` | `(value: string \| number) => string[]` | Path backtracking. Input a leaf node code, output label array from root to leaf |
 | `loading` | `Ref<boolean>` | Loading state |
 | `refresh` | `() => Promise<void>` | Manual refresh |
 
@@ -34,7 +34,7 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 
 ```vue
 <template>
-  <p>Region code: 440104</p>
+  <p>Region value: 440104</p>
   <p>Full path: {{ findPath('440104').join(' / ') }}</p>
   <!-- Output: Guangdong / Guangzhou / Yuexiu -->
 </template>
@@ -51,7 +51,7 @@ const { findPath } = useDictTree('region')
   <el-cascader
     v-model="selected"
     :options="tree || []"
-    :props="{ value: 'code', label: 'label', children: 'children' }"
+    :props="{ value: 'value', label: 'label', children: 'children' }"
     placeholder="Select region"
     clearable
   />

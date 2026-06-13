@@ -1,4 +1,4 @@
----
+﻿---
 title: $dict Synchronous Translation
 description: Call $dict.translate() directly in templates for synchronous translation without component mounting.
 ---
@@ -23,14 +23,14 @@ description: Call $dict.translate() directly in templates for synchronous transl
 
 ```ts
 // Default store
-$dict.translate(type: string, code: string | number): string
+$dict.translate(type: string, value: string | number): string
 // Specific store
-$dict.translate(storeName: string, type: string, code: string | number): string
+$dict.translate(storeName: string, type: string, value: string | number): string
 
 // Default store + default separator ' / '
-$dict.translatePath(type: string, code: string | number): string
+$dict.translatePath(type: string, value: string | number): string
 // Specific store + custom separator
-$dict.translatePath(storeName: string, type: string, code: string | number, separator: string): string
+$dict.translatePath(storeName: string, type: string, value: string | number, separator: string): string
 ```
 
 ## Usage Examples

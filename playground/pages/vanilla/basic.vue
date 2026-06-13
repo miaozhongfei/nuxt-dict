@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <h2>useDict — 基础翻译</h2>
     <p style="color:#666;">核心 composable，返回 loading / error / data / translate / refresh</p>
@@ -15,10 +15,10 @@
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
         <thead><tr><th>code</th><th>label（useDict 翻译）</th><th>$dict.translate（同步）</th></tr></thead>
         <tbody>
-          <tr v-for="item in data" :key="item.code">
-            <td>{{ item.code }}</td>
-            <td>{{ translate(item.code) }}</td>
-            <td>{{ $dict.translate('gender', item.code) }}</td>
+          <tr v-for="item in data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ translate(item.value) }}</td>
+            <td>{{ $dict.translate('gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>
