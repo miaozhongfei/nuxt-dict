@@ -158,7 +158,7 @@ function createAdapters(
  * - 服务端解析语言偏好并预取配置的字典类型
  * - 客户端初始化 IndexedDB 持久缓存
  */
-export default defineNuxtPlugin(async (nuxtApp) => {
+const dictPlugin = defineNuxtPlugin(async (nuxtApp) => {
   const options = (nuxtApp.$config?.public?.dict ?? defaultOptions) as ResolvedModuleOptions
 
   if (!options.enable) return
@@ -208,3 +208,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   nuxtApp.provide('dict', translator)
   nuxtApp.provide('dictManager', manager)
 })
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default dictPlugin as any
