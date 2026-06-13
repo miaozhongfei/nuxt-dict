@@ -3,10 +3,11 @@ title: useDict
 description: خروجی مستقیم با فرمت { value, label } برای یکپارچه‌سازی بی‌دردسر با Element Plus، Vant و غیره.
 ---
 
-**هدف**: یادگیری استفاده از `useDict` برای یکپارچه‌سازی سریع با کامپوننت‌های Element Plus و Vant.
+**هدف**: یادگیری استفاده از `useDict` برای یکپارچه‌سازی سریع با کامپوننت‌های Nuxt UI، Element Plus و Vant.
 
 ## چه زمانی به این ویژگی نیاز دارید؟
 
+- از Nuxt UI استفاده می‌کنید و `<USelect>` به `items` نیاز دارد
 - از Element Plus استفاده می‌کنید و `<el-select>` به فرمت `[{ value, label }]` نیاز دارد
 - از Vant استفاده می‌کنید و `<van-picker>` به `columns` نیاز دارد
 - به داده‌های دیکشنری مستقیماً قابل اتصال به کامپوننت‌های UI نیاز دارید
@@ -32,6 +33,17 @@ useDict(storeName: string, type: string): useDictReturn
 ## مثال‌های استفاده
 
 ::code-group
+  ```vue [Nuxt UI]
+  <template>
+    <USelect v-model="selected" :items="data" placeholder="لطفاً انتخاب کنید" />
+  </template>
+
+  <script setup lang="ts">
+  const { data } = useDict('industry')
+  const selected = ref('')
+  </script>
+  ```
+
   ```vue [Element Plus]
   <template>
     <el-select v-model="selected" placeholder="نوع صنعت را انتخاب کنید" :loading="loading">
@@ -42,12 +54,33 @@ useDict(storeName: string, type: string): useDictReturn
         :value="opt.value"
       />
     </el-select>
-    <p>مقدار انتخاب شده: {{ selected }}</p>
   </template>
 
   <script setup lang="ts">
   const { data, loading } = useDict('industry')
   const selected = ref('')
+  </script>
+  ```
+
+  ```vue [Vant]
+  <template>
+    <van-field v-model="selectedLabel" readonly placeholder="لطفاً انتخاب کنید" @click="showPicker = true" />
+    <van-popup v-model:show="showPicker" round position="bottom">
+      <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
+    </van-popup>
+  </template>
+
+  <script setup lang="ts">
+  const { data } = useDict('gender')
+  const selected = ref('')
+  const selectedLabel = ref('')
+  const showPicker = ref(false)
+  const columns = computed(() => data?.map(item => ({ text: item.label, value: item.value })) || [])
+  function onConfirm(picked: { selectedOptions: Array<{ text: string; value: string }> }) {
+    selected.value = picked.selectedOptions[0].value
+    selectedLabel.value = picked.selectedOptions[0].text
+    showPicker.value = false
+  }
   </script>
   ```
 
@@ -77,5 +110,7 @@ useDict(storeName: string, type: string): useDictReturn
 ## آنچه در این فصل آموختید
 
 - [ ] استفاده از `useDict` برای داده‌های با فرمت `{ value, label }`
+- [ ] یکپارچه‌سازی با کامپوننت `<USelect>` در Nuxt UI
 - [ ] یکپارچه‌سازی با کامپوننت `<el-select>` در Element Plus
+- [ ] یکپارچه‌سازی با کامپوننت `<van-picker>` در Vant
 - [ ] یکپارچه‌سازی با عنصر `<select>` بومی
