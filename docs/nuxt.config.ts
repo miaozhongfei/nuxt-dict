@@ -17,8 +17,9 @@ export default defineNuxtConfig({
   app: {
     baseURL: '/nuxt-dict/',
   },
-  // Nuxt Content v3 数据库：利用 Node 26 内置 SQLite，无需安装 better-sqlite3
+  // Nuxt Content v3 配置：原生 SQLite + 禁用自动 contentHeading（由 [...slug].vue 手动渲染 title/description）
   content: {
+    build: { markdown: { contentHeading: false } },
     experimental: { sqliteConnector: 'native' },
   },
   i18n: {
