@@ -3,8 +3,6 @@ title: useDict
 description: Complete useDict usage guide — fetch dictionary data and translate.
 ---
 
-# useDict
-
 **Goal**: Master all `useDict` usage patterns, including basic translation, loading/error handling, manual refresh, and specifying stores.
 
 ## When do you need this?

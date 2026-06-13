@@ -3,8 +3,6 @@ title: Environment Setup
 description: Install Node.js and pnpm, then create your first Nuxt project.
 ---
 
-# Environment Setup
-
 **Goal**: Install Node.js and pnpm on your computer, then create a running Nuxt project. By the end of this chapter, you will have a blank Nuxt project accessible at `http://localhost:3000`.
 
 ## Step 1: Install Node.js

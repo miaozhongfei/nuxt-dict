@@ -3,8 +3,6 @@ title: SSR Prefetch
 description: Prefetch dictionary data during server-side rendering to accelerate first-screen display.
 ---
 
-# SSR Prefetch
-
 **Goal**: Understand how SSR prefetch works and configure which dictionary types to prefetch for better first-screen performance.
 
 ## Why prefetch?

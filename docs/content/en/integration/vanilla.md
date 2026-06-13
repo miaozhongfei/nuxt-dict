@@ -3,8 +3,6 @@ title: Vanilla Vue Integration
 description: Use dictionary data with native HTML elements, no UI library required.
 ---
 
-# Vanilla Vue Integration
-
 No UI library needed — these examples use only native HTML elements.
 
 ## Native Select

@@ -3,8 +3,6 @@ title: useDict
 description: خروجی مستقیم با فرمت { value, label } برای یکپارچه‌سازی بی‌دردسر با Element Plus، Vant و غیره.
 ---
 
-# useDict
-
 **هدف**: یادگیری استفاده از `useDict` برای یکپارچه‌سازی سریع با کامپوننت‌های Element Plus و Vant.
 
 ## چه زمانی به این ویژگی نیاز دارید؟

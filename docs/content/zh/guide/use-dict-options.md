@@ -3,8 +3,6 @@ title: useDict
 description: 直接输出 { value, label } 格式的字典数据，无缝对接 Element Plus / Vant 等 UI 库。
 ---
 
-# useDict
-
 **本章目标**：学会用 `useDict` 快速对接 Element Plus、Vant 等 UI 库的组件。
 
 ## 什么时候需要这个功能？

@@ -3,8 +3,6 @@ title: API Reference
 description: All composable and $dict method signatures and return values at a glance.
 ---
 
-# API Reference
-
 ## useDict
 
 ```

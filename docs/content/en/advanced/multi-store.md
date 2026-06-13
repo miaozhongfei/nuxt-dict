@@ -3,8 +3,6 @@ title: Multi-Store
 description: Connect one page to multiple backend dictionary data sources simultaneously.
 ---
 
-# Multi-Store
-
 **Goal**: Configure multiple dictionary data stores so a single page can use dictionary data from different systems.
 
 ## When do you need this?

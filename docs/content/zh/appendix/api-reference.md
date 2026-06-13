@@ -3,8 +3,6 @@ title: API 速查表
 description: 所有 composable 和 $dict 的方法签名与返回值一览。
 ---
 
-# API 速查表
-
 ## useDict
 
 ```

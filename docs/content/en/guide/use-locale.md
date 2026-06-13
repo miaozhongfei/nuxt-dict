@@ -3,8 +3,6 @@ title: useLocale
 description: Multi-language management — get current language, switch language, and persist to cookie.
 ---
 
-# useLocale
-
 **Goal**: Learn to get and switch the current language, and understand how dictionary data auto-refreshes after language change.
 
 ## When do you need this?

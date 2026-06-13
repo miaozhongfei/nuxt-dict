@@ -3,8 +3,6 @@ title: Your First Dictionary
 description: From scratch, write your first dictionary dropdown using useDict.
 ---
 
-# Your First Dictionary
-
 **Goal**: Write a "gender dropdown" that fetches option data from a backend dictionary API and renders it on the page.
 
 ## Prerequisite: Prepare Dictionary Data

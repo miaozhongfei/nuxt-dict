@@ -3,8 +3,6 @@ title: Element Plus Integration
 description: Complete examples of using the dictionary module with Element Plus components.
 ---
 
-# Element Plus Integration
-
 Full examples of using the dictionary module with common Element Plus components.
 
 **Prerequisite**: Element Plus installed in your project.

@@ -3,8 +3,6 @@ title: Nuxt Dict
 description: 基于 Element Plus、Vant 字典的 Nuxt 模块，提供便捷的字典数据管理和使用功能。
 ---
 
-# Nuxt Dict
-
 Nuxt Dict 是一个 Nuxt 4 模块，帮你轻松管理项目中的**字典数据**（也叫数据字典、码表、枚举值）。
 
 ## 什么是字典数据？

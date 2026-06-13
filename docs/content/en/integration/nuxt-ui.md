@@ -3,8 +3,6 @@ title: Nuxt UI Integration
 description: Complete examples of using the dictionary module with Nuxt UI components.
 ---
 
-# Nuxt UI Integration
-
 This chapter provides 6 complete examples showing how to use the dictionary module with common Nuxt UI components.
 
 **Prerequisite**: `@nuxt/ui` is installed in your project.
