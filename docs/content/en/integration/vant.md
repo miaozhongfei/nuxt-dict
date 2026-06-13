@@ -1,4 +1,4 @@
-﻿---
+---
 title: Vant Integration
 description: Complete examples of using the dictionary module with Vant mobile components.
 ---

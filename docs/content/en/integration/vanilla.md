@@ -1,4 +1,4 @@
-﻿---
+---
 title: Vanilla Vue Integration
 description: Use dictionary data with native HTML elements, no UI library required.
 ---

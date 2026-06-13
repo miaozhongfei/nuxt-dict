@@ -1,4 +1,4 @@
-﻿---
+---
 title: مرجع API
 description: تمام امضاهای متد composable و $dict و مقادیر بازگشتی در یک نگاه.
 ---

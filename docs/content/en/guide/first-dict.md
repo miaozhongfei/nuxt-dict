@@ -1,4 +1,4 @@
-﻿---
+---
 title: Your First Dictionary
 description: From scratch, write your first dictionary dropdown using useDict.
 ---

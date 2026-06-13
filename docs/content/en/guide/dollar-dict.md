@@ -1,4 +1,4 @@
-﻿---
+---
 title: $dict Synchronous Translation
 description: Call $dict.translate() directly in templates for synchronous translation without component mounting.
 ---

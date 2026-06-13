@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDict
 description: Directly output { value, label } format dictionary data for seamless integration with Element Plus, Vant, etc.
 ---

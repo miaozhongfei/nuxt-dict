@@ -1,4 +1,4 @@
-﻿---
+---
 title: Nuxt Dict
 description: یک ماژول Nuxt برای مدیریت آسان داده‌های دیکشنری بر پایه Element Plus و Vant.
 ---

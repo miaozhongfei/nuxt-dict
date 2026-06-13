@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDict
 description: خروجی مستقیم با فرمت { value, label } برای یکپارچه‌سازی بی‌دردسر با Element Plus، Vant و غیره.
 ---

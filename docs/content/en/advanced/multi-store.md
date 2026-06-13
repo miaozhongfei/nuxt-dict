@@ -1,4 +1,4 @@
-﻿---
+---
 title: Multi-Store
 description: Connect one page to multiple backend dictionary data sources simultaneously.
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 title: 自定义适配器
 description: 对接任意格式的字典数据源 —— GraphQL、Firestore、本地 JSON 文件等。
 ---
