@@ -3,8 +3,6 @@ title: 环境准备
 description: 安装 Node.js 和 pnpm，创建你的第一个 Nuxt 项目。
 ---
 
-# 环境准备
-
 **本章目标**：在你的电脑上安装 Node.js 和 pnpm，然后创建一个可以运行的 Nuxt 项目。学完本章你将有一个可访问 `http://localhost:3000` 的空白 Nuxt 项目。
 
 ## 什么时候需要看这章？
