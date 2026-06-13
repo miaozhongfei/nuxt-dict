@@ -3,8 +3,6 @@ title: 纯 Vue 集成
 description: 不依赖任何 UI 库，用原生 HTML 元素使用字典数据。
 ---
 
-# 纯 Vue 集成
-
 不依赖任何 UI 库也能用字典模块。以下示例全部使用原生 HTML 元素。
 
 ## 原生 Select 下拉框

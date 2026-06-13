@@ -3,8 +3,6 @@ title: مرجع API
 description: تمام امضاهای متد composable و $dict و مقادیر بازگشتی در یک نگاه.
 ---
 
-# مرجع API
-
 ## useDict
 
 ```ts

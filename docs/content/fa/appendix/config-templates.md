@@ -3,8 +3,6 @@ title: قالب‌های تنظیمات
 description: قالب‌های پیکربندی nuxt.config.ts برای سناریوهای رایج، کپی و استفاده کنید.
 ---
 
-# قالب‌های تنظیمات
-
 ::code-group
   ```ts [API داخلی]
   export default defineNuxtConfig({
