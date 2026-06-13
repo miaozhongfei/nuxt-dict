@@ -1,0 +1,109 @@
+# Dependencies
+node_modules
+
+# Logs
+logs
+*.log*
+
+# Temp directories
+.temp
+.tmp
+.cache
+
+# npm
+
+# Yarn
+**/.yarn/cache
+**/.yarn/*state*
+
+# pnpm
+
+# Generated dirs
+dist
+
+# TypeScript
+*.tsbuildinfo
+
+# Nuxt
+.nuxt
+.output
+.data
+.vercel_build_output
+.build-*
+.netlify
+
+# Env
+.env
+
+# Testing
+reports
+coverage
+*.lcov
+.nyc_output
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Intellij idea
+*.iml
+.idea
+
+# OSX
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+.AppleDouble
+.LSOverride
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Tests
+playground/playwright-report
+playground/test-results
+playground/.nuxt
+playground/.output
+playground/node_modules
+playground/.cache
+playground/.temp
+playground/.tmp
+playground/.vercel_build_output
+playground/.build-*
+playground/.data
+playground/dist
+playground/.claude
+playground/.opencode
+playground/.vfox
+
+# doc
+docs/.nuxt
+docs/.output
+docs/.vercel_build_output
+docs/.build-*
+docs/.data
+docs/node_modules
+docs/.cache
+docs/.temp
+docs/.tmp
+docs/superpowers
+docs/.claude
+docs/.opencode
+docs/.vfox
+
+# markdown
+README-TEST.md
+AGENTS.md
+
+.claude
+.opencode
+.superpowers
+.vfox

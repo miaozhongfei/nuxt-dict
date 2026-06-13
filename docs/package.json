@@ -1,0 +1,29 @@
+{
+  "name": "nuxt-dict-docs",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
+    "typescript": "~5.9.3",
+    "vue-tsc": "^3.3.4"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.14.0",
+    "@nuxt/ui": "^4.8.2",
+    "@nuxtjs/i18n": "^10.4.0",
+    "nuxt": "^4.4.8"
+  }
+}

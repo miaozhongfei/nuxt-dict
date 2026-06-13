@@ -1,0 +1,85 @@
+{
+  "name": "@lacqjs/nuxt-dict",
+  "version": "0.0.1",
+  "description": "Nuxt 数据字典模块，提供扁平/树形字典翻译、多语言国际化、三级缓存与 SSR 预取。",
+  "keywords": [
+    "@lacqjs/nuxt-dict",
+    "nuxt",
+    "nuxt-dict",
+    "dict"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "miaozf",
+    "email": "miaozf@example.com"
+  },
+  "contributors": [],
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./dist/types.d.mts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "cleanup": "pnpx nuxt cleanup || npx nuxt cleanup",
+    "clean:install": "pnpm run cleanup && pnpx rimraf .nuxt .output dist node_modules playground/.nuxt playground/.output playground/node_modules && pnpm install",
+    "prepack": "nuxt-module-build build",
+    "dev": "pnpm run dev:prepare && nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "docs:dev": "nuxi dev docs",
+    "docs:build": "nuxi build docs",
+    "release": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push --follow-tags",
+    "release:major": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --major && pnpm publish && git push --follow-tags",
+    "lint": "oxlint . && oxlint docs --no-error-on-unmatched-pattern",
+    "lint:fix": "oxlint --fix . && oxlint --fix docs --no-error-on-unmatched-pattern",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "e2e": "cd playground && pnpm e2e",
+    "typecheck": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^4.4.8",
+    "compare-versions": "^6.1.1",
+    "consola": "^3.4.2",
+    "defu": "^6.1.7"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "^3.2.4",
+    "@nuxt/module-builder": "^1.0.2",
+    "@nuxt/schema": "^4.4.8",
+    "@types/node": "^25.9.2",
+    "element-plus": "^2.14.1",
+    "nuxt": "^4.4.8",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
+    "typescript": "~5.9.3",
+    "vant": "^4.9.24",
+    "vue-tsc": "^3.3.4",
+    "ws": "^8.21.0"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0",
+    "pnpm": ">=10.22.0",
+    "yarn": ">=1.22.22"
+  },
+  "packageManager": "pnpm@10.22.0"
+}

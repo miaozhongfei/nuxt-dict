@@ -1,0 +1,23 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    // 加这行：如果极少数工具还认旧版，强制兼容
+    "module": "ESNext",
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".nuxt",
+    "playground",
+    "playground/.nuxt",
+    "playground/dist",
+    "docs/.nuxt",
+    "docs/dist"
+  ]
+}

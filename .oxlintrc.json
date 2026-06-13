@@ -1,0 +1,39 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "import", "vue", "eslint"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "warn"
+  },
+  "rules": {
+    "no-console": "warn",
+    "unicorn/prefer-node-protocol": "off"
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".nuxt",
+    "dist",
+    "output",
+    ".output",
+    ".nitro",
+    "coverage",
+    ".cache",
+    ".tmp",
+    "temp",
+    "**/*.d.ts",
+    "auto-imports.d.ts",
+    "components.d.ts",
+    "nuxt.d.ts",
+    "schema.d.ts",
+    "playground/.nuxt",
+    "playground/dist",
+    "playground/node_modules",
+    "docs/.nuxt",
+    "docs/dist"
+  ]
+}

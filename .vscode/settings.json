@@ -1,0 +1,36 @@
+{
+  // ====== Oxc 格式化 & Lint ======
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.format.oxc": "always",
+    "source.fixAll.oxc": "always"
+  },
+  "oxc.enable": true,
+  "oxc.lint.run": "onType",
+  "oxc.fmt.configPath": ".oxfmtrc.json",
+
+  // ====== 编辑器基础 ======
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.rulers": [80, 120],
+  "files.eol": "\n",
+
+  // ====== 文件排除 ======
+  "files.exclude": {
+    ".nuxt": true,
+    ".output": true,
+    ".nitro": true,
+    ".cache": true,
+    "dist": true
+  },
+  "search.exclude": {
+    "**/.nuxt": true,
+    "**/.output": true,
+    "**/.nitro": true,
+    "**/.cache": true,
+    "**/node_modules": true,
+    "**/dist": true
+  }
+}

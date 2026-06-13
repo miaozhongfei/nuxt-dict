@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "guide": "راهنما",
+    "api": "API",
+    "integration": "یکپارچه‌سازی"
+  },
+  "sidebar": {
+    "welcome": "شروع کار",
+    "environment": "آماده‌سازی محیط",
+    "installation": "نصب ماژول",
+    "first-dict": "اولین دیکشنری",
+    "core": "ویژگی‌های اصلی",
+    "use-dict": "useDict",
+    "use-dict-options": "useDictOptions",
+    "use-dict-tree": "useDictTree",
+    "use-locale": "useLocale",
+    "dollar-dict": "مترجم $dict",
+    "advanced": "پیشرفته",
+    "multi-store": "چند مخزنی",
+    "custom-adapter": "آداپتور سفارشی",
+    "ssr-prefetch": "پیش‌واکشی SSR",
+    "cache-system": "سیستم کش",
+    "full-config": "مرجع کامل تنظیمات",
+    "integration": "یکپارچه‌سازی",
+    "element-plus": "Element Plus",
+    "vant": "Vant",
+    "nuxt-ui": "Nuxt UI",
+    "vanilla": "Vue خالص",
+    "i18n": "i18n",
+    "appendix": "ضمیمه",
+    "api-reference": "مرجع API",
+    "faq": "سوالات متداول",
+    "config-templates": "قالب‌های تنظیمات"
+  },
+  "common": {
+    "prev": "قبلی",
+    "next": "بعدی",
+    "edit": "ویرایش صفحه",
+    "toc": "فهرست"
+  },
+  "lang": {
+    "switch": "English",
+    "searchCurrent": "فقط زبان فعلی"
+  }
+}

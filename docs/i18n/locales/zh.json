@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "guide": "指南",
+    "api": "API 参考",
+    "integration": "集成"
+  },
+  "sidebar": {
+    "welcome": "新手入门",
+    "environment": "环境准备",
+    "installation": "安装模块",
+    "first-dict": "第一个字典",
+    "core": "核心功能",
+    "use-dict": "useDict",
+    "use-dict-options": "useDictOptions",
+    "use-dict-tree": "useDictTree",
+    "use-locale": "useLocale",
+    "dollar-dict": "$dict 同步翻译",
+    "advanced": "进阶",
+    "multi-store": "多仓库",
+    "custom-adapter": "自定义适配器",
+    "ssr-prefetch": "SSR 预取",
+    "cache-system": "缓存体系",
+    "full-config": "配置全解",
+    "integration": "集成实战",
+    "element-plus": "Element Plus",
+    "vant": "Vant",
+    "nuxt-ui": "Nuxt UI",
+    "vanilla": "纯 Vue",
+    "i18n": "i18n 国际化",
+    "appendix": "附录",
+    "api-reference": "API 速查表",
+    "faq": "常见问题",
+    "config-templates": "配置模板"
+  },
+  "common": {
+    "prev": "上一页",
+    "next": "下一页",
+    "edit": "编辑此页",
+    "toc": "目录"
+  },
+  "lang": {
+    "switch": "English",
+    "searchCurrent": "仅当前语言"
+  }
+}

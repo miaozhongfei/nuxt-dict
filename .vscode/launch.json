@@ -1,0 +1,87 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "调试 Nuxt 4 (服务端 + Chrome 全栈)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--dotenv", ".env.development"], // 根据需要改成 dev:test 等
+      "port": 9229,
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "pattern": "(?:Local|Network):\\s+(https?://[^\\s]+)",
+        "uriFormat": "%s",
+        "killOnServerStop": true
+      },
+      "windows": {
+        "runtimeExecutable": "pnpm.cmd"
+      },
+      "envFile": "${workspaceFolder}/.env.development" // 可根据需要改
+    },
+
+    // test 环境示例（复制调整 runtimeArgs/envFile）
+    {
+      "name": "调试 Nuxt 4 (test环境 + Chrome 全栈)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev:test"],
+      "port": 9229,
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "pattern": "(?:Local|Network):\\s+(https?://[^\\s]+)",
+        "uriFormat": "%s",
+        "killOnServerStop": true
+      },
+      "windows": {
+        "runtimeExecutable": "pnpm.cmd"
+      },
+      "envFile": "${workspaceFolder}/.env.test"
+    },
+
+    // Edge 备用（如果偏好 Edge）
+    {
+      "name": "调试 Nuxt 4 (服务端 + Edge 全栈)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev", "--dotenv", ".env.development"],
+      "port": 9229,
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        "action": "debugWithEdge",
+        "pattern": "(?:Local|Network):\\s+(https?://[^\\s]+)",
+        "uriFormat": "%s",
+        "killOnServerStop": true
+      },
+      "windows": {
+        "runtimeExecutable": "pnpm.cmd"
+      },
+      "envFile": "${workspaceFolder}/.env.development"
+    }
+  ],
+
+  "compounds": [
+    // 现在 compound 简化，只需服务端（浏览器调试内置）
+    {
+      "name": "全栈调试 (服务端 + Chrome)",
+      "configurations": ["调试 Nuxt 4 (服务端 + Chrome 全栈)"]
+    },
+    {
+      "name": "全栈调试 (服务端 + Edge)",
+      "configurations": ["调试 Nuxt 4 (服务端 + Edge 全栈)"]
+    }
+  ]
+}

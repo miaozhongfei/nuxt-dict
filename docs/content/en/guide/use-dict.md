@@ -1,0 +1,124 @@
+---
+title: useDict
+description: Complete useDict usage guide — fetch dictionary data and translate.
+---
+
+# useDict
+
+**Goal**: Master all `useDict` usage patterns, including basic translation, loading/error handling, manual refresh, and specifying stores.
+
+## When do you need this?
+
+- A table's "Status" column stores `0` / `1`, but you want users to see "Enabled" / "Disabled"
+- You need both raw dictionary data and translation capability
+- You want full control over how dictionary data is rendered
+
+## Full Signature
+
+```ts
+// Default store
+useDict(type: string): UseDictReturn
+
+// Specific store
+useDict(storeName: string, type: string): UseDictReturn
+```
+
+## Return Values
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `data` | `ShallowRef<DictItem[] \| null>` | Raw dictionary data array. Starts as `null`, becomes `[{ code: 0, label: 'Disabled' }, ...]` after loading |
+| `translate` | `(code: string \| number) => string` | Synchronous translation function. Input code, output the corresponding label. Falls back to the code as a string if not found |
+| `loading` | `Ref<boolean>` | Whether data is loading |
+| `error` | `Ref<string \| null>` | Error message on failure |
+| `refresh` | `() => Promise<void>` | Force refresh, skipping cache |
+
+## Basic Example
+
+```vue
+<template>
+  <div>
+    <p v-if="loading">Loading...</p>
+
+    <div v-else-if="error" style="background:#fef0f0;padding:16px;border-radius:8px;">
+      <p style="color:#F56C6C;">{{ error }}</p>
+      <button @click="doRefresh">Retry</button>
+    </div>
+
+    <table v-else border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
+      <thead>
+        <tr><th>Code</th><th>Label</th><th>Translate Check</th></tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in data" :key="item.code">
+          <td>{{ item.code }}</td>
+          <td>{{ item.label }}</td>
+          <td>{{ translate(item.code) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script setup lang="ts">
+const { data, translate, loading, error, refresh } = useDict('status')
+
+function doRefresh() { refresh() }
+</script>
+```
+
+## Translation Function Details
+
+`translate(code)` is synchronous and only looks up data already loaded into the memory cache. No network request needed:
+
+```vue
+<template>
+  <table>
+    <tr v-for="user in userList" :key="user.id">
+      <td>{{ user.name }}</td>
+      <td>{{ translate(user.status) }}</td>
+    </tr>
+  </table>
+</template>
+```
+
+> **Why is translation synchronous?** Once `useDict('status')` has finished loading data on mount, the `status` dictionary data is in memory. Subsequent `translate()` calls look up directly from memory.
+
+## Automatic Code Type Conversion
+
+Dictionary item codes may be `number` (e.g., `0`), while your business data may be `string` (e.g., `'0'`). `translate()` automatically converts both to strings for comparison:
+
+```ts
+translate(0)   // → 'Disabled'
+translate('0') // → 'Disabled'
+```
+
+## Manual Refresh
+
+Call `refresh()` to force a re-fetch from the server, skipping both memory and IndexedDB caches.
+
+## Specifying a Store
+
+```vue
+<script setup lang="ts">
+// Default store 'dicts'
+const { data } = useDict('gender')
+
+// Store 'payment'
+const { data: payData } = useDict('payment', 'status')
+</script>
+```
+
+See [Multi-Store](/advanced/multi-store) for details.
+
+## Notes
+
+> `translate()` still works when `data` is `null`, but returns the code as a string. Ensure you use `v-if="data"` or loading state guards.
+
+## What You Learned
+
+- [ ] Use `useDict('type')` to get dictionary data and translation
+- [ ] Handle `loading` / `error` states correctly
+- [ ] Use `translate()` for code → label conversion
+- [ ] Call `refresh()` to force cache invalidation
+- [ ] Use `useDict('store', 'type')` for specific stores
