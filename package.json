@@ -70,6 +70,7 @@
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.4.8",
     "@types/node": "^25.9.2",
+    "changelogen": "^0.6.2",
     "element-plus": "^2.14.1",
     "nuxt": "^4.4.8",
     "oxfmt": "^0.54.0",
