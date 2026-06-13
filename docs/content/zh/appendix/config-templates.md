@@ -1,4 +1,4 @@
-﻿---
+---
 title: 配置模板
 description: 常用场景的 nuxt.config.ts 配置模板，复制即用。
 ---

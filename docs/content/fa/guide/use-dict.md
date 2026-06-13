@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDict
 description: راهنمای کامل useDict — دریافت داده‌های دیکشنری و ترجمه.
 ---

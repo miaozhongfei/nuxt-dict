@@ -1,4 +1,4 @@
-﻿---
+---
 title: 环境准备
 description: 安装 Node.js 和 pnpm，创建你的第一个 Nuxt 项目。
 ---

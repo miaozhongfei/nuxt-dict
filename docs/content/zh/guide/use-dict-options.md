@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDict
 description: 直接输出 { value, label } 格式的字典数据，无缝对接 Element Plus / Vant 等 UI 库。
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 title: useDictTree
 description: 树形字典数据的获取、翻译和路径回溯，支持无限层级深度。
 ---

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Nuxt UI 集成
 description: 将字典模块与 Nuxt UI 组件配合使用的完整示例。
 ---

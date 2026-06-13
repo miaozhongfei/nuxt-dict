@@ -1,4 +1,4 @@
-﻿---
+---
 title: Nuxt UI Integration
 description: Complete examples of using the dictionary module with Nuxt UI components.
 ---

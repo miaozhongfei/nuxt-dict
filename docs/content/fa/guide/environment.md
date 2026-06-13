@@ -1,4 +1,4 @@
-﻿---
+---
 title: آماده‌سازی محیط
 description: نصب Node.js و pnpm، سپس ایجاد اولین پروژه Nuxt.
 ---

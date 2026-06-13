@@ -1,4 +1,4 @@
-﻿---
+---
 title: 缓存体系
 description: 深入理解三级缓存架构 —— 内存、IndexedDB、API，以及版本检测与自动失效机制。
 ---

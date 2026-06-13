@@ -1,4 +1,4 @@
-﻿---
+---
 title: 纯 Vue 集成
 description: 不依赖任何 UI 库，用原生 HTML 元素使用字典数据。
 ---

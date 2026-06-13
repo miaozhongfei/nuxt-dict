@@ -1,4 +1,4 @@
-﻿---
+---
 title: Element Plus Integration
 description: Complete examples of using the dictionary module with Element Plus components.
 ---
