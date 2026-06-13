@@ -1,0 +1,54 @@
+# 文档站点部署工作流
+# 推送 main 分支后自动构建并部署到 GitHub Pages
+name: Deploy Docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+# GitHub Pages 所需权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只允许一个部署任务运行
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # 安装所有 workspace 依赖（docs 依赖 nuxt 等包）
+      - run: pnpm install
+
+      # 生成静态站点到 docs/.output/public
+      - run: pnpm run generate
+        working-directory: docs
+
+      # 上传产物供部署 job 使用
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.output/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
