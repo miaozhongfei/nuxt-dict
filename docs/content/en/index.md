@@ -1,6 +1,6 @@
 ---
 title: Nuxt Dict
-description: A Nuxt module for convenient dictionary data management based on Element Plus and Vant dictionaries.
+description: A Nuxt dictionary module with flat/tree dict translation, i18n, three-tier cache, and SSR prefetch.
 ---
 
 Nuxt Dict is a Nuxt 4 module that helps you manage **dictionary data** (also called data dictionaries, code tables, or enumeration values) in your projects.
@@ -19,7 +19,7 @@ In your daily development, you will inevitably encounter these scenarios:
 ## What can this module do?
 
 - **useDict** — Fetch dictionary data by type, providing a `translate(value)` translation interface
-- **useDict** — Directly output `{ label, value }[]` format, seamlessly integrating with Element Plus / Vant
+- **useDict** — Directly output `{ label, value }[]` format, seamlessly integrating with Nuxt UI / Element Plus / Vant
 - **useDictTree** — Tree dictionary support, providing `findPath` for path backtracking (e.g., finding the full region path from a district code)
 - **useLocale** — Multi-language management, supporting cookie / header / query language detection
 - **Three-tier Cache** — Memory → IndexedDB → API, with automatic version detection and invalidation
