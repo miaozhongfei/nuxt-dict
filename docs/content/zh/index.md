@@ -1,6 +1,6 @@
 ---
 title: Nuxt Dict
-description: 基于 Element Plus、Vant 字典的 Nuxt 模块，提供便捷的字典数据管理和使用功能。
+description: Nuxt 数据字典模块，提供扁平/树形字典翻译、多语言国际化、三级缓存与 SSR 预取。
 ---
 
 Nuxt Dict 是一个 Nuxt 4 模块，帮你轻松管理项目中的**字典数据**（也叫数据字典、码表、枚举值）。
@@ -18,7 +18,7 @@ Nuxt Dict 是一个 Nuxt 4 模块，帮你轻松管理项目中的**字典数据
 
 ## 这个模块能做什么？
 
-- **useDict** — 根据字典类型获取数据，直接返回 `{ value, label }[]` 格式，无缝对接 Element Plus / Vant
+- **useDict** — 根据字典类型获取数据，直接返回 `{ value, label }[]` 格式，无缝对接 Nuxt UI / Element Plus / Vant
 - **useDictTree** — 树形字典支持，提供 `findPath` 路径回溯（如区号找完整省市区）
 - **useLocale** — 多语言管理，支持 cookie / header / query 三种语言检测方式
 - **三级缓存** — 内存 → IndexedDB → API，自动版本检测与失效
