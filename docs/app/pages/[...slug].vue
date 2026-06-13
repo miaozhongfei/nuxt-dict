@@ -10,7 +10,7 @@ const slug = computed(() => {
   return withLeadingSlash(segments.join('/'));
 });
 
-const pageKey = computed(() => 'page-' + slug.value);
+const pageKey = computed(() => 'page-' + locale.value + '-' + slug.value);
 
 const { data: page } = await useAsyncData(
   pageKey,
