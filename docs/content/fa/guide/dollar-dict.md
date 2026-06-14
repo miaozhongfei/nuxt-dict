@@ -39,6 +39,13 @@ $dict.translatePath(type: string, value: string | number): string
 $dict.translatePath(type: string, value: string | number, opts: { storeName?: string; field?: string; separator?: string }): string
 ```
 
+### $dict.translateData()
+
+```ts
+// ترجمه دسته‌ای اشیاء داده
+$dict.translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: string }>, suffix?: string): Record<string, unknown>
+```
+
 ## مثال‌های استفاده
 
 ::code-group
@@ -64,6 +71,28 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
         <td>{{ user.name }}</td>
         <td>{{ $dict.translate('status', user.status) }}</td>
         <td>{{ $dict.translate('gender', user.gender) }}</td>
+      </tr>
+    </table>
+  </template>
+  ```
+
+  ```vue [ترجمه دسته‌ای (translateData)]
+  <script setup>
+  const tableData = [
+    { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
+    { id: 2, gender: 'female', status: 1, name: 'Li Si' },
+  ]
+  const processed = tableData.map(row =>
+    $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } })
+  )
+  // برای مخزن پیش‌فرض string، برای مخزن دیگر { type, storeName? }
+  </script>
+  <template>
+    <table>
+      <tr v-for="row in processed" :key="row.id">
+        <td>{{ row.name }}</td>
+        <td>{{ row.gender_label }}</td>
+        <td>{{ row.status_label }}</td>
       </tr>
     </table>
   </template>
@@ -108,6 +137,14 @@ const tableData = [
 const processed = tableData.map(row =>
   $dict.translateData(row, { gender: 'gender', status: 'status' })
 )
+
+// مثال با مخزن دیگر: { type, storeName? } برای مخزن غیر پیش‌فرض
+$dict.translateData(
+  { orderStatus: 1 },
+  { orderStatus: { type: 'pay_status', storeName: 'payment' } }
+)
+// → { orderStatus: 1, orderStatus_label: 'پرداخت شده' }
+</script>
 // [{ gender: 'male', gender_label: 'مرد', status: 0, status_label: 'غیرفعال', ... }, ...]
 </script>
 ```

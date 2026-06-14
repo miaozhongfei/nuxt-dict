@@ -29,6 +29,9 @@ $dict.translate(type: string, value: string | number, opts: { storeName?: string
 $dict.translatePath(type: string, value: string | number): string
 // 翻译树形字典路径 + 自定义选项（storeName / field / separator）
 $dict.translatePath(type: string, value: string | number, opts: { storeName?: string; field?: string; separator?: string }): string
+
+// 批量翻译数据对象
+$dict.translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: string }>, suffix?: string): Record<string, unknown>
 ```
 
 ## 使用示例
@@ -61,6 +64,28 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
     </table>
   </template>
   ```
+
+  ```vue [批量翻译 (translateData)]
+  <script setup>
+  const tableData = [
+    { id: 1, gender: 'male', status: 0, name: '张三' },
+    { id: 2, gender: 'female', status: 1, name: '李四' },
+  ]
+  const processed = tableData.map(row =>
+    $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } })
+  )
+  // 默认仓库时传 string，跨仓库时传 { type, storeName? }
+  </script>
+  <template>
+    <table>
+      <tr v-for="row in processed" :key="row.id">
+        <td>{{ row.name }}</td>
+        <td>{{ row.gender_label }}</td>
+        <td>{{ row.status_label }}</td>
+      </tr>
+    </table>
+  </template>
+  ```
 ::
 
 ## translateData —— 批量翻译数据对象
@@ -89,6 +114,13 @@ const processed = tableData.map(row =>
   $dict.translateData(row, { xb: 'gender', zt: 'status' })
 )
 // [{ xb: 'male', xb_label: '男', zt: 0, zt_label: '禁用', ... }, ...]
+
+// 跨仓库示例：{ type, storeName? } 指定非默认仓库
+$dict.translateData(
+  { orderStatus: 1 },
+  { orderStatus: { type: 'pay_status', storeName: 'payment' } }
+)
+// → { orderStatus: 1, orderStatus_label: '已支付' }
 </script>
 ```
 
