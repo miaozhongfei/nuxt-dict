@@ -49,8 +49,8 @@ useLocale(): { locale, setLocale, locales }
 
 | 方法 | 签名 |
 |------|------|
-| `translate` | `$dict.translate(type, value)` / `$dict.translate(store, type, value)` |
-| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(store, type, value, separator?)` |
+| `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
+| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
 
 ## 类型定义
 

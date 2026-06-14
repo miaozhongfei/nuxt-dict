@@ -20,15 +20,15 @@ description: 在模板中直接调用 $dict.translate() 做同步翻译，无需
 ## API 签名
 
 ```ts
-// 默认存储库
+// 翻译扁平字典
 $dict.translate(type: string, value: string | number): string
-// 指定存储库
-$dict.translate(storeName: string, type: string, value: string | number): string
+// 翻译扁平字典 + 自定义选项（storeName / field）
+$dict.translate(type: string, value: string | number, opts: { storeName?: string; field?: string }): string
 
-// 默认存储库 + 默认分隔符 ' / '
+// 翻译树形字典路径（默认分隔符 ' / '）
 $dict.translatePath(type: string, value: string | number): string
-// 指定存储库 + 自定义分隔符
-$dict.translatePath(storeName: string, type: string, value: string | number, separator: string): string
+// 翻译树形字典路径 + 自定义选项（storeName / field / separator）
+$dict.translatePath(type: string, value: string | number, opts: { storeName?: string; field?: string; separator?: string }): string
 ```
 
 ## 使用示例
@@ -45,7 +45,7 @@ $dict.translatePath(storeName: string, type: string, value: string | number, sep
     <p>区域代码 440104 → {{ $dict.translatePath('region', '440104') }}</p>
     <!-- 输出: 广东 / 广州 / 越秀区 -->
 
-    <p>自定义分隔符 → {{ $dict.translatePath('dicts', 'region', '440104', ' → ') }}</p>
+    <p>自定义分隔符 → {{ $dict.translatePath('region', '440104', { storeName: 'dicts', separator: ' → ' }) }}</p>
     <!-- 输出: 广东 → 广州 → 越秀区 -->
   </template>
   ```

@@ -166,8 +166,8 @@ const { tree: locTree } = useDictTree('logistics', 'delivery_region')
   <p>{{ $dict.translate('order_status', 'pending') }}</p>
   <!-- مخزن پیش‌فرض -->
 
-  <p>{{ $dict.translate('payment', 'pay_status', 1) }}</p>
-  <!-- مخزن payment (۳ پارامتر: storeName, type, code) -->
+  <p>{{ $dict.translate('pay_status', 1, { storeName: 'payment' }) }}</p>
+  <!-- مخزن payment (از طریق opts.storeName) -->
 </template>
 ```
 

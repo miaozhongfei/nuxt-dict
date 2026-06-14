@@ -2,7 +2,7 @@ import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useNuxtApp } from '#imports'
 import type { DictManager } from '../core/dict-manager'
 import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache'
-import type { DictItem, UseDictReturn, StoreKey } from '../types'
+import type { DictItem, UseDictReturn, StoreKey, TranslateOptions } from '../types'
 
 /** 跟踪同一字典类型的活跃组件实例，用于监听变更。key 格式: `{storeName}:{type}` */
 const activeInstances = new Map<string, Set<symbol>>()
@@ -69,7 +69,7 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
   const nuxtApp = useNuxtApp()
   const manager = nuxtApp.$dictManager as DictManager
 
-  const storeName = maybeType === undefined ? DEFAULT_STORE_NAME : storeOrType
+  const storeName = (maybeType === undefined ? DEFAULT_STORE_NAME : storeOrType) as StoreKey
   const dictType = maybeType ?? storeOrType
 
   const data = shallowRef<DictItem[] | null>(null)
@@ -80,8 +80,8 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
 
   trackInstance(trackKey, instanceId)
 
-  function translate(value: string | number): string {
-    return manager.translate(dictType, value, storeName)
+  function translate(value: string | number, opts?: TranslateOptions): string {
+    return manager.translate(dictType, value, { storeName, ...opts })
   }
 
   async function refresh(): Promise<void> {

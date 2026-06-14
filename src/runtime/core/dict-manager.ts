@@ -2,7 +2,7 @@ import { shallowRef } from 'vue'
 import { MemoryCache } from './cache/memory-cache'
 import { IndexedDBCache, DEFAULT_STORE_NAME } from './cache/indexeddb-cache'
 import { VersionCheck } from './cache/version-check'
-import type { DictAdapter, DictEntry, DictItem, TreeNode, CacheEntry } from '../types'
+import type { DictAdapter, DictEntry, DictItem, TreeNode, CacheEntry, TranslateOptions, TranslatePathOptions } from '../types'
 
 export interface DictManagerOptions {
   /** 仓库名 → DictAdapter 映射表。至少包含默认仓库 'dicts' 的 adapter */
@@ -222,36 +222,42 @@ export class DictManager {
     return entry
   }
 
-  /** 翻译 value → label，未命中时回退原样 */
-  translate(type: string, value: string | number, storeName = DEFAULT_STORE_NAME): string {
+  /** 翻译 value → label，未命中时回退原样。可通过 opts.field 指定返回字段 */
+  translate(type: string, value: string | number, opts?: TranslateOptions): string {
+    const storeName = opts?.storeName ?? DEFAULT_STORE_NAME
+    const field = opts?.field ?? 'label'
     const key = this.buildKey(type, storeName)
     const entry = this.memoryCache.get(key)
     if (!entry) return String(value)
 
     const item = entry.data.items.find((i: DictItem) => this.codeMatch(i.value, value))
-    return item?.label ?? String(value)
+    if (!item) return String(value)
+    return (item[field] as string | undefined) ?? item.label
   }
 
   /** 树形字典中查找 value 的完整层级路径 */
-  translatePath(type: string, value: string | number, separator = ' / ', storeName = DEFAULT_STORE_NAME): string {
+  translatePath(type: string, value: string | number, opts?: TranslatePathOptions): string {
+    const storeName = opts?.storeName ?? DEFAULT_STORE_NAME
+    const field = opts?.field ?? 'label'
+    const separator = opts?.separator ?? ' / '
     const key = this.buildKey(type, storeName)
     const entry = this.memoryCache.get(key)
     if (!entry || !entry.data.tree) return String(value)
 
-    const path = this.findPathInTree(entry.data.tree, value)
+    const path = this.findPathInTree(entry.data.tree, value, field)
     return path.length > 0 ? path.join(separator) : String(value)
   }
 
-  /** DFS 在树形字典中查找目标编码的路径 */
-  private findPathInTree(nodes: TreeNode[], targetCode: string | number): string[] {
+  /** DFS 在树形字典中查找目标编码的路径，每节点取指定字段 */
+  private findPathInTree(nodes: TreeNode[], targetCode: string | number, field: string): string[] {
     for (const node of nodes) {
       if (this.codeMatch(node.value, targetCode)) {
-        return [node.label]
+        return [(node[field] as string | undefined) ?? node.label]
       }
       if (node.children && node.children.length > 0) {
-        const childPath = this.findPathInTree(node.children, targetCode)
+        const childPath = this.findPathInTree(node.children, targetCode, field)
         if (childPath.length > 0) {
-          return [node.label, ...childPath]
+          return [(node[field] as string | undefined) ?? node.label, ...childPath]
         }
       }
     }
