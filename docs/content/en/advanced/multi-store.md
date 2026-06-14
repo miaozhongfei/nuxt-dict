@@ -96,7 +96,7 @@ const { options: payOptions } = useDict('payment', 'pay_method')
 // useDict / useDictTree / $dict all support store parameter
 const { data } = useDict('payment', 'pay_status')
 const { tree } = useDictTree('logistics', 'delivery_region')
-$dict.translate('payment', 'pay_status', 1)
+$dict.translate('pay_status', 1, { storeName: 'payment' })
 ```
 
 ## Independent Version Detection
