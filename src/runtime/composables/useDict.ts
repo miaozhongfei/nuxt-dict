@@ -1,4 +1,5 @@
 import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import type { ShallowRef, DeepReadonly } from 'vue'
 import { useNuxtApp } from '#imports'
 import type { DictManager } from '../core/dict-manager'
 import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache'
@@ -181,5 +182,5 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
     () => { fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap) },
   )
 
-  return { data, translate, getDictItem, loading, error, refresh }
+  return { data: data as unknown as Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>, translate, getDictItem, loading, error, refresh }
 }
