@@ -1,4 +1,4 @@
-import type { ShallowRef, Ref } from 'vue'
+import type { ShallowRef, Ref, DeepReadonly } from 'vue'
 
 /** 仓库名字面量联合类型，由 addTypeTemplate 根据 stores 配置动态生成 */
 import type { StoreKey } from '#build/types/nuxt-dict-store-names'
@@ -246,7 +246,7 @@ export interface GetDictItemOptions {
  * @description useDict 调用后返回的对象，包含字典数据、翻译函数、状态管理和刷新能力。
  * 组件挂载时自动加载数据，卸载时自动清理。支持语言切换后自动重取。
  *
- * @property {ShallowRef<DictItem[] | null>} data - 字典原始数据数组。初始为 null，加载完成后为 [{ value, label, ... }]
+ * @property {Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>} data - 字典原始数据数组（只读）。初始为 null，加载完成后为 [{ value, label, ... }]
  * @property {(value: string | number, opts?: TranslateOptions) => string} translate - 同步翻译函数，默认从 data ref 查找 code → label（响应式），未命中返回 code 原文
  * @property {(value: string | number, opts?: GetDictItemOptions) => DictItem | undefined} getDictItem - 同步获取完整字典项对象，缓存未命中返回 undefined
  * @property {Ref<boolean>} loading - 是否正在加载字典数据
@@ -258,8 +258,8 @@ export interface GetDictItemOptions {
  * const { data, translate } = useDict('dicts2', 'gender')
  */
 export interface UseDictReturn {
-  /** 字典原始数据数组。初始为 null，加载完成后为 [{ value, label, ... }] */
-  data: ShallowRef<DictItem[] | null>
+  /** 字典原始数据数组（只读）。初始为 null，加载完成后为 [{ value, label, ... }] */
+  data: Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>
 
   /**
    * 同步翻译编码 → 文本，默认从 data ref（shallowRef）查找，Vue 响应式系统可追踪。
@@ -414,7 +414,7 @@ export interface DictTranslator {
  * @description useDictTree 调用后返回的对象，包含树形字典数据、翻译函数、路径回溯和刷新能力。
  * 适用于级联选择器等需要层级数据的场景。支持语言切换后自动重取。
  *
- * @property {ShallowRef<TreeNode[] | null>} tree - 树形字典节点数组。初始为 null，加载完成后为完整树结构
+ * @property {Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>} tree - 树形字典节点数组（只读）。初始为 null，加载完成后为完整树结构
  * @property {(value: string | number, opts?: TranslateOptions) => string} translate - 同步翻译树中任意节点的 value → label，默认从 tree ref 查找（响应式）
  * @property {(value: string | number) => string[]} findPath - 查找叶子节点的完整层级路径，从 tree ref 查找（响应式），如 code=440104 → ['广东', '广州', '越秀区']
  * @property {Ref<boolean>} loading - 是否正在加载树形字典数据
@@ -425,8 +425,8 @@ export interface DictTranslator {
  * const { tree, translate } = useDictTree('dicts2', 'region')
  */
 export interface UseDictTreeReturn {
-  /** 树形字典节点数组。初始为 null，加载完成后为完整树结构 */
-  tree: ShallowRef<TreeNode[] | null>
+  /** 树形字典节点数组（只读）。初始为 null，加载完成后为完整树结构 */
+  tree: Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>
 
   /**
    * 同步翻译树中任意节点的 value → label，默认从 tree ref（shallowRef）递归查找。

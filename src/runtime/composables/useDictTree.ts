@@ -1,4 +1,5 @@
 import { shallowRef, ref, watch, onMounted } from 'vue'
+import type { ShallowRef, DeepReadonly } from 'vue'
 import { useNuxtApp } from '#imports'
 import type { DictManager } from '../core/dict-manager'
 import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache'
@@ -113,7 +114,7 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
   // 监听语言切换，自动重新加载树形字典数据
   watch(() => manager.locale.value, load)
 
-  return { tree, translate, findPath, loading, refresh }
+  return { tree: tree as unknown as Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>, translate, findPath, loading, refresh }
 }
 
 /**
