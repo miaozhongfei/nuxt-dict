@@ -10,9 +10,12 @@
   ],
   "license": "MIT",
   "author": {
-    "name": "miaozf",
-    "email": "miaozf@example.com"
+    "name": "miaozhongfei",
+    "email": "miaozhongfei@example.com"
   },
+  "repository": "miaozhongfei/nuxt-dict",
+  "homepage": "https://miaozhongfei.github.io/nuxt-dict/",
+  "documentation": "https://miaozhongfei.github.io/nuxt-dict/",
   "contributors": [],
   "files": [
     "dist"
