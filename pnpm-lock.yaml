@@ -94,6 +94,9 @@ importers:
       '@element-plus/nuxt':
         specifier: ^1.1.5
         version: 1.1.5(@element-plus/icons-vue@2.3.2(vue@3.5.38(typescript@5.9.3)))(element-plus@2.14.2(vue@3.5.38(typescript@5.9.3)))(magicast@0.5.3)
+      '@lacqjs/nuxt-dict':
+        specifier: workspace:*
+        version: link:..
       '@playwright/test':
         specifier: ^1.57.0
         version: 1.60.0

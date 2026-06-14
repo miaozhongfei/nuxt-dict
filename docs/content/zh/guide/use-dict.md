@@ -27,6 +27,7 @@ useDict(storeName: string, type: string): UseDictReturn
 |------|------|------|
 | `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据数组。初始为 `null`，加载完成后变成 `[{ value: 0, label: '禁用' }, ...]` |
 | `translate` | `(value: string \| number) => string` | 同步翻译函数。输入 code，输出对应的 label。如果 code 不存在，返回 code 本身的字符串形式 |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | 同步获取完整字典项对象。输入 code，返回 `{ value, label, ... }`，未命中返回 `undefined` |
 | `loading` | `Ref<boolean>` | 是否正在加载 |
 | `error` | `Ref<string \| null>` | 加载失败时的错误信息 |
 | `refresh` | `() => Promise<void>` | 手动刷新，强制跳过缓存 |
@@ -83,6 +84,27 @@ function doRefresh() { refresh() }
 
 > **为什么翻译是同步的？** 当 `useDict('status')` 在组件挂载时已经完成了数据加载，`status` 的字典数据就存放在内存缓存中了。之后调用 `translate(statusCode)` 直接从内存中查找。
 
+## 获取完整字典项 (getDictItem)
+
+当需要获取字典项的完整对象（而非仅某个字段的翻译）时使用。比如拿到 `color` 字段给组件属性用。
+
+```vue
+<template>
+  <el-tag :color="(statusItem?.color as string)" effect="dark">
+    {{ statusItem?.label }}
+  </el-tag>
+</template>
+
+<script setup lang="ts">
+const { getDictItem } = useDict('status')
+
+const statusItem = computed(() => getDictItem(1))
+// → { value: 1, label: '启用', color: '#67C23A' }
+</script>
+```
+
+> `getDictItem` 也是同步的，从内存缓存查找。缓存未命中时返回 `undefined`。
+
 ## code 类型自动转换
 
 字典项的 code 可能是 `number`（如 `0`），而你的业务数据可能是 `string`（如 `'0'`）。`translate()` 内部自动把两边都转成字符串比较：
@@ -131,5 +153,6 @@ const { data: payData } = useDict('payment', 'status')
 - [ ] 使用 `useDict('type')` 获取字典数据和翻译函数
 - [ ] 正确处理 `loading` / `error` 三种状态
 - [ ] 用 `translate()` 做 code → label 转换
+- [ ] 用 `getDictItem()` 获取完整字典项对象（含扩展字段）
 - [ ] 调用 `refresh()` 强制刷新缓存
 - [ ] 使用 `useDict('store', 'type')` 指定存储库

@@ -27,6 +27,7 @@ useDict(storeName: string, type: string): UseDictReturn
 |--------|------|-----------|
 | `data` | `ShallowRef<DictItem[] \| null>` | آرایه داده‌های خام دیکشنری. در ابتدا `null`، پس از بارگذاری `[{ value: 0, label: 'غیرفعال' }, ...]` می‌شود |
 | `translate` | `(value: string \| number) => string` | تابع ترجمه همزمان. کد را دریافت کرده و label متناظر را برمی‌گرداند. در صورت عدم وجود، کد را به صورت رشته برمی‌گرداند |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | دریافت همزمان آیتم کامل دیکشنری. `{ value, label, ... }` برمی‌گرداند، در صورت عدم وجود `undefined` |
 | `loading` | `Ref<boolean>` | آیا در حال بارگذاری است |
 | `error` | `Ref<string \| null>` | پیام خطا در صورت شکست |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی، کش را نادیده می‌گیرد |
@@ -88,6 +89,27 @@ function doRefresh() { refresh() }
 
 > **چرا ترجمه همزمان است؟** وقتی `useDict('status')` داده‌ها را در زمان mount کامپوننت بارگذاری کرد، داده‌های دیکشنری `status` در کش حافظه ذخیره می‌شوند. سپس `translate(statusCode)` مستقیماً از حافظه جستجو می‌کند.
 
+## دریافت آیتم کامل دیکشنری (getDictItem)
+
+وقتی به شیء کامل DictItem نیاز دارید (نه فقط یک فیلد متنی) از `getDictItem` استفاده کنید.
+
+```vue
+<template>
+  <el-tag :color="(statusItem?.color as string)" effect="dark">
+    {{ statusItem?.label }}
+  </el-tag>
+</template>
+
+<script setup lang="ts">
+const { getDictItem } = useDict('status')
+
+const statusItem = computed(() => getDictItem(1))
+// → { value: 1, label: 'فعال', color: '#67C23A' }
+</script>
+```
+
+> `getDictItem` نیز همزمان است و از کش حافظه جستجو می‌کند. در صورت عدم وجود `undefined` برمی‌گرداند.
+
 ## تبدیل خودکار نوع کد
 
 کدهای آیتم دیکشنری ممکن است `number` باشند (مثلاً `0`)، در حالی که داده‌های کسب‌وکار شما `string` باشد (مثلاً `'0'`). `translate()` به طور خودکار هر دو طرف را به رشته تبدیل می‌کند:
@@ -135,5 +157,6 @@ const { data: payData } = useDict('payment', 'status')
 - [ ] استفاده از `useDict('type')` برای دریافت داده‌ها و تابع ترجمه
 - [ ] مدیریت صحیح سه وضعیت `loading` / `error`
 - [ ] استفاده از `translate()` برای تبدیل code ← label
+- [ ] استفاده از `getDictItem()` برای دریافت آیتم کامل دیکشنری (با فیلدهای اضافی)
 - [ ] فراخوانی `refresh()` برای بازنشانی اجباری کش
 - [ ] استفاده از `useDict('store', 'type')` برای تعیین مخزن

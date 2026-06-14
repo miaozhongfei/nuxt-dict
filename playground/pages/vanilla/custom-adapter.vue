@@ -67,6 +67,9 @@
         </ol>
       </div>
     </template>
+    <el-tag :color="(statusItem?.color as string)" effect="dark">
+    {{ statusItem?.label }}
+    </el-tag>
   </div>
 </template>
 
@@ -74,13 +77,17 @@
 const {
   data: defaultData,
   translate: defaultTranslate,
+  getDictItem: defaultGetDictItem,
   loading: defaultLoading,
   refresh: defaultRefresh,
 } = useDict('gender')
 
+const statusItem = computed(() => defaultGetDictItem(1))
+
 const {
   data: store2Data,
   translate: store2Translate,
+  getDictItem: store2GetDictItem,
   loading: store2Loading,
   refresh: store2Refresh,
 } = useDict('dicts2', 'gender')
@@ -99,4 +106,7 @@ const { $dict} = useNuxtApp()
 const a = $dict.translate('gender', '1')
 const b = $dict.translate('gender', '1', { storeName: 'dicts2' })
 const c = $dict.translate('gender', '1' , { storeName: 'dicts', field: 'name' })
+import type { DictItem } from '@lacqjs/nuxt-dict'
+const q :DictItem = $dict.getDictItem('gender', '1');
+const w :DictItem = $dict.getDictItem('gender', '1', { storeName: 'dicts2'});
 </script>
