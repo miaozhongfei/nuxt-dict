@@ -29,6 +29,9 @@ $dict.translate(type: string, value: string | number, opts: { storeName?: string
 $dict.translatePath(type: string, value: string | number): string
 // Translate tree dictionary path + custom options (storeName / field / separator)
 $dict.translatePath(type: string, value: string | number, opts: { storeName?: string; field?: string; separator?: string }): string
+
+// Batch translate data object
+$dict.translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: string }>, suffix?: string): Record<string, unknown>
 ```
 
 ## Usage Examples
@@ -54,6 +57,28 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
         <td>{{ user.name }}</td>
         <td>{{ $dict.translate('status', user.status) }}</td>
         <td>{{ $dict.translate('gender', user.gender) }}</td>
+      </tr>
+    </table>
+  </template>
+  ```
+
+  ```vue [Batch Translate (translateData)]
+  <script setup>
+  const tableData = [
+    { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
+    { id: 2, gender: 'female', status: 1, name: 'Li Si' },
+  ]
+  const processed = tableData.map(row =>
+    $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } })
+  )
+  // string for default store, { type, storeName? } for cross-store
+  </script>
+  <template>
+    <table>
+      <tr v-for="row in processed" :key="row.id">
+        <td>{{ row.name }}</td>
+        <td>{{ row.gender_label }}</td>
+        <td>{{ row.status_label }}</td>
       </tr>
     </table>
   </template>
@@ -86,6 +111,13 @@ const processed = tableData.map(row =>
   $dict.translateData(row, { gender: 'gender', status: 'status' })
 )
 // [{ gender: 'male', gender_label: 'Male', status: 0, status_label: 'Enabled', ... }, ...]
+
+// Cross-store example: { type, storeName? } for a non-default store
+$dict.translateData(
+  { orderStatus: 1 },
+  { orderStatus: { type: 'pay_status', storeName: 'payment' } }
+)
+// → { orderStatus: 1, orderStatus_label: 'Paid' }
 </script>
 ```
 
