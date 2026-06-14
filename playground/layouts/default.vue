@@ -10,7 +10,6 @@
         <NuxtLink to="/vanilla/tree" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useDictTree 树形</NuxtLink>
         <NuxtLink to="/vanilla/locale" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">useLocale 语言切换</NuxtLink>
         <NuxtLink to="/vanilla/multi-store" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">多存储库 Multi-Store</NuxtLink>
-        <NuxtLink to="/vanilla/field-option" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#333;">自定义字段 field</NuxtLink>
         <NuxtLink to="/vanilla/custom-adapter" style="padding:6px 12px;border-radius:4px;text-decoration:none;color:#E6A23C;">自定义 Adapter 调试</NuxtLink>
       </nav>
 

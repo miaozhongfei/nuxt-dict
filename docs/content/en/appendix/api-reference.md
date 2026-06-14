@@ -49,8 +49,8 @@ useLocale(): { locale, setLocale, locales }
 
 | Method | Signature |
 |--------|-----------|
-| `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
-| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
+| `translate` | `$dict.translate(type, value)` / `$dict.translate(store, type, value)` |
+| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(store, type, value, separator?)` |
 
 ## Type Definitions
 

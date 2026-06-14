@@ -153,40 +153,19 @@ export interface ResolvedModuleOptions {
   }
 }
 
-/** translate / translatePath 使用的选项 */
-export interface TranslateOptions {
-  /** 仓库名，默认 'dicts' */
-  storeName?: StoreKey
-  /** 取值字段名，默认 'label' */
-  field?: string
-}
-
-/** translatePath 使用的选项，在 TranslateOptions 基础上增加 separator */
-export interface TranslatePathOptions extends TranslateOptions {
-  /** 层级路径分隔符，默认 ' / ' */
-  separator?: string
-}
-
 /** useDict 返回类型 */
 export interface UseDictReturn {
   data: ShallowRef<DictItem[] | null>
-  translate: (value: string | number, opts?: TranslateOptions) => string
+  translate: (value: string | number) => string
   loading: Ref<boolean>
   error: Ref<string | null>
   refresh: () => Promise<void>
 }
 
-/** $dict 翻译器对象类型，暴露 translate / translatePath 两个翻译方法。
- * 仓库名统一通过 opts.storeName 指定，不接受首参为 storeName 的旧式写法。 */
-export interface DictTranslator {
-  translate(type: string, code: string | number, opts?: TranslateOptions): string
-  translatePath(type: string, code: string | number, opts?: TranslatePathOptions): string
-}
-
 /** useDictTree 返回类型 */
 export interface UseDictTreeReturn {
   tree: ShallowRef<TreeNode[] | null>
-  translate: (value: string | number, opts?: TranslateOptions) => string
+  translate: (value: string | number) => string
   findPath: (value: string | number) => string[]
   loading: Ref<boolean>
   refresh: () => Promise<void>

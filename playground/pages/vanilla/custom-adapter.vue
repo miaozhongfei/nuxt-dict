@@ -46,7 +46,7 @@
           <tr v-for="item in store2Data" :key="item.value">
             <td>{{ item.value }}</td>
             <td>{{ store2Translate(item.value) }}</td>
-            <td>{{ $dict.translate('gender', item.value, { storeName: 'dicts2' }) }}</td>
+            <td>{{ $dict.translate('dicts2', 'gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>
@@ -95,8 +95,4 @@ function doDefaultRefresh() {
 function doStore2Refresh() {
   store2Refresh()
 }
-const { $dict } = useNuxtApp()
-const a = $dict.translate('gender', '1')
-const b = $dict.translate('gender', '1', { storeName: 'dicts2' })
-const c = $dict.translate('gender', '1' , { storeName: 'dicts', field: 'name' })
 </script>

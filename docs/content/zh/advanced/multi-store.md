@@ -128,7 +128,7 @@ const { data: payData } = useDict('payment', 'pay_status')
 const { tree: locTree } = useDictTree('logistics', 'delivery_region')
 
 // $dict
-$dict.translate('pay_status', 1, { storeName: 'payment' })
+$dict.translate('payment', 'pay_status', 1)
 ```
 
 ## 各仓库独立的版本检测

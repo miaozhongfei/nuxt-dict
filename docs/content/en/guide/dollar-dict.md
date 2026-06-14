@@ -20,15 +20,15 @@ description: Call $dict.translate() directly in templates for synchronous transl
 ## API Signature
 
 ```ts
-// Translate flat dictionary
+// Default store
 $dict.translate(type: string, value: string | number): string
-// Translate flat dictionary + custom options (storeName / field)
-$dict.translate(type: string, value: string | number, opts: { storeName?: string; field?: string }): string
+// Specific store
+$dict.translate(storeName: string, type: string, value: string | number): string
 
-// Translate tree dictionary path (default separator ' / ')
+// Default store + default separator ' / '
 $dict.translatePath(type: string, value: string | number): string
-// Translate tree dictionary path + custom options (storeName / field / separator)
-$dict.translatePath(type: string, value: string | number, opts: { storeName?: string; field?: string; separator?: string }): string
+// Specific store + custom separator
+$dict.translatePath(storeName: string, type: string, value: string | number, separator: string): string
 ```
 
 ## Usage Examples

@@ -10,9 +10,6 @@ import { createLogger } from './runtime/utils/logger';
 import type { Resolver } from '@nuxt/kit';
 
 export type { ModuleOptions };
-export type { DictManager } from './runtime/core/dict-manager'
-export type { DictTranslator } from './runtime/types'
-export { createDictTranslator } from './runtime/utils/dict-translator'
 
 /**
  * 注册类型模板：NuxtApp 扩展声明 + 仓库名字面量联合类型。
@@ -23,23 +20,12 @@ function registerTypeTemplates(resolver: Resolver, stores: ModuleOptions['stores
   addTypeTemplate({
     filename: 'types/nuxt-dict.d.ts',
     getContents: () => `
-import type { StoreKey } from '#build/types/nuxt-dict-store-names'
+import type { DictManager } from '${pkg.name}'
 
 declare module '#app' {
   interface NuxtApp {
-    $dict: {
-      translate(type: string, code: string | number, opts?: { storeName?: StoreKey; field?: string }): string
-      translatePath(type: string, code: string | number, opts?: { storeName?: StoreKey; field?: string; separator?: string }): string
-    }
-  }
-}
-
-declare module '@vue/runtime-core' {
-  interface ComponentCustomProperties {
-    $dict: {
-      translate(type: string, code: string | number, opts?: { storeName?: StoreKey; field?: string }): string
-      translatePath(type: string, code: string | number, opts?: { storeName?: StoreKey; field?: string; separator?: string }): string
-    }
+    $dict: ReturnType<typeof import('${pkg.name}').createDictTranslator>
+    $dictManager: DictManager
   }
 }
 

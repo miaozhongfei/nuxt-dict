@@ -27,12 +27,12 @@
 
       <h3>自定义存储库 <code>'dicts2'</code> — gender（useDict 双参形式）</h3>
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
-        <thead><tr><th>code</th><th>label（useDict 翻译）</th><th>$dict.translate（opts.storeName）</th></tr></thead>
+        <thead><tr><th>code</th><th>label（useDict 翻译）</th><th>$dict.translate（3 参）</th></tr></thead>
         <tbody>
           <tr v-for="item in store2Data" :key="item.value">
             <td>{{ item.value }}</td>
             <td>{{ store2Translate(item.value) }}</td>
-            <td>{{ $dict.translate('gender', item.value, { storeName: 'dicts2' }) }}</td>
+            <td>{{ $dict.translate('dicts2', 'gender', item.value) }}</td>
           </tr>
         </tbody>
       </table>
@@ -81,7 +81,7 @@
           <tr v-for="item in paymentData" :key="item.value">
             <td>{{ item.value }}</td>
             <td>{{ paymentTranslate(item.value) }}</td>
-            <td>{{ $dict.translate('status', item.value, { storeName: 'payment' }) }}</td>
+            <td>{{ $dict.translate('payment', 'status', item.value) }}</td>
           </tr>
         </tbody>
       </table>
