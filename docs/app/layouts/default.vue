@@ -169,6 +169,9 @@ const navItems = computed(() => {
           <UIcon :name="colorMode.preference === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'" class="w-4 h-4" />
         </UButton>
         <SearchDialog />
+        <UButton color="neutral" variant="ghost" size="sm" to="https://github.com/miaozhongfei/nuxt-dict" target="_blank">
+          <UIcon name="i-simple-icons:github" class="w-4 h-4" />
+        </UButton>
         <USelect
           :model-value="locale"
           :items="availableLocales"
