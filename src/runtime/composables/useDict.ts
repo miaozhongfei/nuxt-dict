@@ -57,6 +57,12 @@ function trackInstance(type: string, instanceId: symbol): void {
  * 组件挂载时自动加载，卸载时自动清理引用。
  * 返回翻译函数、加载状态和手动刷新方法。
  *
+ * @description 从字典管理器获取扁平字典数据，挂载后自动触发网络请求（或缓存）。
+ * @param {string} type - 字典类型名（如 'gender'），一参形式：useDict(type)，使用默认仓库 'dicts'
+ * @param {StoreKey} storeName - 仓库名（如 'dicts2'），二参形式：useDict(storeName, type)
+ * @param {string} type - 字典类型名，二参形式时作为第二参数传入
+ * @returns {UseDictReturn} 包含 data（字典项数组）、translate（翻译函数）、loading、error、refresh
+ *
  * @example
  * // 默认存储库 'dicts'
  * const { data, translate } = useDict('gender')

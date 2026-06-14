@@ -8,6 +8,12 @@ import type { TreeNode, UseDictTreeReturn, StoreKey, TranslateOptions } from '..
  * 使用树形字典数据，支持翻译和路径查找。
  * 组件挂载时自动加载，适用于区域选择器等级联场景。
  *
+ * @description 从字典管理器获取树形字典数据，挂载后自动触发网络请求（或缓存）。
+ * @param {string} type - 字典类型名（如 'region'），一参形式：useDictTree(type)，使用默认仓库 'dicts'
+ * @param {StoreKey} storeName - 仓库名（如 'dicts2'），二参形式：useDictTree(storeName, type)
+ * @param {string} type - 字典类型名，二参形式时作为第二参数传入
+ * @returns {UseDictTreeReturn} 包含 tree（树节点数组）、translate（翻译函数）、findPath（路径回溯）、loading、refresh
+ *
  * @example
  * // 默认存储库 'dicts'
  * const { tree, translate } = useDictTree('region')

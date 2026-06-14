@@ -1,6 +1,17 @@
 import type { DictAdapter, DictResponse } from '../types'
 
-/** 创建默认适配器所需的配置参数 */
+/**
+ * 创建默认适配器所需的配置参数。
+ *
+ * @example
+ * const adapter = createDefaultAdapter({
+ *   baseURL: '/api',
+ *   dictEndpoint: '/dict/list',
+ *   versionEndpoint: '/dict/version',
+ *   paramKey: 'lang',
+ *   apiHeaderKey: 'X-Locale',
+ * })
+ */
 export interface DefaultAdapterOptions {
   baseURL: string
   dictEndpoint: string
@@ -90,6 +101,21 @@ async function fetchVersionImpl(_storeName: string, config: FetchVersionConfig):
  * 创建默认的 REST 字典适配器。
  * 底层使用原生 fetch，兼容浏览器和 Node.js 18+（Nuxt 4 要求）。
  * SSR 侧由 resolveBaseURL() 保证 baseURL 为绝对 origin，客户端相对路径由浏览器处理。
+ *
+ * @param {DefaultAdapterOptions} options - 适配器配置参数（baseURL、dictEndpoint、versionEndpoint、paramKey、apiHeaderKey）
+ * @returns {DictAdapter} 实现了 fetchDict / fetchVersion 方法的 DictAdapter 实例
+ *
+ * @example
+ * const adapter = createDefaultAdapter({
+ *   baseURL: 'https://api.example.com',
+ *   dictEndpoint: '/v1/dict/list',
+ *   versionEndpoint: '/v1/dict/version',
+ *   paramKey: 'lang',
+ *   apiHeaderKey: 'X-Locale',
+ * })
+ *
+ * // 用于 ModuleOptions.api.adapter
+ * // 或 stores.<storeName>.adapter
  */
 export function createDefaultAdapter(options: DefaultAdapterOptions): DictAdapter {
   const { baseURL, dictEndpoint, versionEndpoint, paramKey, apiHeaderKey } = options

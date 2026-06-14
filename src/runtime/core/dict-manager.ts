@@ -1,9 +1,22 @@
+// eslint-disable max-lines
 import { shallowRef } from 'vue'
 import { MemoryCache } from './cache/memory-cache'
 import { IndexedDBCache, DEFAULT_STORE_NAME } from './cache/indexeddb-cache'
 import { VersionCheck } from './cache/version-check'
 import type { DictAdapter, DictEntry, DictItem, TreeNode, CacheEntry, TranslateOptions, TranslatePathOptions } from '../types'
 
+/**
+ * DictManager 构造参数。
+ *
+ * @example
+ * const manager = new DictManager({
+ *   adapters: new Map([['dicts', createDefaultAdapter({ ... })]),
+ *   indexedDB: new IndexedDBCache('nuxt-dict'),
+ *   memoryMax: 200,
+ *   ttl: 0,
+ *   versionStorageKey: '__NUXT_DICT_VERSION__',
+ * })
+ */
 export interface DictManagerOptions {
   /** 仓库名 → DictAdapter 映射表。至少包含默认仓库 'dicts' 的 adapter */
   adapters: Map<string, DictAdapter>
@@ -19,6 +32,13 @@ export interface DictManagerOptions {
  *
  * 缓存策略：内存缓存 → IndexedDB 持久缓存 → 网络请求
  * 请求去重：对同一 key 的并发请求合并为单次网络调用（pendingRequests）
+ *
+ * @example
+ * // 通常由插件自动创建，无需手动实例化
+ * // 在组件中通过 useNuxtApp().$dictManager 访问
+ * const { $dictManager: manager } = useNuxtApp()
+ * const entry = await manager.getDict('gender')
+ * const label = manager.translate('gender', 'male')
  */
 export class DictManager {
   private memoryCache: MemoryCache<DictEntry>
@@ -60,7 +80,12 @@ export class DictManager {
     return this.adapters.get(storeName) ?? this.adapters.get(DEFAULT_STORE_NAME)!
   }
 
-  /** 切换语言，清空内存缓存和待处理请求 */
+  /**
+   * 切换语言，清空内存缓存和待处理请求。
+   * 语言变更后所有 useDict / useDictTree 组件通过 watch 自动重取数据。
+   *
+   * @param {string} locale - 目标语言代码，如 'zh-CN'、'en-US'
+   */
   setLocale(locale: string): void {
     if (this.locale.value !== locale) {
       this.locale.value = locale
@@ -69,6 +94,11 @@ export class DictManager {
     }
   }
 
+  /**
+   * 获取当前语言。
+   *
+   * @returns {string} 当前语言代码，如 'zh-CN'
+   */
   getLocale(): string {
     return this.locale.value
   }
@@ -115,6 +145,10 @@ export class DictManager {
   /**
    * 获取字典数据。
    * 优先级：内存缓存 → 合并中的请求 → IndexedDB → 网络请求
+   *
+   * @param {string} type - 字典类型名，如 'gender'
+   * @param {string} storeName - 仓库名，默认 'dicts'
+   * @returns {Promise<DictEntry>} 包含 items 和可选 tree 的字典条目
    */
   async getDict(type: string, storeName = DEFAULT_STORE_NAME): Promise<DictEntry> {
     // 惰性版本检查：首次访问该仓库时检查版本并失效过期缓存
@@ -189,6 +223,10 @@ export class DictManager {
   /**
    * 强制刷新指定字典：跳过缓存，直接从网络获取最新数据。
    * 适用于用户手动刷新、数据变更通知等场景。
+   *
+   * @param {string} type - 字典类型名，如 'gender'
+   * @param {string} storeName - 仓库名，默认 'dicts'
+   * @returns {Promise<DictEntry>} 最新的字典条目
    */
   async refresh(type: string, storeName = DEFAULT_STORE_NAME): Promise<DictEntry> {
     const key = this.buildKey(type, storeName)
@@ -222,7 +260,14 @@ export class DictManager {
     return entry
   }
 
-  /** 翻译 value → label，未命中时回退原样。可通过 opts.field 指定返回字段 */
+  /**
+   * 同步翻译 value → label，未命中缓存时回退原样返回。
+   *
+   * @param {string} type - 字典类型名，如 'gender'
+   * @param {string | number} value - 字典编码值
+   * @param {TranslateOptions} opts - 可选配置（storeName 指定仓库，field 指定取值字段，默认 'label'）
+   * @returns {string} 翻译后的文本，缓存未命中时返回 value 的字符串形式
+   */
   translate(type: string, value: string | number, opts?: TranslateOptions): string {
     const storeName = opts?.storeName ?? DEFAULT_STORE_NAME
     const field = opts?.field ?? 'label'
@@ -235,7 +280,14 @@ export class DictManager {
     return (item[field] as string | undefined) ?? item.label
   }
 
-  /** 树形字典中查找 value 的完整层级路径 */
+  /**
+   * 树形字典中查找 value 的完整层级路径。
+   *
+   * @param {string} type - 字典类型名，如 'region'
+   * @param {string | number} value - 叶子节点编码值
+   * @param {TranslatePathOptions} opts - 可选配置（storeName 指定仓库，field 指定取值字段，separator 指定分隔符，默认 ' / '）
+   * @returns {string} 用分隔符连接的完整层级路径，未命中时返回 value 字符串
+   */
   translatePath(type: string, value: string | number, opts?: TranslatePathOptions): string {
     const storeName = opts?.storeName ?? DEFAULT_STORE_NAME
     const field = opts?.field ?? 'label'
@@ -272,14 +324,21 @@ export class DictManager {
     return String(a) === String(b)
   }
 
-  /** 初始化：版本检查已改为惰性执行，在首次访问仓库时触发 */
+  /**
+   * 初始化管理器。
+   * 版本检查已改为惰性执行，在首次 getDict() 调用时触发，避免全量串行请求。
+   *
+   * @returns {Promise<void>}
+   */
   async initialize(): Promise<void> {
     // no-op: 版本检查移至首次 getDict() 调用时惰性执行，避免全量串行请求
   }
 
   /**
    * 失效缓存数据。
-   * @param storeName 指定要失效的存储库，不传则清空所有存储库及内存缓存
+   *
+   * @param {string} storeName - 指定要失效的仓库，不传则清空所有仓库及内存缓存
+   * @returns {Promise<void>}
    */
   async invalidateAll(storeName?: string): Promise<void> {
     if (storeName) {

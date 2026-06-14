@@ -4,7 +4,14 @@ import type { ShallowRef, Ref } from 'vue'
 import type { StoreKey } from '#build/types/nuxt-dict-store-names'
 export type { StoreKey }
 
-/** 字典项 */
+/**
+ * 字典项。
+ *
+ * @example
+ * // 典型数据条目
+ * { value: 'male', label: '男' }
+ * { value: 1, label: '启用', color: '#67C23A' }
+ */
 export interface DictItem {
   value: string | number
   label: string
@@ -36,7 +43,23 @@ export interface CacheEntry<T = DictEntry> {
   version: string
 }
 
-/** 字典适配器接口，允许用户自定义数据源（REST / GraphQL / 本地文件等） */
+/**
+ * 字典适配器接口，允许用户自定义数据源（REST / GraphQL / 本地文件等）。
+ *
+ * @example
+ * // 自定义适配器示例
+ * const customAdapter: DictAdapter = {
+ *   fetchDict: async (storeName, { types, locale }) => {
+ *     const res = await fetch(`/api/${storeName}/dict?types=${types.join(',')}&lang=${locale}`)
+ *     return res.json()
+ *   },
+ *   fetchVersion: async (storeName) => {
+ *     const res = await fetch(`/api/${storeName}/dict/version`)
+ *     const data = await res.json()
+ *     return data.version
+ *   },
+ * }
+ */
 export interface DictAdapter {
   fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>
   fetchVersion(storeName: string): Promise<string>
@@ -153,7 +176,17 @@ export interface ResolvedModuleOptions {
   }
 }
 
-/** translate / translatePath 使用的选项 */
+/**
+ * translate / translatePath 使用的选项。
+ *
+ * @example
+ * // 默认仓库，取 label
+ * translate('gender', 'male')
+ * // 指定仓库
+ * translate('gender', 'male', { storeName: 'dicts2' })
+ * // 取自定义字段
+ * translate('status', 1, { field: 'color' })
+ */
 export interface TranslateOptions {
   /** 仓库名，默认 'dicts' */
   storeName?: StoreKey
@@ -161,13 +194,29 @@ export interface TranslateOptions {
   field?: string
 }
 
-/** translatePath 使用的选项，在 TranslateOptions 基础上增加 separator */
+/**
+ * translatePath 使用的选项，在 TranslateOptions 基础上增加 separator。
+ *
+ * @example
+ * // 默认仓库，默认分隔符 ' / '
+ * translatePath('region', '440104')
+ * // 自定义分隔符
+ * translatePath('region', '440104', { separator: ' → ' })
+ * // 指定仓库 + 自定义字段 + 自定义分隔符
+ * translatePath('region', '440104', { storeName: 'dicts2', field: 'value', separator: ' → ' })
+ */
 export interface TranslatePathOptions extends TranslateOptions {
   /** 层级路径分隔符，默认 ' / ' */
   separator?: string
 }
 
-/** useDict 返回类型 */
+/**
+ * useDict 返回类型。
+ *
+ * @example
+ * const { data, translate, loading, refresh } = useDict('gender')
+ * const { data, translate } = useDict('dicts2', 'gender')
+ */
 export interface UseDictReturn {
   data: ShallowRef<DictItem[] | null>
   translate: (value: string | number, opts?: TranslateOptions) => string
@@ -176,14 +225,28 @@ export interface UseDictReturn {
   refresh: () => Promise<void>
 }
 
-/** $dict 翻译器对象类型，暴露 translate / translatePath 两个翻译方法。
- * 仓库名统一通过 opts.storeName 指定，不接受首参为 storeName 的旧式写法。 */
+/** $dict 翻译器对象类型，暴露 translate / translatePath / translateData 三个翻译方法。
+ * 仓库名统一通过 opts.storeName 或 mapping 中的配置指定，不接受首参为 storeName 的旧式写法。
+ *
+ * @example
+ * $dict.translate('gender', 'male')
+ * $dict.translate('gender', 'male', { storeName: 'dicts2' })
+ * $dict.translatePath('region', '440104', { separator: ' → ' })
+ * $dict.translateData({ gender: 'male', status: 1 }, { gender: 'gender', status: 'status' })
+ */
 export interface DictTranslator {
   translate(type: string, code: string | number, opts?: TranslateOptions): string
   translatePath(type: string, code: string | number, opts?: TranslatePathOptions): string
+  translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: StoreKey }>, suffix?: string): Record<string, unknown>
 }
 
-/** useDictTree 返回类型 */
+/**
+ * useDictTree 返回类型。
+ *
+ * @example
+ * const { tree, translate, findPath, loading, refresh } = useDictTree('region')
+ * const { tree, translate } = useDictTree('dicts2', 'region')
+ */
 export interface UseDictTreeReturn {
   tree: ShallowRef<TreeNode[] | null>
   translate: (value: string | number, opts?: TranslateOptions) => string
