@@ -63,6 +63,37 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
   ```
 ::
 
+## translateData —— 批量翻译数据对象
+
+当需要一次性翻译数据对象中的多个编码字段时，使用 `translateData`。
+
+```vue
+<template>
+  <table>
+    <tr v-for="row in processed" :key="row.id">
+      <td>{{ row.xb_label }}</td>
+      <td>{{ row.zt_label }}</td>
+      <td>{{ row.name }}</td>
+    </tr>
+  </table>
+</template>
+
+<script setup>
+const tableData = [
+  { id: 1, xb: 'male', zt: 0, name: '张三' },
+  { id: 2, xb: 'female', zt: 1, name: '李四' },
+]
+
+// 批量翻译：传入映射表 { 原字段: 字典类型 } → 返回追加了翻译字段的新对象
+const processed = tableData.map(row =>
+  $dict.translateData(row, { xb: 'gender', zt: 'status' })
+)
+// [{ xb: 'male', xb_label: '男', zt: 0, zt_label: '禁用', ... }, ...]
+</script>
+```
+
+> `mapping` 中值为 `string` 时使用默认仓库。需要指定仓库时用 `{ type: 'status', storeName: 'dicts2' }`。后缀可通过第三个参数自定义，默认 `'_label'`。
+
 ## 与 useDict.translate 的区别
 
 | 对比 | `$dict.translate()` | `useDict().translate()` |

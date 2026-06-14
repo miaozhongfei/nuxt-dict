@@ -7,6 +7,20 @@ import { defaultOptions } from '../options'
  * 获取/切换当前语言。
  * 切换语言时会同步更新 cookie（客户端）并通知 DictManager 刷新缓存。
  * locale 为 DictManager 上的响应式 ref，语言切换后所有 useDict / useDictTree 组件自动重取。
+ *
+ * @description 从 DictManager 获取当前语言信息，提供切换语言并持久化到 cookie 的能力。
+ * @returns {{ locale: Ref<string>, setLocale: (newLocale: string) => void, locales: string[] }} 当前语言 ref、语言切换函数、支持的语言列表
+ *
+ * @example
+ * const { locale, setLocale } = useLocale()
+ *
+ * // 切换语言
+ * setLocale('en-US')                // 切换到英文
+ * console.log(locale.value)         // 'en-US'
+ *
+ * // 模板中直接使用
+ * // <p>当前语言：{{ locale }}</p>
+ * // <button @click="setLocale('zh-CN')">中文</button>
  */
 export function useLocale() {
   const nuxtApp = useNuxtApp()

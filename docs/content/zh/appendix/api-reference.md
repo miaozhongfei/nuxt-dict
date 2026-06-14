@@ -51,6 +51,7 @@ useLocale(): { locale, setLocale, locales }
 |------|------|
 | `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
+| `translateData` | `$dict.translateData(data, mapping, suffix?)` → 返回追加了翻译字段的新对象 |
 
 ## 类型定义
 

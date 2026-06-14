@@ -60,6 +60,37 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
   ```
 ::
 
+## translateData — Batch Translate Data Objects
+
+Use `translateData` when you need to translate multiple code fields in a data object at once.
+
+```vue
+<template>
+  <table>
+    <tr v-for="row in processed" :key="row.id">
+      <td>{{ row.gender_label }}</td>
+      <td>{{ row.status_label }}</td>
+      <td>{{ row.name }}</td>
+    </tr>
+  </table>
+</template>
+
+<script setup>
+const tableData = [
+  { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
+  { id: 2, gender: 'female', status: 1, name: 'Li Si' },
+]
+
+// Batch translate: pass a mapping { sourceField: dictType } → returns a new object with translated fields appended
+const processed = tableData.map(row =>
+  $dict.translateData(row, { gender: 'gender', status: 'status' })
+)
+// [{ gender: 'male', gender_label: 'Male', status: 0, status_label: 'Enabled', ... }, ...]
+</script>
+```
+
+> When mapping value is a `string`, the default store is used. To specify a store, use `{ type: 'status', storeName: 'dicts2' }`. The suffix defaults to `'_label'` and can be customized via the third parameter.
+
 ## vs useDict.translate
 
 | | `$dict.translate()` | `useDict().translate()` |

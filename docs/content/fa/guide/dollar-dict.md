@@ -83,6 +83,37 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
 </template>
 ```
 
+## translateData — ترجمه دسته‌ای اشیاء داده
+
+وقتی نیاز به ترجمه همزمان چندین فیلد کد در یک شیء داده دارید، از `translateData` استفاده کنید.
+
+```vue
+<template>
+  <table>
+    <tr v-for="row in processed" :key="row.id">
+      <td>{{ row.gender_label }}</td>
+      <td>{{ row.status_label }}</td>
+      <td>{{ row.name }}</td>
+    </tr>
+  </table>
+</template>
+
+<script setup>
+const tableData = [
+  { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
+  { id: 2, gender: 'female', status: 1, name: 'Li Si' },
+]
+
+// ترجمه دسته‌ای: نگاشت { فیلدمنبع: نوع‌دیکشنری } → شیء جدید با فیلدهای ترجمه شده
+const processed = tableData.map(row =>
+  $dict.translateData(row, { gender: 'gender', status: 'status' })
+)
+// [{ gender: 'male', gender_label: 'مرد', status: 0, status_label: 'غیرفعال', ... }, ...]
+</script>
+```
+
+> وقتی مقدار mapping یک `string` باشد، از مخزن پیش‌فرض استفاده می‌شود. برای تعیین مخزن مشخص از `{ type: 'status', storeName: 'dicts2' }` استفاده کنید. پسوند به‌طور پیش‌فرض `'_label'` است و با پارامتر سوم قابل تغییر است.
+
 ## مقایسه با useDict.translate
 
 | معیار | `$dict.translate()` | `useDict().translate()` |

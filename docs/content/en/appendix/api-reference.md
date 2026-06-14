@@ -51,6 +51,7 @@ useLocale(): { locale, setLocale, locales }
 |--------|-----------|
 | `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
+| `translateData` | `$dict.translateData(data, mapping, suffix?)` → returns new object with translated fields appended |
 
 ## Type Definitions
 

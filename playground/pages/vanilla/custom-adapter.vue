@@ -95,7 +95,7 @@ function doDefaultRefresh() {
 function doStore2Refresh() {
   store2Refresh()
 }
-const { $dict } = useNuxtApp()
+const { $dict} = useNuxtApp()
 const a = $dict.translate('gender', '1')
 const b = $dict.translate('gender', '1', { storeName: 'dicts2' })
 const c = $dict.translate('gender', '1' , { storeName: 'dicts', field: 'name' })
