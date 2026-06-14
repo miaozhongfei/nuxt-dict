@@ -30,13 +30,17 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
   const dictType = maybeType ?? storeOrType
 
   const tree = shallowRef<TreeNode[] | null>(null)
+  // String(code) → TreeNode 索引映射，O(1) 查找替代 O(N) 递归遍历
+  const nodeMap = new Map<string, TreeNode>()
+  // String(code) → 完整层级路径 索引映射
+  const pathMap = new Map<string, string[]>()
   const loading = ref(false)
 
   /**
    * 同步翻译树中任意节点的 value → label。
    *
-   * @description 默认从当前 useDictTree 的 tree ref（shallowRef）中递归查找，Vue 响应式系统可追踪，
-   * 可直接放在 computed 中使用。跨仓库时回退到 manager 的内存缓存查找。
+   * @description 默认从预建的 nodeMap（String(code) → TreeNode）中 O(1) 查找。
+   * 仍读 tree.value 保持 Vue 响应式依赖。跨仓库时回退到 manager 的内存缓存查找。
    *
    * @param {string | number} value - 节点编码值
    * @param {TranslateOptions} [opts] - 可选配置（field 指定取值字段，storeName 可覆盖仓库）
@@ -49,17 +53,18 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
     if (targetStore !== storeName) {
       return manager.translate(dictType, value, { storeName: targetStore, field })
     }
-    // 默认场景：从 tree ref（shallowRef）递归查找 → Vue 能追踪
+    // 默认场景：读 tree.value 保持响应式依赖，从 nodeMap O(1) 查找
     if (!tree.value) return String(value)
-    const node = findNodeByCode(tree.value, value)
+    const node = nodeMap.get(String(value))
     if (!node) return String(value)
     return (node[field] as string | undefined) ?? node.label
   }
 
   /**
-   * 在已加载的树数据中查找 value 对应的层级路径。
+   * 查找叶子节点的完整层级路径。
    *
-   * @description 从 tree ref（shallowRef）递归查找，Vue 响应式系统可追踪，可直接放在 computed 中使用。
+   * @description 从预建的 pathMap（String(code) → 完整路径数组）中 O(1) 查找。
+   * 仍读 tree.value 保持 Vue 响应式依赖。
    * @param {string | number} value - 叶子节点编码值
    * @returns {string[]} 从根节点到目标节点的 label 数组，未找到返回空数组
    *
@@ -68,7 +73,7 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
    */
   function findPath(value: string | number): string[] {
     if (!tree.value) return []
-    return findPathInTree(tree.value, value)
+    return pathMap.get(String(value)) ?? []
   }
 
   /**
@@ -81,6 +86,7 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
     try {
       const entry = await manager.getDict(dictType, storeName)
       tree.value = entry.tree ?? null
+      if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap)
     } finally {
       loading.value = false
     }
@@ -96,6 +102,7 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
     try {
       const entry = await manager.refresh(dictType, storeName)
       tree.value = entry.tree ?? null
+      if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap)
     } finally {
       loading.value = false
     }
@@ -110,47 +117,27 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
 }
 
 /**
- * 在树形字典中递归查找指定 code 的层级路径。
+ * 遍历整棵树，预建 String(code) → TreeNode 和 String(code) → 完整路径两个索引映射。
+ * 将 translate / findPath 从 O(N) 递归优化为 O(1) 直接查找。
  *
  * @param {TreeNode[]} nodes - 树节点数组
- * @param {string | number} targetCode - 目标叶子节点编码值
- * @returns {string[]} 从根节点到目标节点的 label 数组，未找到返回空数组
- *
- * @example
- * // code=440104 → ['广东', '广州', '越秀区']
- * findPathInTree(tree, '440104')
+ * @param {Map<string, TreeNode>} nodeMap - code → 节点的映射（会被填充）
+ * @param {Map<string, string[]>} pathMap - code → 完整路径的映射（会被填充）
+ * @param {string[]} ancestors - 当前节点的祖先 label 列表（内部递归用）
  */
-function findPathInTree(nodes: TreeNode[], targetCode: string | number): string[] {
+function buildMaps(
+  nodes: TreeNode[],
+  nodeMap: Map<string, TreeNode>,
+  pathMap: Map<string, string[]>,
+  ancestors: string[] = [],
+): void {
   for (const node of nodes) {
-    if (String(node.value) === String(targetCode)) {
-      return [node.label]
-    }
+    const code = String(node.value)
+    const path = [...ancestors, node.label]
+    nodeMap.set(code, node)
+    pathMap.set(code, path)
     if (node.children && node.children.length > 0) {
-      const childPath = findPathInTree(node.children, targetCode)
-      if (childPath.length > 0) {
-        return [node.label, ...childPath]
-      }
+      buildMaps(node.children, nodeMap, pathMap, path)
     }
   }
-  return []
-}
-
-/**
- * 在树形字典中递归查找指定 code 的节点。
- *
- * @param {TreeNode[]} nodes - 树节点数组
- * @param {string | number} targetCode - 目标节点编码值
- * @returns {TreeNode | undefined} 匹配的树节点，未找到返回 undefined
- */
-function findNodeByCode(nodes: TreeNode[], targetCode: string | number): TreeNode | undefined {
-  for (const node of nodes) {
-    if (String(node.value) === String(targetCode)) {
-      return node
-    }
-    if (node.children && node.children.length > 0) {
-      const found = findNodeByCode(node.children, targetCode)
-      if (found) return found
-    }
-  }
-  return undefined
 }

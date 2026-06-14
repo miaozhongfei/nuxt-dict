@@ -28,6 +28,7 @@ async function fetchDictData(
   loading: ReturnType<typeof ref<boolean>>,
   error: ReturnType<typeof ref<string | null>>,
   mode: 'load' | 'refresh' = 'load',
+  itemMap?: Map<string, DictItem>,
 ): Promise<void> {
   loading.value = true
   error.value = null
@@ -36,6 +37,13 @@ async function fetchDictData(
       ? manager.refresh(dictType, storeName)
       : manager.getDict(dictType, storeName))
     data.value = entry.items
+    // 预建 String(code) → DictItem 索引，O(1) 查找替代 O(N) .find()
+    if (itemMap) {
+      itemMap.clear()
+      for (const item of entry.items) {
+        itemMap.set(String(item.value), item)
+      }
+    }
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e)
   } finally {
@@ -88,6 +96,8 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
   const dictType = maybeType ?? storeOrType
 
   const data = shallowRef<DictItem[] | null>(null)
+  // String(code) → DictItem 索引映射，O(1) 查找替代 O(N) .find()
+  const itemMap = new Map<string, DictItem>()
   const loading = ref(false)
   const error = ref<string | null>(null)
   const instanceId = Symbol(dictType)
@@ -115,7 +125,7 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
     }
     // 默认场景：从 data ref（shallowRef）中查找，Vue 能追踪 → computed 可自动重算
     if (!data.value) return String(value)
-    const item = data.value.find((i) => String(i.value) === String(value))
+    const item = itemMap.get(String(value))
     if (!item) return String(value)
     return (item[field] as string | undefined) ?? item.label
   }
@@ -149,7 +159,7 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
     }
     // 默认场景：从 data ref（shallowRef）中查找，Vue 能追踪 → computed 可自动重算
     if (!data.value) return undefined
-    return data.value.find((i) => String(i.value) === String(value))
+    return itemMap.get(String(value))
   }
 
   /**
@@ -158,17 +168,17 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
    * @returns {Promise<void>}
    */
   async function refresh(): Promise<void> {
-    await fetchDictData(manager, dictType, storeName, data, loading, error, 'refresh')
+    await fetchDictData(manager, dictType, storeName, data, loading, error, 'refresh', itemMap)
   }
 
   onMounted(() => {
-    fetchDictData(manager, dictType, storeName, data, loading, error, 'load')
+    fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap)
   })
 
   // 监听语言切换，自动重新加载字典数据
   watch(
     () => manager.locale.value,
-    () => { fetchDictData(manager, dictType, storeName, data, loading, error, 'load') },
+    () => { fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap) },
   )
 
   return { data, translate, getDictItem, loading, error, refresh }
