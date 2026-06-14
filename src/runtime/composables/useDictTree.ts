@@ -32,17 +32,50 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
   const tree = shallowRef<TreeNode[] | null>(null)
   const loading = ref(false)
 
-  /** 翻译树中任意节点的 value → label。支持通过 opts.field 取自定义字段 */
+  /**
+   * 同步翻译树中任意节点的 value → label。
+   *
+   * @description 默认从当前 useDictTree 的 tree ref（shallowRef）中递归查找，Vue 响应式系统可追踪，
+   * 可直接放在 computed 中使用。跨仓库时回退到 manager 的内存缓存查找。
+   *
+   * @param {string | number} value - 节点编码值
+   * @param {TranslateOptions} [opts] - 可选配置（field 指定取值字段，storeName 可覆盖仓库）
+   * @returns {string} 翻译后的文本，未命中时返回 value 的字符串形式
+   */
   function translate(value: string | number, opts?: TranslateOptions): string {
-    return manager.translate(dictType, value, { storeName, ...opts })
+    const targetStore = opts?.storeName ?? storeName
+    const field = opts?.field ?? 'label'
+    // 跨仓库场景：当前 tree ref 只持有本仓库数据，回退到 manager
+    if (targetStore !== storeName) {
+      return manager.translate(dictType, value, { storeName: targetStore, field })
+    }
+    // 默认场景：从 tree ref（shallowRef）递归查找 → Vue 能追踪
+    if (!tree.value) return String(value)
+    const node = findNodeByCode(tree.value, value)
+    if (!node) return String(value)
+    return (node[field] as string | undefined) ?? node.label
   }
 
-  /** 在已加载的树数据中查找 value 对应的层级路径 */
+  /**
+   * 在已加载的树数据中查找 value 对应的层级路径。
+   *
+   * @description 从 tree ref（shallowRef）递归查找，Vue 响应式系统可追踪，可直接放在 computed 中使用。
+   * @param {string | number} value - 叶子节点编码值
+   * @returns {string[]} 从根节点到目标节点的 label 数组，未找到返回空数组
+   *
+   * @example
+   * findPath('440104')  // → ['广东', '广州', '越秀区']
+   */
   function findPath(value: string | number): string[] {
     if (!tree.value) return []
     return findPathInTree(tree.value, value)
   }
 
+  /**
+   * 从管理器加载树形字典数据，走正常缓存链（内存 → IndexedDB → 网络）。
+   *
+   * @returns {Promise<void>}
+   */
   async function load(): Promise<void> {
     loading.value = true
     try {
@@ -53,7 +86,11 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
     }
   }
 
-  /** 强制刷新，跳过缓存直接从服务端拉取 */
+  /**
+   * 强制刷新：跳过缓存，直接从网络获取最新树形数据。
+   *
+   * @returns {Promise<void>}
+   */
   async function refresh(): Promise<void> {
     loading.value = true
     try {
@@ -74,11 +111,18 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
 
 /**
  * 在树形字典中递归查找指定 code 的层级路径。
- * 例如 code=440104 → ['广东', '广州', '越秀区']
+ *
+ * @param {TreeNode[]} nodes - 树节点数组
+ * @param {string | number} targetCode - 目标叶子节点编码值
+ * @returns {string[]} 从根节点到目标节点的 label 数组，未找到返回空数组
+ *
+ * @example
+ * // code=440104 → ['广东', '广州', '越秀区']
+ * findPathInTree(tree, '440104')
  */
 function findPathInTree(nodes: TreeNode[], targetCode: string | number): string[] {
   for (const node of nodes) {
-    if (node.value === targetCode) {
+    if (String(node.value) === String(targetCode)) {
       return [node.label]
     }
     if (node.children && node.children.length > 0) {
@@ -89,4 +133,24 @@ function findPathInTree(nodes: TreeNode[], targetCode: string | number): string[
     }
   }
   return []
+}
+
+/**
+ * 在树形字典中递归查找指定 code 的节点。
+ *
+ * @param {TreeNode[]} nodes - 树节点数组
+ * @param {string | number} targetCode - 目标节点编码值
+ * @returns {TreeNode | undefined} 匹配的树节点，未找到返回 undefined
+ */
+function findNodeByCode(nodes: TreeNode[], targetCode: string | number): TreeNode | undefined {
+  for (const node of nodes) {
+    if (String(node.value) === String(targetCode)) {
+      return node
+    }
+    if (node.children && node.children.length > 0) {
+      const found = findNodeByCode(node.children, targetCode)
+      if (found) return found
+    }
+  }
+  return undefined
 }

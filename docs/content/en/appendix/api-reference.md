@@ -14,6 +14,7 @@ useDict(storeName: string, type: string): UseDictReturn
 |--------|------|-------------|
 | `data` | `ShallowRef<DictItem[] \| null>` | Raw dictionary data, each item is `{ value, label, ... }` |
 | `translate` | `(value: string \| number) => string` | Synchronous translation |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | Get full dictionary item |
 | `loading` | `Ref<boolean>` | Loading state |
 | `error` | `Ref<string \| null>` | Error info |
 | `refresh` | `() => Promise<void>` | Manual refresh |
@@ -52,6 +53,7 @@ useLocale(): { locale, setLocale, locales }
 | `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → returns new object with translated fields appended |
+| `getDictItem` | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → returns full DictItem object |
 
 ## Type Definitions
 

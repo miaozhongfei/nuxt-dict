@@ -10,6 +10,7 @@ description: 在模板中直接调用 $dict.translate() 做同步翻译，无需
 - 在模板中快速翻译某个 code，不想单独声明 composable
 - 在多个组件中翻译同一种字典类型，共享已缓存的翻译结果
 - 翻译树形字典的层级路径（`$dict.translatePath`）
+- 需要通过 code 获取完整的字典项对象（如获取颜色、图标等扩展字段，使用 `$dict.getDictItem`）
 
 ## $dict 是什么？
 
@@ -32,6 +33,11 @@ $dict.translatePath(type: string, value: string | number, opts: { storeName?: st
 
 // 批量翻译数据对象
 $dict.translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: string }>, suffix?: string): Record<string, unknown>
+
+// 获取完整字典项对象（返回 DictItem，非字符串）
+$dict.getDictItem(type: string, value: string | number): DictItem | undefined
+// 指定仓库
+$dict.getDictItem(type: string, value: string | number, opts: { storeName?: string }): DictItem | undefined
 ```
 
 ## 使用示例
@@ -88,6 +94,32 @@ $dict.translateData(data: Record<string, unknown>, mapping: Record<string, strin
   ```
 ::
 
+## getDictItem —— 获取完整字典项对象
+
+当需要获取字典项的完整对象（而非单独某个字段的文字翻译）时使用。比如拿到 `color` 字段用于组件属性。
+
+```vue
+<template>
+  <el-tag :color="(statusItem?.color as string)" effect="dark">
+    {{ statusItem?.label }}
+  </el-tag>
+</template>
+
+<script setup>
+// useDict 预加载数据
+useDict('status')
+
+// 获取完整 DictItem 对象，可直接访问 color 等扩展属性
+const statusItem = computed(() => $dict.getDictItem('status', 1))
+// → { value: 1, label: '启用', color: '#67C23A' }
+
+// 跨仓库
+const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' })
+</script>
+```
+
+> 返回值是 `DictItem | undefined`。缓存未命中时返回 `undefined`，与 `translate()` 返回 code 原文的行为不同。
+
 ## translateData —— 批量翻译数据对象
 
 当需要一次性翻译数据对象中的多个编码字段时，使用 `translateData`。
@@ -140,4 +172,5 @@ $dict.translateData(
 
 - [ ] 在模板中使用 `$dict.translate()` 做同步翻译
 - [ ] 使用 `$dict.translatePath()` 获取树形字典的层级路径
+- [ ] 使用 `$dict.getDictItem()` 获取完整字典项对象
 - [ ] 理解 `$dict` 与 `useDict().translate` 的适用场景差异

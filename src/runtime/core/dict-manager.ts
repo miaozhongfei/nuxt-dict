@@ -3,7 +3,7 @@ import { shallowRef } from 'vue'
 import { MemoryCache } from './cache/memory-cache'
 import { IndexedDBCache, DEFAULT_STORE_NAME } from './cache/indexeddb-cache'
 import { VersionCheck } from './cache/version-check'
-import type { DictAdapter, DictEntry, DictItem, TreeNode, CacheEntry, TranslateOptions, TranslatePathOptions } from '../types'
+import type { DictAdapter, DictEntry, DictItem, TreeNode, CacheEntry, TranslateOptions, TranslatePathOptions, GetDictItemOptions } from '../types'
 
 /**
  * DictManager 构造参数。
@@ -278,6 +278,24 @@ export class DictManager {
     const item = entry.data.items.find((i: DictItem) => this.codeMatch(i.value, value))
     if (!item) return String(value)
     return (item[field] as string | undefined) ?? item.label
+  }
+
+  /**
+   * 从内存缓存中查找编码对应的完整字典项对象。
+   * 参数与 translate 一致，但返回整个 DictItem 而非提取字段。
+   *
+   * @param {string} type - 字典类型名，如 'gender'
+   * @param {string | number} value - 字典编码值
+   * @param {GetDictItemOptions} opts - 可选配置（storeName 指定仓库）
+   * @returns {DictItem | undefined} 完整的字典项对象，缓存未命中时返回 undefined
+   */
+  getDictItem(type: string, value: string | number, opts?: GetDictItemOptions): DictItem | undefined {
+    const storeName = opts?.storeName ?? DEFAULT_STORE_NAME
+    const key = this.buildKey(type, storeName)
+    const entry = this.memoryCache.get(key)
+    if (!entry) return undefined
+
+    return entry.data.items.find((i: DictItem) => this.codeMatch(i.value, value))
   }
 
   /**

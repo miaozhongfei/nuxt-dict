@@ -11,7 +11,7 @@ import type { Resolver } from '@nuxt/kit';
 
 export type { ModuleOptions };
 export type { DictManager } from './runtime/core/dict-manager'
-export type { DictTranslator } from './runtime/types'
+export type { DictTranslator, DictItem, TreeNode, TranslateOptions, TranslatePathOptions, GetDictItemOptions } from './runtime/types'
 export { createDictTranslator } from './runtime/utils/dict-translator'
 
 /**
@@ -74,12 +74,25 @@ declare module '#app' {
        * )
        * // → { ..., gender_label: '男', status_label: '禁用', ... }
        */
-      translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: StoreKey }>, suffix?: string): Record<string, unknown>
-    }
-  }
-}
+       translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: StoreKey }>, suffix?: string): Record<string, unknown>
+       /**
+        * 从内存缓存中查找编码对应的完整字典项对象。
+        * @description 从已加载的缓存中查找编码对应的完整 DictItem 对象（非字符串翻译）。缓存未命中时返回 undefined。
+        * @param type - 字典类型名，如 'gender'
+        * @param code - 编码值
+        * @param opts - 可选配置对象
+        * @param {StoreKey} [opts.storeName] - 指定仓库名
+        * @returns {DictItem | undefined} 完整的字典项对象，缓存未命中时返回 undefined
+        * @example
+        * $dict.getDictItem('gender', 'male')
+        * $dict.getDictItem('gender', 'male', { storeName: 'dicts2' })
+        */
+       getDictItem(type: string, code: string | number, opts?: { storeName?: StoreKey }): DictItem | undefined
+     }
+   }
+ }
 
-declare module '@vue/runtime-core' {
+ declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $dict: {
       /**
@@ -125,12 +138,25 @@ declare module '@vue/runtime-core' {
        * )
        * // → { ..., gender_label: '男', status_label: '禁用', ... }
        */
-      translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: StoreKey }>, suffix?: string): Record<string, unknown>
-    }
-  }
-}
+       translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: StoreKey }>, suffix?: string): Record<string, unknown>
+       /**
+        * 从内存缓存中查找编码对应的完整字典项对象。
+        * @description 从已加载的缓存中查找编码对应的完整 DictItem 对象（非字符串翻译）。缓存未命中时返回 undefined。
+        * @param type - 字典类型名，如 'gender'
+        * @param code - 编码值
+        * @param opts - 可选配置对象
+        * @param {StoreKey} [opts.storeName] - 指定仓库名
+        * @returns {DictItem | undefined} 完整的字典项对象，缓存未命中时返回 undefined
+        * @example
+        * $dict.getDictItem('gender', 'male')
+        * $dict.getDictItem('gender', 'male', { storeName: 'dicts2' })
+        */
+       getDictItem(type: string, code: string | number, opts?: { storeName?: StoreKey }): DictItem | undefined
+     }
+   }
+ }
 
-export {}
+ export {}
 `,
   })
 

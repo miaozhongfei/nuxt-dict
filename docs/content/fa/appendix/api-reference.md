@@ -14,6 +14,7 @@ useDict(storeName: string, type: string): UseDictReturn
 |--------|------|-----------|
 | `data` | `ShallowRef<DictItem[] \| null>` | داده‌های خام دیکشنری، هر آیتم `{ value, label, ... }` |
 | `translate` | `(value: string \| number) => string` | تابع ترجمه همزمان |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | دریافت آیتم کامل دیکشنری |
 | `loading` | `Ref<boolean>` | وضعیت بارگذاری |
 | `error` | `Ref<string \| null>` | اطلاعات خطا |
 | `refresh` | `() => Promise<void>` | بازنشانی دستی |
@@ -52,6 +53,7 @@ useLocale(): { locale, setLocale, locales }
 | `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → شیء جدید با فیلدهای ترجمه شده برمی‌گرداند |
+| `getDictItem` | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → شیء کامل DictItem برمی‌گرداند |
 
 ## تعاریف نوع
 

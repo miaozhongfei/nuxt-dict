@@ -28,7 +28,12 @@ export function useLocale() {
 
   const options = (useRuntimeConfig().public.dict ?? defaultOptions) as ResolvedModuleOptions
 
-  /** 切换语言并持久化到 cookie */
+  /**
+   * 切换语言并持久化到 cookie。
+   * 会同步更新 DictManager 的语言状态，触发所有活跃的 useDict / useDictTree 组件自动重取数据。
+   *
+   * @param {string} newLocale - 目标语言代码，如 'en-US'、'zh-CN'
+   */
   function setLocale(newLocale: string) {
     manager.setLocale(newLocale)
 

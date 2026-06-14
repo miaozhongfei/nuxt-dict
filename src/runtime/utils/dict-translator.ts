@@ -1,5 +1,5 @@
 import type { DictManager } from '../core/dict-manager'
-import type { DictTranslator, TranslateOptions, TranslatePathOptions, StoreKey } from '../types'
+import type { DictTranslator, DictItem, TranslateOptions, TranslatePathOptions, GetDictItemOptions, StoreKey } from '../types'
 
 /** 批翻译映射配置：字段名 → 字典类型 string 或 { type, storeName? } */
 type TranslateDataMappingValue = string | { type: string; storeName?: StoreKey }
@@ -31,6 +31,20 @@ function translatePath(
   opts?: TranslatePathOptions,
 ): string {
   return manager.translatePath(type, code, opts)
+}
+
+/**
+ * 从内存缓存中查找编码对应的完整字典项对象。
+ * 与 translate 参数一致，但返回整个 DictItem 而非提取字符串字段。
+ * 由 createDictTranslator 内部委托，独立为函数以控制长度。
+ */
+function getDictItem(
+  manager: DictManager,
+  type: string,
+  code: string | number,
+  opts?: GetDictItemOptions,
+): DictItem | undefined {
+  return manager.getDictItem(type, code, opts)
 }
 
 /**
@@ -154,6 +168,25 @@ export function createDictTranslator(manager: DictManager): DictTranslator {
       suffix: string = '_label',
     ): Record<string, unknown> {
       return translateData(manager, data, mapping, suffix)
+    },
+
+    /**
+     * 从内存缓存中查找编码对应的完整字典项对象。
+     *
+     * @description 与 translate 参数一致，但返回整个 DictItem 而非提取单个字段。缓存未命中时返回 undefined。
+     * @param {string} type - 字典类型名，如 'gender'、'status'
+     * @param {string | number} code - 字典编码值
+     * @param {GetDictItemOptions} [opts] - 可选配置（storeName 指定仓库）
+     * @returns {DictItem | undefined} 完整的字典项对象，缓存未命中时返回 undefined
+     *
+     * @example
+     * $dict.getDictItem('gender', 'male')
+     * // → { value: 'male', label: '男' }
+     * $dict.getDictItem('gender', 'male', { storeName: 'dicts2' })
+     * // → { value: 'male', label: '男（源2）' }
+     */
+    getDictItem(type: string, code: string | number, opts?: GetDictItemOptions): DictItem | undefined {
+      return getDictItem(manager, type, code, opts)
     },
   }
 }

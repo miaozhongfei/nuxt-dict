@@ -2,7 +2,7 @@ import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useNuxtApp } from '#imports'
 import type { DictManager } from '../core/dict-manager'
 import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache'
-import type { DictItem, UseDictReturn, StoreKey, TranslateOptions } from '../types'
+import type { DictItem, UseDictReturn, StoreKey, TranslateOptions, GetDictItemOptions } from '../types'
 
 /** 跟踪同一字典类型的活跃组件实例，用于监听变更。key 格式: `{storeName}:{type}` */
 const activeInstances = new Map<string, Set<symbol>>()
@@ -10,6 +10,15 @@ const activeInstances = new Map<string, Set<symbol>>()
 /**
  * 从管理器拉取字典数据并更新响应式状态。
  * 抽取 load/refresh 共用逻辑以减少重复。
+ *
+ * @param {DictManager} manager - 字典管理器实例
+ * @param {string} dictType - 字典类型名，如 'gender'
+ * @param {string} storeName - 仓库名，如 'dicts'
+ * @param {ReturnType<typeof shallowRef<DictItem[] | null>>} data - 响应式数据引用
+ * @param {ReturnType<typeof ref<boolean>>} loading - 加载状态引用
+ * @param {ReturnType<typeof ref<string | null>>} error - 错误信息引用
+ * @param {'load' | 'refresh'} mode - 加载模式，load 走正常缓存链，refresh 跳过缓存
+ * @returns {Promise<void>}
  */
 async function fetchDictData(
   manager: DictManager,
@@ -86,10 +95,68 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
 
   trackInstance(trackKey, instanceId)
 
+  /**
+   * 同步翻译编码 → 文本。
+   *
+   * @description 默认从当前 useDict 的 data ref（shallowRef）中查找，Vue 响应式系统可追踪，
+   * 可直接放在 computed 中使用。跨仓库时回退到 manager 的内存缓存查找。
+   *
+   * @param {string | number} value - 字典编码值
+   * @param {TranslateOptions} [opts] - 可选配置（field 指定取值字段，storeName 覆盖仓库）
+   * @returns {string} 翻译后的文本，缓存未命中时返回 value 的字符串形式
+   */
   function translate(value: string | number, opts?: TranslateOptions): string {
-    return manager.translate(dictType, value, { storeName, ...opts })
+    const targetStore = opts?.storeName ?? storeName
+    const field = opts?.field ?? 'label'
+    // 跨仓库场景：当前 data ref 只持有本仓库数据，回退到 manager 的内存缓存查找
+    // 极少使用，非响应式可接受
+    if (targetStore !== storeName) {
+      return manager.translate(dictType, value, { storeName: targetStore, field })
+    }
+    // 默认场景：从 data ref（shallowRef）中查找，Vue 能追踪 → computed 可自动重算
+    if (!data.value) return String(value)
+    const item = data.value.find((i) => String(i.value) === String(value))
+    if (!item) return String(value)
+    return (item[field] as string | undefined) ?? item.label
   }
 
+  /**
+   * 同步获取完整字典项对象。
+   *
+   * @description 默认从当前 useDict 的 data ref（shallowRef）中查找，Vue 响应式系统可追踪，
+   * 可直接放在 computed 中使用。跨仓库时回退到 manager 的内存缓存查找。
+   * 与 translate 参数一致，但返回整个 DictItem 而非提取字符串字段。
+   *
+   * @param {string | number} value - 字典编码值
+   * @param {GetDictItemOptions} [opts] - 可选配置（storeName 指定目标仓库）
+   * @returns {DictItem | undefined} 完整的字典项对象，缓存未命中时返回 undefined
+   *
+   * @example
+   * const { getDictItem } = useDict('status')
+   * // 当前仓库，从 data ref 读取 → computed 可追踪 ✅
+   * const item = computed(() => getDictItem(1))
+   * // → { value: 1, label: '启用', color: '#67C23A' }
+   *
+   * @example
+   * // 跨仓库回退到 manager 内存缓存
+   * const item = getDictItem(1, { storeName: 'dicts2' })
+   */
+  function getDictItem(value: string | number, opts?: GetDictItemOptions): DictItem | undefined {
+    // 跨仓库场景：当前 data ref 只持有本仓库数据，回退到 manager 的内存缓存查找
+    // 极少使用，非响应式可接受
+    if (opts?.storeName && opts.storeName !== storeName) {
+      return manager.getDictItem(dictType, value, opts)
+    }
+    // 默认场景：从 data ref（shallowRef）中查找，Vue 能追踪 → computed 可自动重算
+    if (!data.value) return undefined
+    return data.value.find((i) => String(i.value) === String(value))
+  }
+
+  /**
+   * 强制刷新：跳过内存缓存和 IndexedDB，直接从网络获取最新数据。
+   *
+   * @returns {Promise<void>}
+   */
   async function refresh(): Promise<void> {
     await fetchDictData(manager, dictType, storeName, data, loading, error, 'refresh')
   }
@@ -104,5 +171,5 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
     () => { fetchDictData(manager, dictType, storeName, data, loading, error, 'load') },
   )
 
-  return { data, translate, loading, error, refresh }
+  return { data, translate, getDictItem, loading, error, refresh }
 }

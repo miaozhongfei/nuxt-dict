@@ -27,6 +27,7 @@ useDict(storeName: string, type: string): UseDictReturn
 |----------|------|-------------|
 | `data` | `ShallowRef<DictItem[] \| null>` | Raw dictionary data array. Starts as `null`, becomes `[{ value: 0, label: 'Disabled' }, ...]` after loading |
 | `translate` | `(value: string \| number) => string` | Synchronous translation function. Input code, output the corresponding label. Falls back to the code as a string if not found |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | Synchronously get the full dictionary item object. Returns `{ value, label, ... }`, or `undefined` on cache miss |
 | `loading` | `Ref<boolean>` | Whether data is loading |
 | `error` | `Ref<string \| null>` | Error message on failure |
 | `refresh` | `() => Promise<void>` | Force refresh, skipping cache |
@@ -82,6 +83,27 @@ function doRefresh() { refresh() }
 
 > **Why is translation synchronous?** Once `useDict('status')` has finished loading data on mount, the `status` dictionary data is in memory. Subsequent `translate()` calls look up directly from memory.
 
+## Get Full Dictionary Item (getDictItem)
+
+Use when you need the full `DictItem` object rather than a string translation of a single field. For example, to access the `color` field for component properties.
+
+```vue
+<template>
+  <el-tag :color="(statusItem?.color as string)" effect="dark">
+    {{ statusItem?.label }}
+  </el-tag>
+</template>
+
+<script setup lang="ts">
+const { getDictItem } = useDict('status')
+
+const statusItem = computed(() => getDictItem(1))
+// → { value: 1, label: 'Enabled', color: '#67C23A' }
+</script>
+```
+
+> `getDictItem` is also synchronous, looking up from the memory cache. Returns `undefined` on cache miss.
+
 ## Automatic Code Type Conversion
 
 Dictionary item codes may be `number` (e.g., `0`), while your business data may be `string` (e.g., `'0'`). `translate()` automatically converts both to strings for comparison:
@@ -118,5 +140,6 @@ See [Multi-Store](/advanced/multi-store) for details.
 - [ ] Use `useDict('type')` to get dictionary data and translation
 - [ ] Handle `loading` / `error` states correctly
 - [ ] Use `translate()` for code → label conversion
+- [ ] Use `getDictItem()` to get full dictionary item objects (with extended fields)
 - [ ] Call `refresh()` to force cache invalidation
 - [ ] Use `useDict('store', 'type')` for specific stores

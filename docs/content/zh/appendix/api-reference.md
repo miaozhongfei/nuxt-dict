@@ -14,6 +14,7 @@ useDict(storeName: string, type: string): UseDictReturn
 |--------|------|------|
 | `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据，每项为 `{ value, label, ... }` |
 | `translate` | `(value: string \| number) => string` | 同步翻译函数 |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | 同步获取完整字典项对象 |
 | `loading` | `Ref<boolean>` | 加载状态 |
 | `error` | `Ref<string \| null>` | 错误信息 |
 | `refresh` | `() => Promise<void>` | 手动刷新 |
@@ -52,6 +53,7 @@ useLocale(): { locale, setLocale, locales }
 | `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → 返回追加了翻译字段的新对象 |
+| `getDictItem` | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → 返回完整 DictItem 对象 |
 
 ## 类型定义
 
