@@ -20,13 +20,13 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 
 ## مقادیر بازگشتی
 
-| ویژگی | نوع | توضیح |
-|--------|------|-----------|
-| `tree` | `ShallowRef<TreeNode[] \| null>` | داده‌های کامل درختی دیکشنری |
-| `translate` | `(value: string \| number) => string` | ترجمه گره در هر عمقی |
-| `findPath` | `(value: string \| number) => string[]` | بازگشت مسیر. کد گره برگ را دریافت کرده و آرایه label از ریشه تا آن گره را برمی‌گرداند |
-| `loading` | `Ref<boolean>` | آیا در حال بارگذاری است |
-| `refresh` | `() => Promise<void>` | بازنشانی دستی |
+| ویژگی       | نوع                                     | توضیح                                                                                 |
+| ----------- | --------------------------------------- | ------------------------------------------------------------------------------------- |
+| `tree`      | `ShallowRef<TreeNode[] \| null>`        | داده‌های کامل درختی دیکشنری                                                           |
+| `translate` | `(value: string \| number) => string`   | ترجمه گره در هر عمقی                                                                  |
+| `findPath`  | `(value: string \| number) => string[]` | بازگشت مسیر. کد گره برگ را دریافت کرده و آرایه label از ریشه تا آن گره را برمی‌گرداند |
+| `loading`   | `Ref<boolean>`                          | آیا در حال بارگذاری است                                                               |
+| `refresh`   | `() => Promise<void>`                   | بازنشانی دستی                                                                         |
 
 ## findPath: بازگشت مسیر
 
@@ -53,7 +53,7 @@ Guangdong
 </template>
 
 <script setup lang="ts">
-const { findPath } = useDictTree('region')
+const { findPath } = useDictTree('region');
 </script>
 ```
 
@@ -71,13 +71,13 @@ const { findPath } = useDictTree('region')
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
-const selected = ref([])
+const { tree } = useDictTree('region');
+const selected = ref([]);
 
 // el-cascader به value / label / children نیاز دارد
 // TreeNode ما دقیقاً code / label / children دارد
 // با ویژگی props نگاشت انجام می‌شود، نیازی به تبدیل داده نیست
-const cascaderOptions = computed(() => tree.value ?? [])
+const cascaderOptions = computed(() => tree.value ?? []);
 </script>
 ```
 

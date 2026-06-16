@@ -23,14 +23,14 @@ useDict(storeName: string, type: string): UseDictReturn
 
 ## Return Values
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `data` | `ShallowRef<DictItem[] \| null>` | Raw dictionary data array. Starts as `null`, becomes `[{ value: 0, label: 'Disabled' }, ...]` after loading |
-| `translate` | `(value: string \| number) => string` | Synchronous translation function. Input code, output the corresponding label. Falls back to the code as a string if not found |
-| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | Synchronously get the full dictionary item object. Returns `{ value, label, ... }`, or `undefined` on cache miss |
-| `loading` | `Ref<boolean>` | Whether data is loading |
-| `error` | `Ref<string \| null>` | Error message on failure |
-| `refresh` | `() => Promise<void>` | Force refresh, skipping cache |
+| Property      | Type                                                 | Description                                                                                                                   |
+| ------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `data`        | `ShallowRef<DictItem[] \| null>`                     | Raw dictionary data array. Starts as `null`, becomes `[{ value: 0, label: 'Disabled' }, ...]` after loading                   |
+| `translate`   | `(value: string \| number) => string`                | Synchronous translation function. Input code, output the corresponding label. Falls back to the code as a string if not found |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | Synchronously get the full dictionary item object. Returns `{ value, label, ... }`, or `undefined` on cache miss              |
+| `loading`     | `Ref<boolean>`                                       | Whether data is loading                                                                                                       |
+| `error`       | `Ref<string \| null>`                                | Error message on failure                                                                                                      |
+| `refresh`     | `() => Promise<void>`                                | Force refresh, skipping cache                                                                                                 |
 
 ## Basic Example
 
@@ -46,7 +46,11 @@ useDict(storeName: string, type: string): UseDictReturn
 
     <table v-else border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
       <thead>
-        <tr><th>Code</th><th>Label</th><th>Translate Check</th></tr>
+        <tr>
+          <th>Code</th>
+          <th>Label</th>
+          <th>Translate Check</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="item in data" :key="item.value">
@@ -60,9 +64,11 @@ useDict(storeName: string, type: string): UseDictReturn
 </template>
 
 <script setup lang="ts">
-const { data, translate, loading, error, refresh } = useDict('status')
+const { data, translate, loading, error, refresh } = useDict('status');
 
-function doRefresh() { refresh() }
+function doRefresh() {
+  refresh();
+}
 </script>
 ```
 
@@ -89,15 +95,15 @@ Use when you need the full `DictItem` object rather than a string translation of
 
 ```vue
 <template>
-  <el-tag :color="(statusItem?.color as string)" effect="dark">
+  <el-tag :color="statusItem?.color as string" effect="dark">
     {{ statusItem?.label }}
   </el-tag>
 </template>
 
 <script setup lang="ts">
-const { getDictItem } = useDict('status')
+const { getDictItem } = useDict('status');
 
-const statusItem = computed(() => getDictItem(1))
+const statusItem = computed(() => getDictItem(1));
 // → { value: 1, label: 'Enabled', color: '#67C23A' }
 </script>
 ```
@@ -109,8 +115,8 @@ const statusItem = computed(() => getDictItem(1))
 Dictionary item codes may be `number` (e.g., `0`), while your business data may be `string` (e.g., `'0'`). `translate()` automatically converts both to strings for comparison:
 
 ```ts
-translate(0)   // → 'Disabled'
-translate('0') // → 'Disabled'
+translate(0); // → 'Disabled'
+translate('0'); // → 'Disabled'
 ```
 
 ## Manual Refresh
@@ -122,10 +128,10 @@ Call `refresh()` to force a re-fetch from the server, skipping both memory and I
 ```vue
 <script setup lang="ts">
 // Default store 'dicts'
-const { data } = useDict('gender')
+const { data } = useDict('gender');
 
 // Store 'payment'
-const { data: payData } = useDict('payment', 'status')
+const { data: payData } = useDict('payment', 'status');
 </script>
 ```
 

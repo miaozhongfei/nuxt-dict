@@ -1,12 +1,20 @@
-import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import type { ShallowRef, DeepReadonly } from 'vue'
-import { useNuxtApp } from '#imports'
-import type { DictManager } from '../core/dict-manager'
-import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache'
-import type { DictItem, UseDictReturn, StoreKey, TranslateOptions, GetDictItemOptions } from '../types'
+import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import type { ShallowRef, DeepReadonly } from 'vue';
+
+import { useNuxtApp } from '#imports';
+
+import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache';
+import type { DictManager } from '../core/dict-manager';
+import type {
+  DictItem,
+  UseDictReturn,
+  StoreKey,
+  TranslateOptions,
+  GetDictItemOptions,
+} from '../types';
 
 /** 跟踪同一字典类型的活跃组件实例，用于监听变更。key 格式: `{storeName}:{type}` */
-const activeInstances = new Map<string, Set<symbol>>()
+const activeInstances = new Map<string, Set<symbol>>();
 
 /**
  * 从管理器拉取字典数据并更新响应式状态。
@@ -31,43 +39,43 @@ async function fetchDictData(
   mode: 'load' | 'refresh' = 'load',
   itemMap?: Map<string, DictItem>,
 ): Promise<void> {
-  loading.value = true
-  error.value = null
+  loading.value = true;
+  error.value = null;
   try {
     const entry = await (mode === 'refresh'
       ? manager.refresh(dictType, storeName)
-      : manager.getDict(dictType, storeName))
-    data.value = entry.items
+      : manager.getDict(dictType, storeName));
+    data.value = entry.items;
     // 预建 String(code) → DictItem 索引，O(1) 查找替代 O(N) .find()
     if (itemMap) {
-      itemMap.clear()
+      itemMap.clear();
       for (const item of entry.items) {
-        itemMap.set(String(item.value), item)
+        itemMap.set(String(item.value), item);
       }
     }
   } catch (e) {
-    error.value = e instanceof Error ? e.message : String(e)
+    error.value = e instanceof Error ? e.message : String(e);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 /** 注册组件实例到活跃追踪表，卸载时自动清理 */
 function trackInstance(type: string, instanceId: symbol): void {
   if (!activeInstances.has(type)) {
-    activeInstances.set(type, new Set())
+    activeInstances.set(type, new Set());
   }
-  activeInstances.get(type)!.add(instanceId)
+  activeInstances.get(type)!.add(instanceId);
 
   onBeforeUnmount(() => {
-    const instances = activeInstances.get(type)
+    const instances = activeInstances.get(type);
     if (instances) {
-      instances.delete(instanceId)
+      instances.delete(instanceId);
       if (instances.size === 0) {
-        activeInstances.delete(type)
+        activeInstances.delete(type);
       }
     }
-  })
+  });
 }
 
 /**
@@ -87,24 +95,24 @@ function trackInstance(type: string, instanceId: symbol): void {
  * // 指定存储库 'dicts2'
  * const { data, translate } = useDict('dicts2', 'gender')
  */
-export function useDict(type: string): UseDictReturn
-export function useDict(storeName: StoreKey, type: string): UseDictReturn
+export function useDict(type: string): UseDictReturn;
+export function useDict(storeName: StoreKey, type: string): UseDictReturn;
 export function useDict(storeOrType: string, maybeType?: string): UseDictReturn {
-  const nuxtApp = useNuxtApp()
-  const manager = nuxtApp.$dictManager as DictManager
+  const nuxtApp = useNuxtApp();
+  const manager = nuxtApp.$dictManager as DictManager;
 
-  const storeName = (maybeType === undefined ? DEFAULT_STORE_NAME : storeOrType) as StoreKey
-  const dictType = maybeType ?? storeOrType
+  const storeName = (maybeType === undefined ? DEFAULT_STORE_NAME : storeOrType) as StoreKey;
+  const dictType = maybeType ?? storeOrType;
 
-  const data = shallowRef<DictItem[] | null>(null)
+  const data = shallowRef<DictItem[] | null>(null);
   // String(code) → DictItem 索引映射，O(1) 查找替代 O(N) .find()
-  const itemMap = new Map<string, DictItem>()
-  const loading = ref(false)
-  const error = ref<string | null>(null)
-  const instanceId = Symbol(dictType)
-  const trackKey = `${storeName}:${dictType}`
+  const itemMap = new Map<string, DictItem>();
+  const loading = ref(false);
+  const error = ref<string | null>(null);
+  const instanceId = Symbol(dictType);
+  const trackKey = `${storeName}:${dictType}`;
 
-  trackInstance(trackKey, instanceId)
+  trackInstance(trackKey, instanceId);
 
   /**
    * 同步翻译编码 → 文本。
@@ -117,18 +125,18 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
    * @returns {string} 翻译后的文本，缓存未命中时返回 value 的字符串形式
    */
   function translate(value: string | number, opts?: TranslateOptions): string {
-    const targetStore = opts?.storeName ?? storeName
-    const field = opts?.field ?? 'label'
+    const targetStore = opts?.storeName ?? storeName;
+    const field = opts?.field ?? 'label';
     // 跨仓库场景：当前 data ref 只持有本仓库数据，回退到 manager 的内存缓存查找
     // 极少使用，非响应式可接受
     if (targetStore !== storeName) {
-      return manager.translate(dictType, value, { storeName: targetStore, field })
+      return manager.translate(dictType, value, { storeName: targetStore, field });
     }
     // 默认场景：从 data ref（shallowRef）中查找，Vue 能追踪 → computed 可自动重算
-    if (!data.value) return String(value)
-    const item = itemMap.get(String(value))
-    if (!item) return String(value)
-    return (item[field] as string | undefined) ?? item.label
+    if (!data.value) return String(value);
+    const item = itemMap.get(String(value));
+    if (!item) return String(value);
+    return (item[field] as string | undefined) ?? item.label;
   }
 
   /**
@@ -156,11 +164,11 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
     // 跨仓库场景：当前 data ref 只持有本仓库数据，回退到 manager 的内存缓存查找
     // 极少使用，非响应式可接受
     if (opts?.storeName && opts.storeName !== storeName) {
-      return manager.getDictItem(dictType, value, opts)
+      return manager.getDictItem(dictType, value, opts);
     }
     // 默认场景：从 data ref（shallowRef）中查找，Vue 能追踪 → computed 可自动重算
-    if (!data.value) return undefined
-    return itemMap.get(String(value))
+    if (!data.value) return undefined;
+    return itemMap.get(String(value));
   }
 
   /**
@@ -169,18 +177,27 @@ export function useDict(storeOrType: string, maybeType?: string): UseDictReturn 
    * @returns {Promise<void>}
    */
   async function refresh(): Promise<void> {
-    await fetchDictData(manager, dictType, storeName, data, loading, error, 'refresh', itemMap)
+    await fetchDictData(manager, dictType, storeName, data, loading, error, 'refresh', itemMap);
   }
 
   onMounted(() => {
-    fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap)
-  })
+    fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap);
+  });
 
   // 监听语言切换，自动重新加载字典数据
   watch(
     () => manager.locale.value,
-    () => { fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap) },
-  )
+    () => {
+      fetchDictData(manager, dictType, storeName, data, loading, error, 'load', itemMap);
+    },
+  );
 
-  return { data: data as unknown as Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>, translate, getDictItem, loading, error, refresh }
+  return {
+    data: data as unknown as Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>,
+    translate,
+    getDictItem,
+    loading,
+    error,
+    refresh,
+  };
 }

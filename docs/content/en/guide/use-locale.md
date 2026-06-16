@@ -23,11 +23,11 @@ useLocale(): {
 
 ## Return Values
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `locale` | `Ref<string>` | Current language code, e.g., `'zh-CN'` |
+| Property    | Type                          | Description                                            |
+| ----------- | ----------------------------- | ------------------------------------------------------ |
+| `locale`    | `Ref<string>`                 | Current language code, e.g., `'zh-CN'`                 |
 | `setLocale` | `(newLocale: string) => void` | Switch language, update cookie, clear dictionary cache |
-| `locales` | `string[]` | Supported language list |
+| `locales`   | `string[]`                    | Supported language list                                |
 
 ## Basic Example
 
@@ -35,13 +35,23 @@ useLocale(): {
 <template>
   <div>
     <p>Current language: {{ locale }}</p>
-    <button @click="setLocale('zh-CN')" :style="{ fontWeight: locale === 'zh-CN' ? 'bold' : 'normal' }">中文</button>
-    <button @click="setLocale('en-US')" :style="{ fontWeight: locale === 'en-US' ? 'bold' : 'normal' }">English</button>
+    <button
+      @click="setLocale('zh-CN')"
+      :style="{ fontWeight: locale === 'zh-CN' ? 'bold' : 'normal' }"
+    >
+      中文
+    </button>
+    <button
+      @click="setLocale('en-US')"
+      :style="{ fontWeight: locale === 'en-US' ? 'bold' : 'normal' }"
+    >
+      English
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-const { locale, setLocale } = useLocale()
+const { locale, setLocale } = useLocale();
 </script>
 ```
 

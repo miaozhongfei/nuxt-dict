@@ -43,21 +43,24 @@ export default defineNuxtConfig({
             return {
               version: 'static-1.0',
               data: {
-                priority: { type: 'priority', items: [
-                  { value: 'high', label: `اولویت بالا (${locale})` },
-                  { value: 'low', label: `اولویت پایین (${locale})` },
-                ] },
+                priority: {
+                  type: 'priority',
+                  items: [
+                    { value: 'high', label: `اولویت بالا (${locale})` },
+                    { value: 'low', label: `اولویت پایین (${locale})` },
+                  ],
+                },
               },
-            }
+            };
           },
           async fetchVersion(_storeName) {
-            return 'static-1.0'
+            return 'static-1.0';
           },
         },
       },
     },
   },
-})
+});
 ```
 
 ## قوانین وراثت پیکربندی
@@ -68,6 +71,7 @@ export default defineNuxtConfig({
 - **فیلدهای پیکربندی شده** مقدار سراسری را بازنویسی می‌کنند
 
 برای مخزن `logistics` به عنوان مثال:
+
 - `baseURL` پیکربندی نشده ← به ارث بردن `''` سراسری (API محلی)
 - `dictEndpoint` به صورت `/api/logistics/dict` پیکربندی شده ← بازنویسی `/api/dict/list` سراسری
 - `versionEndpoint` پیکربندی نشده ← به ارث بردن `/api/dict/version` سراسری
@@ -89,16 +93,18 @@ export default defineNuxtConfig({
   <div>
     <h3>اولویت (static store — آداپتور سفارشی)</h3>
     <select v-model="priority">
-      <option v-for="opt in staticOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+      <option v-for="opt in staticOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }}
+      </option>
     </select>
   </div>
 </template>
 
 <script setup lang="ts">
 // مخزن static از آداپتور سفارشی استفاده می‌کند، بدون درخواست شبکه
-const { options: staticOptions } = useDict('static', 'priority')
+const { options: staticOptions } = useDict('static', 'priority');
 
-const priority = ref('')
+const priority = ref('');
 </script>
 ```
 
@@ -125,13 +131,13 @@ const priority = ref('')
 
 <script setup lang="ts">
 // مخزن پیش‌فرض: استفاده از پیکربندی api سراسری
-const { options: orderOptions } = useDict('order_status')
+const { options: orderOptions } = useDict('order_status');
 
 // مخزن payment: https://pay-api.example.com/v1/dictionary
-const { options: payOptions } = useDict('payment', 'pay_method')
+const { options: payOptions } = useDict('payment', 'pay_method');
 
-const orderStatus = ref('')
-const payMethod = ref('')
+const orderStatus = ref('');
+const payMethod = ref('');
 </script>
 ```
 
@@ -140,10 +146,10 @@ const payMethod = ref('')
 ```vue
 <script setup lang="ts">
 // مخزن پیش‌فرض
-const { data, translate } = useDict('order_status')
+const { data, translate } = useDict('order_status');
 
 // مخزن payment
-const { data: payData, translate: payTranslate } = useDict('payment', 'pay_status')
+const { data: payData, translate: payTranslate } = useDict('payment', 'pay_status');
 </script>
 ```
 
@@ -152,10 +158,10 @@ const { data: payData, translate: payTranslate } = useDict('payment', 'pay_statu
 ```vue
 <script setup lang="ts">
 // دیکشنری درختی مخزن پیش‌فرض
-const { tree } = useDictTree('region')
+const { tree } = useDictTree('region');
 
 // دیکشنری درختی مخزن logistics
-const { tree: locTree } = useDictTree('logistics', 'delivery_region')
+const { tree: locTree } = useDictTree('logistics', 'delivery_region');
 </script>
 ```
 
@@ -174,6 +180,7 @@ const { tree: locTree } = useDictTree('logistics', 'delivery_region')
 ## تشخیص نسخه مستقل هر مخزن
 
 هر مخزن تشخیص نسخه مستقل خود را با **مکانیزم تنبل** دارد — `fetchVersion()` فقط در اولین دسترسی به داده‌های دیکشنری آن مخزن فراخوانی می‌شود، نه در زمان راه‌اندازی ماژول:
+
 - کلید نسخه مخزن پیش‌فرض `dicts` = `__NUXT_DICT_VERSION__`
 - کلید نسخه مخزن `payment` = `__NUXT_DICT_VERSION____payment`
 - کلید نسخه مخزن `logistics` = `__NUXT_DICT_VERSION____logistics`
@@ -203,6 +210,7 @@ const { tree: locTree } = useDictTree('logistics', 'delivery_region')
 **۲. آداپتور (adapter) چیست؟**
 
 آداپتور یک "ابزار دریافت داده" است. دو وظیفه دارد:
+
 - `fetchDict`: رفتن و دریافت داده‌های دیکشنری
 - `fetchVersion`: بررسی اینکه آیا نسخه تغییر کرده است
 
@@ -212,11 +220,11 @@ const { tree: locTree } = useDictTree('logistics', 'delivery_region')
 
 یک مخزن می‌تواند در یکی از سه حالت زیر باشد:
 
-| حالت | نحوه نوشتن در `stores` | اثر |
-|------|------------------------|-----|
-| **اعلام نشده** | اصلاً ننویسید | ماژول از وجود آن خبر ندارد. وقتی `useDict('myStore', 'type')` را فراخوانی می‌کنید، مستقیماً از آداپتور `dicts` استفاده مجدد می‌کند |
-| **اعلام شده، اما خالی** | `myStore: {}` | ماژول می‌داند این مخزن وجود دارد، اما همه فیلدها خالی هستند. یک آداپتور REST مستقل ایجاد می‌کند و همه فیلدهای آدرس را از `api` سراسری کپی می‌کند |
-| **اعلام شده با فیلدها** | `myStore: { baseURL: '...' }` | از فیلدهایی که تنظیم کرده‌اید استفاده می‌کند + فیلدهای تنظیم نشده را از `api` سراسری کپی می‌کند |
+| حالت                    | نحوه نوشتن در `stores`        | اثر                                                                                                                                              |
+| ----------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **اعلام نشده**          | اصلاً ننویسید                 | ماژول از وجود آن خبر ندارد. وقتی `useDict('myStore', 'type')` را فراخوانی می‌کنید، مستقیماً از آداپتور `dicts` استفاده مجدد می‌کند               |
+| **اعلام شده، اما خالی** | `myStore: {}`                 | ماژول می‌داند این مخزن وجود دارد، اما همه فیلدها خالی هستند. یک آداپتور REST مستقل ایجاد می‌کند و همه فیلدهای آدرس را از `api` سراسری کپی می‌کند |
+| **اعلام شده با فیلدها** | `myStore: { baseURL: '...' }` | از فیلدهایی که تنظیم کرده‌اید استفاده می‌کند + فیلدهای تنظیم نشده را از `api` سراسری کپی می‌کند                                                  |
 
 **مقایسه کد سه حالت:**
 
@@ -241,6 +249,7 @@ stores: {
 **تفاوت حالت ۱ و حالت ۲:**
 
 حتی اگر endpointها یکسان باشند:
+
 - حالت ۱: `payment` و `dicts` یک آداپتور و یک کش را به اشتراک می‌گذارند — وقتی نسخه `dicts` به‌روزرسانی می‌شود، کش `payment` نیز باطل می‌شود
 - حالت ۲: `logistics` آداپتور و کش مستقل خود را دارد — وقتی نسخه `dicts` به‌روزرسانی می‌شود، `logistics` تحت تأثیر قرار نمی‌گیرد
 
@@ -250,12 +259,12 @@ stores: {
 
 هر مخزن می‌تواند چهار فیلد را پیکربندی کند:
 
-| فیلد | نوع | هدف | مثال |
-|------|-----|-----|------|
-| `baseURL` | رشته | آدرس سرور | `https://pay-api.example.com` |
-| `dictEndpoint` | رشته | مسیر endpoint برای دریافت داده‌های دیکشنری | `/v1/dictionary` |
-| `versionEndpoint` | رشته | مسیر endpoint برای دریافت شماره نسخه | `/v1/dictionary/version` |
-| `adapter` | شیء | ابزار سفارشی برای جایگزینی ابزار HTTP پیش‌فرض | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
+| فیلد              | نوع  | هدف                                           | مثال                                          |
+| ----------------- | ---- | --------------------------------------------- | --------------------------------------------- |
+| `baseURL`         | رشته | آدرس سرور                                     | `https://pay-api.example.com`                 |
+| `dictEndpoint`    | رشته | مسیر endpoint برای دریافت داده‌های دیکشنری    | `/v1/dictionary`                              |
+| `versionEndpoint` | رشته | مسیر endpoint برای دریافت شماره نسخه          | `/v1/dictionary/version`                      |
+| `adapter`         | شیء  | ابزار سفارشی برای جایگزینی ابزار HTTP پیش‌فرض | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
 
 **URL نهایی درخواست = `baseURL` + endpoint متناظر.**
 
@@ -288,6 +297,7 @@ stores: {
 ```
 
 نتیجه نهایی `payment`:
+
 - `baseURL` = `'https://pay-api.example.com'` ← از مقدار شما استفاده می‌کند
 - `dictEndpoint` = `'/dict/list'` ← از سراسری کپی شده
 - `versionEndpoint` = `'/dict/version'` ← از سراسری کپی شده
@@ -303,6 +313,7 @@ stores: {
 ```
 
 نتیجه نهایی `logistics`:
+
 - `baseURL` = `'/api'` ← از سراسری کپی شده
 - `dictEndpoint` = `'/dict/list'` ← از سراسری کپی شده
 - `versionEndpoint` = `'/dict/version'` ← از سراسری کپی شده
@@ -438,13 +449,13 @@ stores: {
 
 همه حالات ممکن فهرست شده است:
 
-| نوع مخزن | شرط | آداپتور استفاده شده |
-|---------|------|-------------------|
-| `dicts` (پیش‌فرض) | `api.adapter` تنظیم شده | از `api.adapter` استفاده می‌کند |
-| `dicts` (پیش‌فرض) | `api.adapter` تنظیم نشده | از REST استفاده می‌کند: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint` |
-| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم شده | از `stores.xxx.adapter` استفاده می‌کند (تحت تأثیر `api.adapter` قرار نمی‌گیرد) |
+| نوع مخزن                      | شرط                             | آداپتور استفاده شده                                                                                                                                                                           |
+| ----------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم شده         | از `api.adapter` استفاده می‌کند                                                                                                                                                               |
+| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم نشده        | از REST استفاده می‌کند: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                                                            |
+| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم شده  | از `stores.xxx.adapter` استفاده می‌کند (تحت تأثیر `api.adapter` قرار نمی‌گیرد)                                                                                                                |
 | `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم نشده | از REST استفاده می‌کند: `stores.xxx.baseURL ?? api.baseURL` + `stores.xxx.dictEndpoint ?? api.dictEndpoint` + `stores.xxx.versionEndpoint ?? api.versionEndpoint`. کش و تشخیص نسخه مستقل دارد |
-| `yyy` (اعلام نشده) | — | از آداپتور `dicts` استفاده مجدد می‌کند، کش یکسان را به اشتراک می‌گذارد |
+| `yyy` (اعلام نشده)            | —                               | از آداپتور `dicts` استفاده مجدد می‌کند، کش یکسان را به اشتراک می‌گذارد                                                                                                                        |
 
 ### خلاصه در یک جمله
 

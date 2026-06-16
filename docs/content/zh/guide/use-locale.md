@@ -23,11 +23,11 @@ useLocale(): {
 
 ## 返回值
 
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `locale` | `Ref<string>` | 当前语言代码，如 `'zh-CN'` |
+| 属性        | 类型                          | 说明                                 |
+| ----------- | ----------------------------- | ------------------------------------ |
+| `locale`    | `Ref<string>`                 | 当前语言代码，如 `'zh-CN'`           |
 | `setLocale` | `(newLocale: string) => void` | 切换语言，更新 Cookie 并清空字典缓存 |
-| `locales` | `string[]` | 支持的语言列表 |
+| `locales`   | `string[]`                    | 支持的语言列表                       |
 
 ## 基础示例
 
@@ -35,17 +35,23 @@ useLocale(): {
 <template>
   <div>
     <p>当前语言：{{ locale }}</p>
-    <button @click="setLocale('zh-CN')" :style="{ fontWeight: locale === 'zh-CN' ? 'bold' : 'normal' }">
+    <button
+      @click="setLocale('zh-CN')"
+      :style="{ fontWeight: locale === 'zh-CN' ? 'bold' : 'normal' }"
+    >
       中文
     </button>
-    <button @click="setLocale('en-US')" :style="{ fontWeight: locale === 'en-US' ? 'bold' : 'normal' }">
+    <button
+      @click="setLocale('en-US')"
+      :style="{ fontWeight: locale === 'en-US' ? 'bold' : 'normal' }"
+    >
       English
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-const { locale, setLocale } = useLocale()
+const { locale, setLocale } = useLocale();
 </script>
 ```
 

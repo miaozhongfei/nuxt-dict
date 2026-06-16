@@ -14,6 +14,7 @@ Node.js is the runtime environment for Nuxt. Nuxt 4 requires **Node.js >= 22.0.0
 Open the Node.js official website: [https://nodejs.org](https://nodejs.org)
 
 You will see two versions:
+
 - **LTS** (Long Term Support): Recommended for most users, stable and reliable
 - **Current**: Includes the latest features, but may have bugs
 
@@ -82,6 +83,7 @@ npx nuxi init my-app
 ```
 
 During setup, it will ask:
+
 - **Which package manager would you like to use?** → Choose **pnpm**
 - **Initialize git repository?** → Choose **Yes** (recommended)
 

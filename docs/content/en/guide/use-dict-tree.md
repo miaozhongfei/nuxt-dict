@@ -20,13 +20,13 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 
 ## Return Values
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `tree` | `ShallowRef<TreeNode[] \| null>` | Complete tree data |
-| `translate` | `(value: string \| number) => string` | Translate any node at any depth |
-| `findPath` | `(value: string \| number) => string[]` | Path backtracking. Input a leaf node code, output label array from root to leaf |
-| `loading` | `Ref<boolean>` | Loading state |
-| `refresh` | `() => Promise<void>` | Manual refresh |
+| Property    | Type                                    | Description                                                                     |
+| ----------- | --------------------------------------- | ------------------------------------------------------------------------------- |
+| `tree`      | `ShallowRef<TreeNode[] \| null>`        | Complete tree data                                                              |
+| `translate` | `(value: string \| number) => string`   | Translate any node at any depth                                                 |
+| `findPath`  | `(value: string \| number) => string[]` | Path backtracking. Input a leaf node code, output label array from root to leaf |
+| `loading`   | `Ref<boolean>`                          | Loading state                                                                   |
+| `refresh`   | `() => Promise<void>`                   | Manual refresh                                                                  |
 
 ## findPath: Path Backtracking
 
@@ -38,7 +38,7 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 </template>
 
 <script setup lang="ts">
-const { findPath } = useDictTree('region')
+const { findPath } = useDictTree('region');
 </script>
 ```
 
@@ -56,8 +56,8 @@ const { findPath } = useDictTree('region')
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
-const selected = ref([])
+const { tree } = useDictTree('region');
+const selected = ref([]);
 </script>
 ```
 

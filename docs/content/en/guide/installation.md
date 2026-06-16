@@ -19,10 +19,8 @@ Open `nuxt.config.ts` and add `'@lacqjs/nuxt-dict'` to the `modules` array:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-  modules: [
-    '@lacqjs/nuxt-dict'
-  ],
-})
+  modules: ['@lacqjs/nuxt-dict'],
+});
 ```
 
 > **What is `modules`?** Nuxt's module system allows others to package a feature — you just register it in `modules` and it works. Like installing + enabling an App on your phone.
@@ -52,7 +50,7 @@ In your `pages/index.vue`, enter:
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const { data } = useDict('gender')
+const { data } = useDict('gender');
 </script>
 ```
 

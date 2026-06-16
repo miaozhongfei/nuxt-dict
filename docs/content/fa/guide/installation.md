@@ -14,10 +14,12 @@ pnpm add @lacqjs/nuxt-dict
 ```
 
 این دستور دو کار انجام می‌دهد:
+
 1. بسته `@lacqjs/nuxt-dict` را در `node_modules/` دانلود می‌کند
 2. این وابستگی را در `dependencies` فایل `package.json` ثبت می‌کند
 
 > **تفاوت `dependencies` و `devDependencies` چیست؟**
+>
 > - `dependencies` = بسته‌های مورد نیاز در زمان اجرا (پروژه شما برای کار کردن به آن‌ها نیاز دارد)
 > - `devDependencies` = بسته‌های مورد نیاز در زمان توسعه (مانند ابزارهای بررسی کد، ابزارهای تست، در محیط production لازم نیستند)
 >
@@ -29,10 +31,8 @@ pnpm add @lacqjs/nuxt-dict
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-  modules: [
-    '@lacqjs/nuxt-dict'
-  ],
-})
+  modules: ['@lacqjs/nuxt-dict'],
+});
 ```
 
 > **`modules` چیست؟** سیستم ماژول Nuxt به دیگران اجازه می‌دهد یک بسته کاربردی بنویسند، شما فقط آن را در modules ثبت می‌کنید و مستقیماً قابل استفاده است. مانند نصب + فعال‌سازی یک App روی گوشی.
@@ -64,7 +64,7 @@ pnpm dev
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const { data } = useDict('gender')
+const { data } = useDict('gender');
 </script>
 ```
 

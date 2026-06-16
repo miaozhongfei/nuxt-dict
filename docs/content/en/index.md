@@ -35,12 +35,12 @@ In your daily development, you will inevitably encounter these scenarios:
 
 ## Document Navigation
 
-| Section | For Whom |
-|---------|----------|
-| [Environment Setup](/guide/environment) → [Installation](/guide/installation) → [Your First Dict](/guide/first-dict) | Zero experience, first time using |
-| [useDict](/guide/use-dict) ∼ [$dict](/guide/dollar-dict) | Understanding each API in detail |
-| [Multi-Store](/advanced/multi-store) ∼ [Full Config](/advanced/full-config) | Deep usage in production |
-| [Element Plus](/integration/element-plus) / [Vant](/integration/vant) | Complete UI library integration examples |
-| [API Reference](/appendix/api-reference) / [FAQ](/appendix/faq) | Quick lookup |
+| Section                                                                                                              | For Whom                                 |
+| -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [Environment Setup](/guide/environment) → [Installation](/guide/installation) → [Your First Dict](/guide/first-dict) | Zero experience, first time using        |
+| [useDict](/guide/use-dict) ∼ [$dict](/guide/dollar-dict)                                                             | Understanding each API in detail         |
+| [Multi-Store](/advanced/multi-store) ∼ [Full Config](/advanced/full-config)                                          | Deep usage in production                 |
+| [Element Plus](/integration/element-plus) / [Vant](/integration/vant)                                                | Complete UI library integration examples |
+| [API Reference](/appendix/api-reference) / [FAQ](/appendix/faq)                                                      | Quick lookup                             |
 
 Ready? Start with [Environment Setup](/guide/environment)!

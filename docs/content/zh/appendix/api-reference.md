@@ -10,14 +10,14 @@ useDict(type: string): UseDictReturn
 useDict(storeName: string, type: string): UseDictReturn
 ```
 
-| 返回值 | 类型 | 说明 |
-|--------|------|------|
-| `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据，每项为 `{ value, label, ... }` |
-| `translate` | `(value: string \| number) => string` | 同步翻译函数 |
-| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | 同步获取完整字典项对象 |
-| `loading` | `Ref<boolean>` | 加载状态 |
-| `error` | `Ref<string \| null>` | 错误信息 |
-| `refresh` | `() => Promise<void>` | 手动刷新 |
+| 返回值        | 类型                                                 | 说明                                         |
+| ------------- | ---------------------------------------------------- | -------------------------------------------- |
+| `data`        | `ShallowRef<DictItem[] \| null>`                     | 字典原始数据，每项为 `{ value, label, ... }` |
+| `translate`   | `(value: string \| number) => string`                | 同步翻译函数                                 |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | 同步获取完整字典项对象                       |
+| `loading`     | `Ref<boolean>`                                       | 加载状态                                     |
+| `error`       | `Ref<string \| null>`                                | 错误信息                                     |
+| `refresh`     | `() => Promise<void>`                                | 手动刷新                                     |
 
 ## useDictTree
 
@@ -26,13 +26,13 @@ useDictTree(type: string): UseDictTreeReturn
 useDictTree(storeName: string, type: string): UseDictTreeReturn
 ```
 
-| 返回值 | 类型 | 说明 |
-|--------|------|------|
-| `tree` | `ShallowRef<TreeNode[] \| null>` | 树形字典数据 |
-| `translate` | `(value: string \| number) => string` | 翻译任意节点 |
-| `findPath` | `(value: string \| number) => string[]` | 路径回溯 |
-| `loading` | `Ref<boolean>` | 加载状态 |
-| `refresh` | `() => Promise<void>` | 手动刷新 |
+| 返回值      | 类型                                    | 说明         |
+| ----------- | --------------------------------------- | ------------ |
+| `tree`      | `ShallowRef<TreeNode[] \| null>`        | 树形字典数据 |
+| `translate` | `(value: string \| number) => string`   | 翻译任意节点 |
+| `findPath`  | `(value: string \| number) => string[]` | 路径回溯     |
+| `loading`   | `Ref<boolean>`                          | 加载状态     |
+| `refresh`   | `() => Promise<void>`                   | 手动刷新     |
 
 ## useLocale
 
@@ -40,54 +40,54 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 useLocale(): { locale, setLocale, locales }
 ```
 
-| 返回值 | 类型 | 说明 |
-|--------|------|------|
-| `locale` | `Ref<string>` | 当前语言 |
-| `setLocale` | `(newLocale: string) => void` | 切换语言 |
-| `locales` | `string[]` | 支持的语言列表 |
+| 返回值      | 类型                          | 说明           |
+| ----------- | ----------------------------- | -------------- |
+| `locale`    | `Ref<string>`                 | 当前语言       |
+| `setLocale` | `(newLocale: string) => void` | 切换语言       |
+| `locales`   | `string[]`                    | 支持的语言列表 |
 
 ## $dict
 
-| 方法 | 签名 |
-|------|------|
-| `translate` | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })` |
-| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })` |
-| `translateData` | `$dict.translateData(data, mapping, suffix?)` → 返回追加了翻译字段的新对象 |
-| `getDictItem` | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → 返回完整 DictItem 对象 |
+| 方法            | 签名                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `translate`     | `$dict.translate(type, value)` / `$dict.translate(type, value, { storeName?, field? })`                      |
+| `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })`  |
+| `translateData` | `$dict.translateData(data, mapping, suffix?)` → 返回追加了翻译字段的新对象                                   |
+| `getDictItem`   | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → 返回完整 DictItem 对象 |
 
 ## 类型定义
 
 ```ts
 interface DictItem {
-  value: string | number
-  label: string
-  [key: string]: unknown
+  value: string | number;
+  label: string;
+  [key: string]: unknown;
 }
 
 interface TreeNode extends DictItem {
-  children?: TreeNode[]
+  children?: TreeNode[];
 }
 
 interface DictEntry {
-  type: string
-  items: DictItem[]
-  tree?: TreeNode[]
+  type: string;
+  items: DictItem[];
+  tree?: TreeNode[];
 }
 
 interface DictResponse {
-  version: string
-  data: Record<string, DictEntry>
+  version: string;
+  data: Record<string, DictEntry>;
 }
 
 interface DictAdapter {
-  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>
-  fetchVersion(storeName: string): Promise<string>
+  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>;
+  fetchVersion(storeName: string): Promise<string>;
 }
 
 interface StoreApiOptions {
-  baseURL?: string
-  dictEndpoint?: string
-  versionEndpoint?: string
-  adapter?: DictAdapter
+  baseURL?: string;
+  dictEndpoint?: string;
+  versionEndpoint?: string;
+  adapter?: DictAdapter;
 }
 ```

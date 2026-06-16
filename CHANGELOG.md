@@ -1,5 +1,105 @@
 # Changelog
 
+## v0.0.4
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.2...v0.0.4)
+
+### 🚀 Enhancements
+
+- Add GitHub Pages deployment for docs site ([773da91](https://github.com/miaozhongfei/nuxt-dict/commit/773da91))
+- Remove manual # headings from markdown, use frontmatter title with ContentRenderer ([bb8e6b0](https://github.com/miaozhongfei/nuxt-dict/commit/bb8e6b0))
+- 新增 getDictItem 方法，translate/getDictItem/findPath 改为响应式，补充 JSDoc ([dfc1596](https://github.com/miaozhongfei/nuxt-dict/commit/dfc1596))
+
+### 🔥 Performance
+
+- 预建 itemMap/nodeMap/pathMap 索引映射，translate/getDictItem/findPath 查找 O(N) → O(1) ([61a25e0](https://github.com/miaozhongfei/nuxt-dict/commit/61a25e0))
+
+### 🩹 Fixes
+
+- Add explicit type annotation for dict plugin export ([1dfc222](https://github.com/miaozhongfei/nuxt-dict/commit/1dfc222))
+- Add /en and /fa to prerender routes for multi-locale SSG ([972ee5d](https://github.com/miaozhongfei/nuxt-dict/commit/972ee5d))
+- Include locale in useAsyncData key to prevent content cross-language ([dc7f39a](https://github.com/miaozhongfei/nuxt-dict/commit/dc7f39a))
+- Remove BOM from markdown files to fix frontmatter parsing ([16ffe5e](https://github.com/miaozhongfei/nuxt-dict/commit/16ffe5e))
+- Remove remaining # headings from missed markdown files ([f86155e](https://github.com/miaozhongfei/nuxt-dict/commit/f86155e))
+- 修复模块发布后插件路径解析报 ENOENT 警告，新增 demo-base-api 示例 ([3922343](https://github.com/miaozhongfei/nuxt-dict/commit/3922343))
+
+### 💅 Refactors
+
+- Rename DictItem.code to value, remove useDictOptions ([39fbac5](https://github.com/miaozhongfei/nuxt-dict/commit/39fbac5))
+- Remove old-style  API, unify storeName to opts object ([9f6ad4d](https://github.com/miaozhongfei/nuxt-dict/commit/9f6ad4d))
+- Data/tree 改为 DeepReadonly 只读，防止外部直接修改 ([ad79274](https://github.com/miaozhongfei/nuxt-dict/commit/ad79274))
+
+### 📖 Documentation
+
+- Add Nuxt UI and Vant examples to use-dict-options (zh/en/fa) ([dae3bbb](https://github.com/miaozhongfei/nuxt-dict/commit/dae3bbb))
+- Sync index description with zh version (en/fa) ([d51d9dc](https://github.com/miaozhongfei/nuxt-dict/commit/d51d9dc))
+- Update zh index description and feature list ([aadeddb](https://github.com/miaozhongfei/nuxt-dict/commit/aadeddb))
+- Add JSDoc for all public exports and generate doc ([5080be8](https://github.com/miaozhongfei/nuxt-dict/commit/5080be8))
+- Add translateData to API signature, usage examples, and cross-store demo ([824f33e](https://github.com/miaozhongfei/nuxt-dict/commit/824f33e))
+- 完善 README、添加 LICENSE、统一作者信息、docs 顶栏增加 GitHub 按钮 ([c1a21ea](https://github.com/miaozhongfei/nuxt-dict/commit/c1a21ea))
+
+### 🏡 Chore
+
+- Commit remaining config and code changes for docs site ([3ab4924](https://github.com/miaozhongfei/nuxt-dict/commit/3ab4924))
+- Release 脚本显式指定 push origin dev ([369294c](https://github.com/miaozhongfei/nuxt-dict/commit/369294c))
+- 恢复 v0.0.3 CHANGELOG 条目 ([106e2f8](https://github.com/miaozhongfei/nuxt-dict/commit/106e2f8))
+- 同步版本号至 0.0.3（与已发布版本保持一致） ([f3e45cd](https://github.com/miaozhongfei/nuxt-dict/commit/f3e45cd))
+
+### 🎨 Styles
+
+- Oxfmt 格式化全部代码 ([352c75e](https://github.com/miaozhongfei/nuxt-dict/commit/352c75e))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+- Miaozf <1103520414@qq.com>
+
+## v0.0.3
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.2...v0.0.3)
+
+### 🚀 Enhancements
+
+- Add GitHub Pages deployment for docs site ([773da91](https://github.com/miaozhongfei/nuxt-dict/commit/773da91))
+- Remove manual # headings from markdown, use frontmatter title with ContentRenderer ([bb8e6b0](https://github.com/miaozhongfei/nuxt-dict/commit/bb8e6b0))
+- 新增 getDictItem 方法，translate/getDictItem/findPath 改为响应式，补充 JSDoc ([dfc1596](https://github.com/miaozhongfei/nuxt-dict/commit/dfc1596))
+
+### 🔥 Performance
+
+- 预建 itemMap/nodeMap/pathMap 索引映射，translate/getDictItem/findPath 查找 O(N) → O(1) ([61a25e0](https://github.com/miaozhongfei/nuxt-dict/commit/61a25e0))
+
+### 🩹 Fixes
+
+- Add explicit type annotation for dict plugin export ([1dfc222](https://github.com/miaozhongfei/nuxt-dict/commit/1dfc222))
+- Add /en and /fa to prerender routes for multi-locale SSG ([972ee5d](https://github.com/miaozhongfei/nuxt-dict/commit/972ee5d))
+- Include locale in useAsyncData key to prevent content cross-language ([dc7f39a](https://github.com/miaozhongfei/nuxt-dict/commit/dc7f39a))
+- Remove BOM from markdown files to fix frontmatter parsing ([16ffe5e](https://github.com/miaozhongfei/nuxt-dict/commit/16ffe5e))
+- Remove remaining # headings from missed markdown files ([f86155e](https://github.com/miaozhongfei/nuxt-dict/commit/f86155e))
+
+### 💅 Refactors
+
+- Rename DictItem.code to value, remove useDictOptions ([39fbac5](https://github.com/miaozhongfei/nuxt-dict/commit/39fbac5))
+- Remove old-style API, unify storeName to opts object ([e3ff644](https://github.com/miaozhongfei/nuxt-dict/commit/e3ff644))
+- Remove old-style API, unify storeName to opts object" ([ce343ec](https://github.com/miaozhongfei/nuxt-dict/commit/ce343ec))
+- Remove old-style API, unify storeName to opts object ([9f6ad4d](https://github.com/miaozhongfei/nuxt-dict/commit/9f6ad4d))
+- Data/tree 改为 DeepReadonly 只读，防止外部直接修改 ([ad79274](https://github.com/miaozhongfei/nuxt-dict/commit/ad79274))
+
+### 📖 Documentation
+
+- Add Nuxt UI and Vant examples to use-dict-options (zh/en/fa) ([dae3bbb](https://github.com/miaozhongfei/nuxt-dict/commit/dae3bbb))
+- Sync index description with zh version (en/fa) ([d51d9dc](https://github.com/miaozhongfei/nuxt-dict/commit/d51d9dc))
+- Update zh index description and feature list ([aadeddb](https://github.com/miaozhongfei/nuxt-dict/commit/aadeddb))
+- Add JSDoc for all public exports and generate doc ([5080be8](https://github.com/miaozhongfei/nuxt-dict/commit/5080be8))
+- Add translateData to API signature, usage examples, and cross-store demo ([824f33e](https://github.com/miaozhongfei/nuxt-dict/commit/824f33e))
+- 完善 README、添加 LICENSE、统一作者信息、docs 顶栏增加 GitHub 按钮 ([c1a21ea](https://github.com/miaozhongfei/nuxt-dict/commit/c1a21ea))
+
+### 🏡 Chore
+
+- Commit remaining config and code changes for docs site ([3ab4924](https://github.com/miaozhongfei/nuxt-dict/commit/3ab4924))
+
+### ❤️ Contributors
+
+- Miaozf <1103520414@qq.com>
 
 ## v0.0.3
 
@@ -50,7 +150,6 @@
 
 ## v0.0.2
 
-
 ### 🚀 Enhancements
 
 - Initial commit ([a9d80bb](https://github.com/miaozhongfei/nuxt-dict/commit/a9d80bb))
@@ -63,4 +162,3 @@
 ### ❤️ Contributors
 
 - Miaozf <1103520414@qq.com>
-

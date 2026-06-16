@@ -1,8 +1,8 @@
-import type { ShallowRef, Ref, DeepReadonly } from 'vue'
+import type { ShallowRef, Ref, DeepReadonly } from 'vue';
 
 /** 仓库名字面量联合类型，由 addTypeTemplate 根据 stores 配置动态生成 */
-import type { StoreKey } from '#build/types/nuxt-dict-store-names'
-export type { StoreKey }
+import type { StoreKey } from '#build/types/nuxt-dict-store-names';
+export type { StoreKey };
 
 /**
  * 字典项，表示字典中单个编码与其显示文本的映射关系。
@@ -10,7 +10,7 @@ export type { StoreKey }
  * @description 扁平字典的最小数据单元。每个 DictItem 包含一个编码值（value）
  * 和对应的显示文本（label），并可携带任意扩展字段（如 color、icon 等）。
  * 用于 useDict 返回的 data、$dict.getDictItem 的返回值等场景。
- * 
+ *
  * @property {string | number} value - 字典编码值，支持字符串和数字类型，用于匹配业务数据中的 code
  * @property {string} label - 编码对应的显示文本（翻译后的文字）
  *
@@ -27,36 +27,36 @@ export type { StoreKey }
  */
 export interface DictItem {
   /** 字典编码值，支持字符串和数字类型 */
-  value: string | number
+  value: string | number;
   /** 编码对应的显示文本 */
-  label: string
+  label: string;
   /** 允许携带任意扩展字段（如 color、icon 等） */
-  [key: string]: unknown
+  [key: string]: unknown;
 }
 
 /** 树形字典节点，用于级联选择器 */
 export interface TreeNode extends DictItem {
-  children?: TreeNode[]
+  children?: TreeNode[];
 }
 
 /** 单个字典类型的数据结构 */
 export interface DictEntry {
-  type: string
-  items: DictItem[]
-  tree?: TreeNode[]
+  type: string;
+  items: DictItem[];
+  tree?: TreeNode[];
 }
 
 /** API 返回的字典响应格式 */
 export interface DictResponse {
-  version: string
-  data: Record<string, DictEntry>
+  version: string;
+  data: Record<string, DictEntry>;
 }
 
 /** IndexedDB 中存储的缓存条目 */
 export interface CacheEntry<T = DictEntry> {
-  data: T
-  timestamp: number
-  version: string
+  data: T;
+  timestamp: number;
+  version: string;
 }
 
 /**
@@ -77,119 +77,119 @@ export interface CacheEntry<T = DictEntry> {
  * }
  */
 export interface DictAdapter {
-  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>
-  fetchVersion(storeName: string): Promise<string>
+  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>;
+  fetchVersion(storeName: string): Promise<string>;
 }
 
 /** 语言来源类型 */
-export type LocaleSource = 'cookie' | 'header' | 'query'
+export type LocaleSource = 'cookie' | 'header' | 'query';
 
 /** 单个仓库的 API 配置。未配置项从全局 `api` 继承。 */
 export interface StoreApiOptions {
   /** API 基础地址，默认继承全局 `api.baseURL` */
-  baseURL?: string
+  baseURL?: string;
   /** 字典列表接口路径，默认继承全局 `api.dictEndpoint` */
-  dictEndpoint?: string
+  dictEndpoint?: string;
   /** 版本号接口路径，默认继承全局 `api.versionEndpoint` */
-  versionEndpoint?: string
+  versionEndpoint?: string;
   /** 自定义字典适配器，不传则使用默认 REST 适配器（继承全局 api 配置） */
-  adapter?: DictAdapter
+  adapter?: DictAdapter;
 }
 
 /** 模块配置项（用户可传，字段均可选） */
 export interface ModuleOptions {
   /** 是否启用字典模块，默认 `true` */
-  enable?: boolean
+  enable?: boolean;
   /** 日志级别，0=静默, 1=错误, 2=警告, 3=信息, 4=调试, 5=详细，默认 `3` */
-  logLevel?: number
+  logLevel?: number;
   api?: {
     /** API 基础地址，支持绝对 URL（外部接口）或相对路径（本地接口），默认 `'/api'` */
-    baseURL?: string
+    baseURL?: string;
     /** 字典列表接口路径，默认 `'/dict/list'` */
-    dictEndpoint?: string
+    dictEndpoint?: string;
     /** 版本号接口路径，默认 `'/dict/version'` */
-    versionEndpoint?: string
+    versionEndpoint?: string;
     /** 自定义字典适配器，不传则使用默认 REST 适配器 */
-    adapter?: DictAdapter
-  }
+    adapter?: DictAdapter;
+  };
   cache?: {
     /** 内存缓存最大条目数，默认 `200` */
-    memoryMax?: number
+    memoryMax?: number;
     /** 内存缓存 TTL（毫秒），`0` 表示永不过期，默认 `0` */
-    ttl?: number
+    ttl?: number;
     indexedDB?: {
       /** 是否启用 IndexedDB 持久缓存，默认 `true` */
-      enabled?: boolean
+      enabled?: boolean;
       /** IndexedDB 数据库名称，默认 `'nuxt-dict'` */
-      dbName?: string
-    }
-  }
+      dbName?: string;
+    };
+  };
   locale?: {
     /** 兜底语言，无法从指定来源检测到语言时使用，默认 `'zh-CN'` */
-    default?: string
+    default?: string;
     /** 语言检测来源，`'cookie'` / `'header'` / `'query'`，默认 `'cookie'` */
-    source?: LocaleSource
+    source?: LocaleSource;
     /** `source` 为 `'cookie'` 时读取的 cookie 名称，默认 `'lang'` */
-    cookieKey?: string
+    cookieKey?: string;
     /** `source` 为 `'query'` 时读取的 URL 查询参数名，默认 `'lang'` */
-    queryKey?: string
+    queryKey?: string;
     /** `source` 为 `'header'` 时读取的请求头名称，默认 `'accept-language'` */
-    headerKey?: string
+    headerKey?: string;
     /** 发给字典 API 时，语言值的查询参数名，设为 `''` 则不传，默认 `'lang'` */
-    paramKey?: string
+    paramKey?: string;
     /** 发给字典 API 时，语言值的请求头名，设为 `''` 则不传，默认 `'X-Locale'` */
-    apiHeaderKey?: string
-  }
+    apiHeaderKey?: string;
+  };
   /** 仓库 API 配置映射。key 为仓库名，value 为该仓库的 API 端点配置。
    * 未配置的字段从全局 `api` 继承。未在此列出的仓库使用全局 `api` 配置。
    * @example { payment: { baseURL: 'https://pay-api.com' }, logistics: { dictEndpoint: '/logistics/list' } }
    */
-  stores?: Record<string, StoreApiOptions>
+  stores?: Record<string, StoreApiOptions>;
   ssr?: {
     /** 服务端预取的字典类型列表，加速首屏渲染 */
-    prefetch?: string[]
-  }
+    prefetch?: string[];
+  };
   version?: {
     /** localStorage 中存储版本号的 key，默认 `'__NUXT_DICT_VERSION__'` */
-    storageKey?: string
-  }
+    storageKey?: string;
+  };
 }
 
 /** 模块配置项（内部解析后，字段均必填） */
 export interface ResolvedModuleOptions {
-  enable: boolean
-  logLevel: number
+  enable: boolean;
+  logLevel: number;
   api: {
-    baseURL: string
-    dictEndpoint: string
-    versionEndpoint: string
-    adapter?: DictAdapter
-  }
+    baseURL: string;
+    dictEndpoint: string;
+    versionEndpoint: string;
+    adapter?: DictAdapter;
+  };
   cache: {
-    memoryMax: number
-    ttl: number
+    memoryMax: number;
+    ttl: number;
     indexedDB: {
-      enabled: boolean
-      dbName: string
-    }
-  }
+      enabled: boolean;
+      dbName: string;
+    };
+  };
   locale: {
-    default: string
-    source: LocaleSource
-    cookieKey: string
-    queryKey: string
-    headerKey: string
-    paramKey: string
-    apiHeaderKey: string
-  }
+    default: string;
+    source: LocaleSource;
+    cookieKey: string;
+    queryKey: string;
+    headerKey: string;
+    paramKey: string;
+    apiHeaderKey: string;
+  };
   /** 仓库 API 配置映射（解析后） */
-  stores: Record<string, StoreApiOptions>
+  stores: Record<string, StoreApiOptions>;
   ssr: {
-    prefetch: string[]
-  }
+    prefetch: string[];
+  };
   version: {
-    storageKey: string
-  }
+    storageKey: string;
+  };
 }
 
 /**
@@ -205,9 +205,9 @@ export interface ResolvedModuleOptions {
  */
 export interface TranslateOptions {
   /** 仓库名，默认 'dicts' */
-  storeName?: StoreKey
+  storeName?: StoreKey;
   /** 取值字段名，默认 'label' */
-  field?: string
+  field?: string;
 }
 
 /**
@@ -223,7 +223,7 @@ export interface TranslateOptions {
  */
 export interface TranslatePathOptions extends TranslateOptions {
   /** 层级路径分隔符，默认 ' / ' */
-  separator?: string
+  separator?: string;
 }
 
 /**
@@ -237,7 +237,7 @@ export interface TranslatePathOptions extends TranslateOptions {
  */
 export interface GetDictItemOptions {
   /** 仓库名，默认 'dicts' */
-  storeName?: StoreKey
+  storeName?: StoreKey;
 }
 
 /**
@@ -259,7 +259,7 @@ export interface GetDictItemOptions {
  */
 export interface UseDictReturn {
   /** 字典原始数据数组（只读）。初始为 null，加载完成后为 [{ value, label, ... }] */
-  data: Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>
+  data: Readonly<ShallowRef<DeepReadonly<DictItem[] | null>>>;
 
   /**
    * 同步翻译编码 → 文本，默认从 data ref（shallowRef）查找，Vue 响应式系统可追踪。
@@ -277,7 +277,7 @@ export interface UseDictReturn {
    * translate('male')              // → '男'
    * translate(1, { field: 'color' }) // 取自定义字段
    */
-  translate: (value: string | number, opts?: TranslateOptions) => string
+  translate: (value: string | number, opts?: TranslateOptions) => string;
 
   /**
    * 同步获取完整字典项对象，默认从 data ref（shallowRef）中查找，Vue 响应式系统可追踪。
@@ -294,12 +294,12 @@ export interface UseDictReturn {
    * const item = computed(() => getDictItem(1))  // 响应式 ✅
    * // → { value: 1, label: '启用', color: '#67C23A' }
    */
-  getDictItem: (value: string | number, opts?: GetDictItemOptions) => DictItem | undefined
+  getDictItem: (value: string | number, opts?: GetDictItemOptions) => DictItem | undefined;
 
   /** 是否正在加载字典数据 */
-  loading: Ref<boolean>
+  loading: Ref<boolean>;
   /** 加载失败时的错误信息，正常时为 null */
-  error: Ref<string | null>
+  error: Ref<string | null>;
 
   /**
    * 强制刷新字典数据。
@@ -312,7 +312,7 @@ export interface UseDictReturn {
    * const { refresh } = useDict('gender')
    * await refresh()  // 强制重新拉取最新数据
    */
-  refresh: () => Promise<void>
+  refresh: () => Promise<void>;
 }
 
 /**
@@ -350,7 +350,7 @@ export interface DictTranslator {
    * $dict.translate('gender', 'male', { storeName: 'dicts2' })
    * $dict.translate('status', 1, { field: 'color' })
    */
-  translate(type: string, code: string | number, opts?: TranslateOptions): string
+  translate(type: string, code: string | number, opts?: TranslateOptions): string;
 
   /**
    * 树形字典编码 → 层级路径，从内存缓存查找。
@@ -368,7 +368,7 @@ export interface DictTranslator {
    * $dict.translatePath('region', '440104')
    * $dict.translatePath('region', '440104', { separator: ' → ' })
    */
-  translatePath(type: string, code: string | number, opts?: TranslatePathOptions): string
+  translatePath(type: string, code: string | number, opts?: TranslatePathOptions): string;
 
   /**
    * 批量翻译数据对象中的多个编码字段。
@@ -386,7 +386,11 @@ export interface DictTranslator {
    * )
    * // → { gender: 'male', gender_label: '男', status: 1, status_label: '启用' }
    */
-  translateData(data: Record<string, unknown>, mapping: Record<string, string | { type: string; storeName?: StoreKey }>, suffix?: string): Record<string, unknown>
+  translateData(
+    data: Record<string, unknown>,
+    mapping: Record<string, string | { type: string; storeName?: StoreKey }>,
+    suffix?: string,
+  ): Record<string, unknown>;
 
   /**
    * 同步获取完整字典项对象，从内存缓存查找。
@@ -405,7 +409,7 @@ export interface DictTranslator {
    * $dict.getDictItem('status', 1, { storeName: 'dicts2' })
    * // → { value: 1, label: '启用', color: '#67C23A' }
    */
-  getDictItem(type: string, code: string | number, opts?: GetDictItemOptions): DictItem | undefined
+  getDictItem(type: string, code: string | number, opts?: GetDictItemOptions): DictItem | undefined;
 }
 
 /**
@@ -426,7 +430,7 @@ export interface DictTranslator {
  */
 export interface UseDictTreeReturn {
   /** 树形字典节点数组（只读）。初始为 null，加载完成后为完整树结构 */
-  tree: Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>
+  tree: Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>;
 
   /**
    * 同步翻译树中任意节点的 value → label，默认从 tree ref（shallowRef）递归查找。
@@ -443,7 +447,7 @@ export interface UseDictTreeReturn {
    * const { translate } = useDictTree('region')
    * translate('440104')  // → '越秀区'
    */
-  translate: (value: string | number, opts?: TranslateOptions) => string
+  translate: (value: string | number, opts?: TranslateOptions) => string;
 
   /**
    * 查找叶子节点的完整层级路径，从 tree ref（shallowRef）查找，已为响应式。
@@ -457,10 +461,10 @@ export interface UseDictTreeReturn {
    * const { findPath } = useDictTree('region')
    * findPath('440104')  // → ['广东', '广州', '越秀区']
    */
-  findPath: (value: string | number) => string[]
+  findPath: (value: string | number) => string[];
 
   /** 是否正在加载树形字典数据 */
-  loading: Ref<boolean>
+  loading: Ref<boolean>;
 
   /**
    * 强制刷新树形字典数据。
@@ -472,5 +476,5 @@ export interface UseDictTreeReturn {
    * const { refresh } = useDictTree('region')
    * await refresh()  // 强制重新拉取最新数据
    */
-  refresh: () => Promise<void>
+  refresh: () => Promise<void>;
 }

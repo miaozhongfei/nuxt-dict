@@ -35,7 +35,7 @@ export default defineNuxtConfig({
       prefetch: ['gender', 'status', 'industry'],
     },
   },
-})
+});
 ```
 
 ## 预取与按需加载的配合

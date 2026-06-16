@@ -1,4 +1,4 @@
-import type { ResolvedModuleOptions } from './types'
+import type { ResolvedModuleOptions } from './types';
 
 /** 模块默认配置。module.ts 和 runtime 端共享同一份，避免重复定义。 */
 export const defaultOptions: ResolvedModuleOptions = {
@@ -33,4 +33,4 @@ export const defaultOptions: ResolvedModuleOptions = {
   version: {
     storageKey: '__NUXT_DICT_VERSION__',
   },
-}
+};

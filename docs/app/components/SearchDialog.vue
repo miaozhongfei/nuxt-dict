@@ -20,7 +20,10 @@ const { status, search } = useSearchCollection(collectionKey as any);
 
 watch(query, async (value) => {
   const q = value.trim();
-  if (!q || status.value !== 'ready') { results.value = []; return; }
+  if (!q || status.value !== 'ready') {
+    results.value = [];
+    return;
+  }
   results.value = await search(q, {
     limit: 10,
     snippet: { columns: ['content'], around: 30 },
@@ -38,7 +41,10 @@ watch(isOpen, (val) => {
 function onKeydown(e: KeyboardEvent) {
   if (e.key === '/' && !isOpen.value) {
     const tag = (e.target as HTMLElement)?.tagName;
-    if (tag !== 'INPUT' && tag !== 'TEXTAREA') { e.preventDefault(); isOpen.value = true; }
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      e.preventDefault();
+      isOpen.value = true;
+    }
   }
   if (e.key === 'Escape' && isOpen.value) isOpen.value = false;
 }
@@ -76,19 +82,29 @@ function goTo(item: any) {
             :disabled="status !== 'ready'"
             class="flex-1 bg-transparent outline-none text-base"
           />
-          <span class="text-xs text-(--ui-text-muted) px-1.5 py-0.5 border border-(--ui-border) rounded">ESC</span>
+          <span
+            class="text-xs text-(--ui-text-muted) px-1.5 py-0.5 border border-(--ui-border) rounded"
+            >ESC</span
+          >
         </div>
 
         <div class="flex items-center gap-2 px-4 py-2 border-b border-(--ui-border)">
-          <label class="flex items-center gap-1.5 text-xs text-(--ui-text-muted) cursor-pointer select-none">
+          <label
+            class="flex items-center gap-1.5 text-xs text-(--ui-text-muted) cursor-pointer select-none"
+          >
             <input type="checkbox" v-model="onlyCurrent" class="cursor-pointer" />
             {{ $t('lang.searchCurrent') }}
           </label>
         </div>
 
         <div class="max-h-80 overflow-y-auto">
-          <div v-if="status === 'loading'" class="p-4 text-center text-(--ui-text-muted) text-sm">Indexing...</div>
-          <div v-else-if="query && results.length === 0 && status === 'ready'" class="p-4 text-center text-(--ui-text-muted) text-sm">
+          <div v-if="status === 'loading'" class="p-4 text-center text-(--ui-text-muted) text-sm">
+            Indexing...
+          </div>
+          <div
+            v-else-if="query && results.length === 0 && status === 'ready'"
+            class="p-4 text-center text-(--ui-text-muted) text-sm"
+          >
             No results for "{{ query }}"
           </div>
           <ul v-else-if="results.length > 0" class="py-2">
@@ -98,11 +114,18 @@ function goTo(item: any) {
                 @click="goTo(item)"
               >
                 <div class="text-sm font-medium truncate">{{ item.title }}</div>
-                <p v-if="item.snippets?.content" class="text-xs text-(--ui-text-muted) mt-0.5" v-html="item.snippets.content" />
+                <p
+                  v-if="item.snippets?.content"
+                  class="text-xs text-(--ui-text-muted) mt-0.5"
+                  v-html="item.snippets.content"
+                />
               </button>
             </li>
           </ul>
-          <div v-if="!query && status === 'ready'" class="p-4 text-center text-(--ui-text-muted) text-sm">
+          <div
+            v-if="!query && status === 'ready'"
+            class="p-4 text-center text-(--ui-text-muted) text-sm"
+          >
             Type to search...
           </div>
         </div>

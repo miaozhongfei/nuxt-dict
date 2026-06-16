@@ -12,35 +12,37 @@ The dictionary module requires a backend API. To get you started quickly, we'll 
 Create a file at `server/api/dict/list.get.ts`:
 
 ::code-group
-  ```ts [server/api/dict/list.get.ts]
-  export default defineEventHandler(() => {
-    return {
-      version: '1.0.0',
-      data: {
-        gender: {
-          type: 'gender',
-          items: [
-            { value: 'male', label: 'Male' },
-            { value: 'female', label: 'Female' },
-            { value: 'other', label: 'Other' },
-          ],
-        },
-      },
-    }
-  })
-  ```
 
-  ```ts [nuxt.config.ts]
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        baseURL: '',
-        dictEndpoint: '/api/dict/list',
+```ts [server/api/dict/list.get.ts]
+export default defineEventHandler(() => {
+  return {
+    version: '1.0.0',
+    data: {
+      gender: {
+        type: 'gender',
+        items: [
+          { value: 'male', label: 'Male' },
+          { value: 'female', label: 'Female' },
+          { value: 'other', label: 'Other' },
+        ],
       },
     },
-  })
-  ```
+  };
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      baseURL: '',
+      dictEndpoint: '/api/dict/list',
+    },
+  },
+});
+```
+
 ::
 
 > **What does `baseURL: ''` mean?** The API address is relative to your website. If you have a separate dictionary service, change `baseURL` to `https://dict-api.example.com`.
@@ -62,16 +64,18 @@ Open `pages/index.vue` and replace the content:
           {{ opt.label }}
         </option>
       </select>
-      <p style="margin-top:12px;">Selected: <strong>{{ selected }}</strong></p>
+      <p style="margin-top:12px;">
+        Selected: <strong>{{ selected }}</strong>
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const { options, loading, error } = useDict('gender')
-const selected = ref('')
+const { options, loading, error } = useDict('gender');
+const selected = ref('');
 </script>
 ```
 
@@ -82,6 +86,7 @@ pnpm dev
 ```
 
 Open `http://localhost:3000/`, you should see:
+
 1. A dropdown with "Select gender", "Male", "Female", "Other" four options
 2. After selecting, the chosen value appears below
 
@@ -92,6 +97,7 @@ Open `http://localhost:3000/`, you should see:
 - `loading` / `error` represent the loading state
 
 Internally, `useDict`:
+
 1. Checks memory cache for `gender` data
 2. Falls back to IndexedDB (browser database)
 3. Falls back to fetching `/api/dict/list?types=gender`

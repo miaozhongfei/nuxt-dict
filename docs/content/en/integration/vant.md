@@ -11,24 +11,31 @@ Full examples of using the dictionary module with Vant mobile components.
 
 ```vue
 <template>
-  <van-field v-model="selectedText" is-link readonly label="Gender" placeholder="Select" @click="showPicker = true" />
+  <van-field
+    v-model="selectedText"
+    is-link
+    readonly
+    label="Gender"
+    placeholder="Select"
+    @click="showPicker = true"
+  />
   <van-popup v-model:show="showPicker" round position="bottom">
     <van-picker :columns="pickerColumns" @confirm="onConfirm" @cancel="showPicker = false" />
   </van-popup>
 </template>
 
 <script setup lang="ts">
-const { options } = useDict('gender')
-const showPicker = ref(false)
-const selectedText = ref('')
+const { options } = useDict('gender');
+const showPicker = ref(false);
+const selectedText = ref('');
 
 const pickerColumns = computed(() =>
-  options.value.map(opt => ({ text: opt.label, value: opt.value }))
-)
+  options.value.map((opt) => ({ text: opt.label, value: opt.value })),
+);
 
 function onConfirm({ selectedOptions }: any) {
-  selectedText.value = selectedOptions[0]?.text ?? ''
-  showPicker.value = false
+  selectedText.value = selectedOptions[0]?.text ?? '';
+  showPicker.value = false;
 }
 </script>
 ```
@@ -44,11 +51,15 @@ function onConfirm({ selectedOptions }: any) {
 </template>
 
 <script setup lang="ts">
-const { options: statusOptions } = useDict('status')
-const { options: genderOptions } = useDict('gender')
+const { options: statusOptions } = useDict('status');
+const { options: genderOptions } = useDict('gender');
 
-const statusCols = computed(() => statusOptions.value.map(o => ({ text: o.label, value: o.value })))
-const genderCols = computed(() => genderOptions.value.map(o => ({ text: o.label, value: o.value })))
+const statusCols = computed(() =>
+  statusOptions.value.map((o) => ({ text: o.label, value: o.value })),
+);
+const genderCols = computed(() =>
+  genderOptions.value.map((o) => ({ text: o.label, value: o.value })),
+);
 </script>
 ```
 
@@ -63,12 +74,18 @@ const genderCols = computed(() => genderOptions.value.map(o => ({ text: o.label,
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
+const { tree } = useDictTree('region');
 
 const vantTree = computed(() => {
-  if (!tree.value) return []
-  return tree.value.map(n => ({ text: n.label, value: n.value, children: n.children?.length ? n.children.map(c => ({ text: c.label, value: c.code })) : undefined }))
-})
+  if (!tree.value) return [];
+  return tree.value.map((n) => ({
+    text: n.label,
+    value: n.value,
+    children: n.children?.length
+      ? n.children.map((c) => ({ text: c.label, value: c.code }))
+      : undefined,
+  }));
+});
 </script>
 ```
 
@@ -82,7 +99,7 @@ const vantTree = computed(() => {
 </template>
 
 <script setup lang="ts">
-const { options } = useDict('gender')
-const radio = ref('')
+const { options } = useDict('gender');
+const radio = ref('');
 </script>
 ```

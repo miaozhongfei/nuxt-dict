@@ -1,9 +1,16 @@
-import type { DictManager } from '../core/dict-manager'
-import type { DictTranslator, DictItem, TranslateOptions, TranslatePathOptions, GetDictItemOptions, StoreKey } from '../types'
+import type { DictManager } from '../core/dict-manager';
+import type {
+  DictTranslator,
+  DictItem,
+  TranslateOptions,
+  TranslatePathOptions,
+  GetDictItemOptions,
+  StoreKey,
+} from '../types';
 
 /** 批翻译映射配置：字段名 → 字典类型 string 或 { type, storeName? } */
-type TranslateDataMappingValue = string | { type: string; storeName?: StoreKey }
-type TranslateDataMapping = Record<string, TranslateDataMappingValue>
+type TranslateDataMappingValue = string | { type: string; storeName?: StoreKey };
+type TranslateDataMapping = Record<string, TranslateDataMappingValue>;
 
 /**
  * 通过字典类型和编码获取翻译文本。
@@ -16,7 +23,7 @@ function translate(
   code: string | number,
   opts?: TranslateOptions,
 ): string {
-  return manager.translate(type, code, opts)
+  return manager.translate(type, code, opts);
 }
 
 /**
@@ -30,7 +37,7 @@ function translatePath(
   code: string | number,
   opts?: TranslatePathOptions,
 ): string {
-  return manager.translatePath(type, code, opts)
+  return manager.translatePath(type, code, opts);
 }
 
 /**
@@ -44,7 +51,7 @@ function getDictItem(
   code: string | number,
   opts?: GetDictItemOptions,
 ): DictItem | undefined {
-  return manager.getDictItem(type, code, opts)
+  return manager.getDictItem(type, code, opts);
 }
 
 /**
@@ -57,17 +64,18 @@ function translateData(
   mapping: TranslateDataMapping,
   suffix: string,
 ): Record<string, unknown> {
-  const result: Record<string, unknown> = { ...data }
+  const result: Record<string, unknown> = { ...data };
   for (const [key, mapValue] of Object.entries(mapping)) {
-    const code = data[key]
-    const type = typeof mapValue === 'string' ? mapValue : mapValue.type
-    const storeName = typeof mapValue === 'string' ? undefined : mapValue.storeName
-    const translated = code !== undefined && code !== null
-      ? translate(manager, type, code as string | number, storeName ? { storeName } : undefined)
-      : ''
-    result[key + suffix] = translated
+    const code = data[key];
+    const type = typeof mapValue === 'string' ? mapValue : mapValue.type;
+    const storeName = typeof mapValue === 'string' ? undefined : mapValue.storeName;
+    const translated =
+      code !== undefined && code !== null
+        ? translate(manager, type, code as string | number, storeName ? { storeName } : undefined)
+        : '';
+    result[key + suffix] = translated;
   }
-  return result
+  return result;
 }
 
 /**
@@ -117,7 +125,7 @@ export function createDictTranslator(manager: DictManager): DictTranslator {
      * $dict.translate('status', 1, { field: 'color' })
      */
     translate(type: string, code: string | number, opts?: TranslateOptions): string {
-      return translate(manager, type, code, opts)
+      return translate(manager, type, code, opts);
     },
 
     /**
@@ -135,7 +143,7 @@ export function createDictTranslator(manager: DictManager): DictTranslator {
      * $dict.translatePath('region', '440104', { storeName: 'dicts2', field: 'value' })
      */
     translatePath(type: string, code: string | number, opts?: TranslatePathOptions): string {
-      return translatePath(manager, type, code, opts)
+      return translatePath(manager, type, code, opts);
     },
 
     /**
@@ -167,7 +175,7 @@ export function createDictTranslator(manager: DictManager): DictTranslator {
       mapping: TranslateDataMapping,
       suffix: string = '_label',
     ): Record<string, unknown> {
-      return translateData(manager, data, mapping, suffix)
+      return translateData(manager, data, mapping, suffix);
     },
 
     /**
@@ -185,8 +193,12 @@ export function createDictTranslator(manager: DictManager): DictTranslator {
      * $dict.getDictItem('gender', 'male', { storeName: 'dicts2' })
      * // → { value: 'male', label: '男（源2）' }
      */
-    getDictItem(type: string, code: string | number, opts?: GetDictItemOptions): DictItem | undefined {
-      return getDictItem(manager, type, code, opts)
+    getDictItem(
+      type: string,
+      code: string | number,
+      opts?: GetDictItemOptions,
+    ): DictItem | undefined {
+      return getDictItem(manager, type, code, opts);
     },
-  }
+  };
 }

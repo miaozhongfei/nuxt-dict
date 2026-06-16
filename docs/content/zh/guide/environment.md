@@ -20,6 +20,7 @@ Node.js 是 Nuxt 运行的基础环境。Nuxt 4 要求 **Node.js >= 22.0.0**。
 打开 Node.js 官网： [https://nodejs.org](https://nodejs.org)
 
 你会看到两个版本：
+
 - **LTS**（长期支持版）：推荐大多数人使用，稳定可靠
 - **Current**（最新版）：包含最新功能，但可能有 bug
 
@@ -62,6 +63,7 @@ npm install -g pnpm
 ```
 
 这条命令的含义是：
+
 - `npm install` = 用 npm 安装一个包
 - `-g`（global）= 全局安装，之后在任何目录都能用 pnpm 命令
 - `pnpm` = 我们要装的包名
@@ -95,10 +97,12 @@ npx nuxi init my-app
 ```
 
 这个命令会：
+
 - `npx nuxi` = 临时下载并运行 `nuxi`（Nuxt 的项目脚手架工具）
 - `init my-app` = 创建一个名为 `my-app` 的项目
 
 运行过程中它会问你几个问题：
+
 - **Which package manager would you like to use?** → 选择 **pnpm**
 - **Initialize git repository?** → 选择 **Yes**（推荐）
 

@@ -21,10 +21,8 @@ pnpm add @lacqjs/nuxt-dict
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-  modules: [
-    '@lacqjs/nuxt-dict'
-  ],
-})
+  modules: ['@lacqjs/nuxt-dict'],
+});
 ```
 
 > **`modules` 是什么？** Nuxt 的模块系统允许别人写好一个功能包，你在 modules 里注册一下就能直接用。就像给手机装 App 一样——安装 + 启用。
@@ -56,7 +54,7 @@ pnpm dev
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const { data } = useDict('gender')
+const { data } = useDict('gender');
 </script>
 ```
 
