@@ -5,6 +5,7 @@ trustPolicy: off
 packages:
   - ./
   - ./docs
+  - ./examples/*
   - ./playground
 
 onlyBuiltDependencies:
