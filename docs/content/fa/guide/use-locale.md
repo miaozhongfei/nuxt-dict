@@ -23,11 +23,11 @@ useLocale(): {
 
 ## مقادیر بازگشتی
 
-| ویژگی | نوع | توضیح |
-|--------|------|-----------|
-| `locale` | `Ref<string>` | کد زبان فعلی، مثلاً `'zh-CN'`، `'en-US'` |
+| ویژگی       | نوع                           | توضیح                                                               |
+| ----------- | ----------------------------- | ------------------------------------------------------------------- |
+| `locale`    | `Ref<string>`                 | کد زبان فعلی، مثلاً `'zh-CN'`، `'en-US'`                            |
 | `setLocale` | `(newLocale: string) => void` | تغییر زبان، همزمان Cookie را به‌روزرسانی و کش دیکشنری را پاک می‌کند |
-| `locales` | `string[]` | لیست زبان‌های پشتیبانی شده |
+| `locales`   | `string[]`                    | لیست زبان‌های پشتیبانی شده                                          |
 
 ## مثال پایه: دکمه تغییر زبان
 
@@ -35,17 +35,23 @@ useLocale(): {
 <template>
   <div>
     <p>زبان فعلی: {{ locale }}</p>
-    <button @click="setLocale('zh-CN')" :style="{ fontWeight: locale === 'zh-CN' ? 'bold' : 'normal' }">
+    <button
+      @click="setLocale('zh-CN')"
+      :style="{ fontWeight: locale === 'zh-CN' ? 'bold' : 'normal' }"
+    >
       中文
     </button>
-    <button @click="setLocale('en-US')" :style="{ fontWeight: locale === 'en-US' ? 'bold' : 'normal' }">
+    <button
+      @click="setLocale('en-US')"
+      :style="{ fontWeight: locale === 'en-US' ? 'bold' : 'normal' }"
+    >
       English
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-const { locale, setLocale } = useLocale()
+const { locale, setLocale } = useLocale();
 </script>
 ```
 

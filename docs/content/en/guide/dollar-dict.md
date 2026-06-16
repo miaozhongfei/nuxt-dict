@@ -43,52 +43,54 @@ $dict.getDictItem(type: string, value: string | number, opts: { storeName?: stri
 ## Usage Examples
 
 ::code-group
-  ```vue [Basic]
-  <template>
-    <p>Gender code 'male' → {{ $dict.translate('gender', 'male') }}</p>
-    <!-- Output: Male -->
 
-    <p>Status code 0 → {{ $dict.translate('status', 0) }}</p>
-    <!-- Output: Disabled -->
+```vue [Basic]
+<template>
+  <p>Gender code 'male' → {{ $dict.translate('gender', 'male') }}</p>
+  <!-- Output: Male -->
 
-    <p>Region code 440104 path → {{ $dict.translatePath('region', '440104') }}</p>
-    <!-- Output: Guangdong / Guangzhou / Yuexiu -->
-  </template>
-  ```
+  <p>Status code 0 → {{ $dict.translate('status', 0) }}</p>
+  <!-- Output: Disabled -->
 
-  ```vue [In Table Columns]
-  <template>
-    <table>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.name }}</td>
-        <td>{{ $dict.translate('status', user.status) }}</td>
-        <td>{{ $dict.translate('gender', user.gender) }}</td>
-      </tr>
-    </table>
-  </template>
-  ```
+  <p>Region code 440104 path → {{ $dict.translatePath('region', '440104') }}</p>
+  <!-- Output: Guangdong / Guangzhou / Yuexiu -->
+</template>
+```
 
-  ```vue [Batch Translate (translateData)]
-  <script setup>
-  const tableData = [
-    { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
-    { id: 2, gender: 'female', status: 1, name: 'Li Si' },
-  ]
-  const processed = tableData.map(row =>
-    $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } })
-  )
-  // string for default store, { type, storeName? } for cross-store
-  </script>
-  <template>
-    <table>
-      <tr v-for="row in processed" :key="row.id">
-        <td>{{ row.name }}</td>
-        <td>{{ row.gender_label }}</td>
-        <td>{{ row.status_label }}</td>
-      </tr>
-    </table>
-  </template>
-  ```
+```vue [In Table Columns]
+<template>
+  <table>
+    <tr v-for="user in users" :key="user.id">
+      <td>{{ user.name }}</td>
+      <td>{{ $dict.translate('status', user.status) }}</td>
+      <td>{{ $dict.translate('gender', user.gender) }}</td>
+    </tr>
+  </table>
+</template>
+```
+
+```vue [Batch Translate (translateData)]
+<script setup>
+const tableData = [
+  { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
+  { id: 2, gender: 'female', status: 1, name: 'Li Si' },
+];
+const processed = tableData.map((row) =>
+  $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } }),
+);
+// string for default store, { type, storeName? } for cross-store
+</script>
+<template>
+  <table>
+    <tr v-for="row in processed" :key="row.id">
+      <td>{{ row.name }}</td>
+      <td>{{ row.gender_label }}</td>
+      <td>{{ row.status_label }}</td>
+    </tr>
+  </table>
+</template>
+```
+
 ::
 
 ## getDictItem — Get Full Dictionary Item Object
@@ -104,14 +106,14 @@ Use when you need the full `DictItem` object rather than a string translation of
 
 <script setup>
 // useDict pre-loads data
-useDict('status')
+useDict('status');
 
 // Get full DictItem object, accessing color and other extended properties
-const statusItem = computed(() => $dict.getDictItem('status', 1))
+const statusItem = computed(() => $dict.getDictItem('status', 1));
 // → { value: 1, label: 'Enabled', color: '#67C23A' }
 
 // Cross-store
-const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' })
+const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 </script>
 ```
 
@@ -136,19 +138,19 @@ Use `translateData` when you need to translate multiple code fields in a data ob
 const tableData = [
   { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
   { id: 2, gender: 'female', status: 1, name: 'Li Si' },
-]
+];
 
 // Batch translate: pass a mapping { sourceField: dictType } → returns a new object with translated fields appended
-const processed = tableData.map(row =>
-  $dict.translateData(row, { gender: 'gender', status: 'status' })
-)
+const processed = tableData.map((row) =>
+  $dict.translateData(row, { gender: 'gender', status: 'status' }),
+);
 // [{ gender: 'male', gender_label: 'Male', status: 0, status_label: 'Enabled', ... }, ...]
 
 // Cross-store example: { type, storeName? } for a non-default store
 $dict.translateData(
   { orderStatus: 1 },
-  { orderStatus: { type: 'pay_status', storeName: 'payment' } }
-)
+  { orderStatus: { type: 'pay_status', storeName: 'payment' } },
+);
 // → { orderStatus: 1, orderStatus_label: 'Paid' }
 </script>
 ```
@@ -157,11 +159,11 @@ $dict.translateData(
 
 ## vs useDict.translate
 
-| | `$dict.translate()` | `useDict().translate()` |
-|---|---|---|
-| Mount required | No | `useDict` loads in `onMounted` |
-| Data source | Global memory cache | Component's `data` ref |
-| Use case | Quick translation, shared across components | When loading/error state is needed |
+|                | `$dict.translate()`                         | `useDict().translate()`            |
+| -------------- | ------------------------------------------- | ---------------------------------- |
+| Mount required | No                                          | `useDict` loads in `onMounted`     |
+| Data source    | Global memory cache                         | Component's `data` ref             |
+| Use case       | Quick translation, shared across components | When loading/error state is needed |
 
 > **Best practice:** Load a dictionary type once with `useDict` in a root component, then use `$dict.translate()` everywhere else.
 

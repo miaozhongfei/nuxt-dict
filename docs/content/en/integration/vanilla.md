@@ -18,8 +18,8 @@ No UI library needed — these examples use only native HTML elements.
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDict('gender')
-const selected = ref('')
+const { options, loading } = useDict('gender');
+const selected = ref('');
 </script>
 ```
 
@@ -28,7 +28,13 @@ const selected = ref('')
 ```vue
 <template>
   <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse;">
-    <thead><tr><th>Name</th><th>Gender</th><th>Status</th></tr></thead>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Gender</th>
+        <th>Status</th>
+      </tr>
+    </thead>
     <tbody>
       <tr v-if="!genderData || !statusData">
         <td colspan="3" style="text-align:center;">Loading...</td>
@@ -43,13 +49,13 @@ const selected = ref('')
 </template>
 
 <script setup lang="ts">
-const { data: genderData } = useDict('gender')
-const { data: statusData } = useDict('status')
+const { data: genderData } = useDict('gender');
+const { data: statusData } = useDict('status');
 
 const users = [
   { id: 1, name: 'John', gender: 'male', status: 1 },
   { id: 2, name: 'Jane', gender: 'female', status: 0 },
-]
+];
 </script>
 ```
 
@@ -66,7 +72,9 @@ const users = [
             <details v-if="child.children?.length">
               <summary>{{ child.label }} ({{ child.value }})</summary>
               <ul style="list-style:none;padding-left:20px;">
-                <li v-for="leaf in child.children" :key="leaf.value">{{ leaf.label }} ({{ leaf.value }})</li>
+                <li v-for="leaf in child.children" :key="leaf.value">
+                  {{ leaf.label }} ({{ leaf.value }})
+                </li>
               </ul>
             </details>
             <span v-else>{{ child.label }} ({{ child.value }})</span>
@@ -78,6 +86,6 @@ const users = [
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
+const { tree } = useDictTree('region');
 </script>
 ```

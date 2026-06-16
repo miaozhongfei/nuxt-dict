@@ -1,4 +1,3 @@
-
 <p align="center">
   <h1 align="center">@lacqjs/nuxt-dict</h1>
 </p>
@@ -26,7 +25,7 @@ pnpm add @lacqjs/nuxt-dict
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['@lacqjs/nuxt-dict'],
-})
+});
 ```
 
 ```vue
@@ -37,8 +36,8 @@ export default defineNuxtConfig({
 </template>
 
 <script setup lang="ts">
-const { data: options } = useDict('gender')
-const value = ref('')
+const { data: options } = useDict('gender');
+const value = ref('');
 </script>
 ```
 

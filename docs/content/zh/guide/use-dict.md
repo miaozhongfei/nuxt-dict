@@ -23,14 +23,14 @@ useDict(storeName: string, type: string): UseDictReturn
 
 ## 返回值
 
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `data` | `ShallowRef<DictItem[] \| null>` | 字典原始数据数组。初始为 `null`，加载完成后变成 `[{ value: 0, label: '禁用' }, ...]` |
-| `translate` | `(value: string \| number) => string` | 同步翻译函数。输入 code，输出对应的 label。如果 code 不存在，返回 code 本身的字符串形式 |
+| 属性          | 类型                                                 | 说明                                                                                    |
+| ------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `data`        | `ShallowRef<DictItem[] \| null>`                     | 字典原始数据数组。初始为 `null`，加载完成后变成 `[{ value: 0, label: '禁用' }, ...]`    |
+| `translate`   | `(value: string \| number) => string`                | 同步翻译函数。输入 code，输出对应的 label。如果 code 不存在，返回 code 本身的字符串形式 |
 | `getDictItem` | `(value: string \| number) => DictItem \| undefined` | 同步获取完整字典项对象。输入 code，返回 `{ value, label, ... }`，未命中返回 `undefined` |
-| `loading` | `Ref<boolean>` | 是否正在加载 |
-| `error` | `Ref<string \| null>` | 加载失败时的错误信息 |
-| `refresh` | `() => Promise<void>` | 手动刷新，强制跳过缓存 |
+| `loading`     | `Ref<boolean>`                                       | 是否正在加载                                                                            |
+| `error`       | `Ref<string \| null>`                                | 加载失败时的错误信息                                                                    |
+| `refresh`     | `() => Promise<void>`                                | 手动刷新，强制跳过缓存                                                                  |
 
 ## 基础示例
 
@@ -46,7 +46,11 @@ useDict(storeName: string, type: string): UseDictReturn
 
     <table v-else border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
       <thead>
-        <tr><th>编码 (code)</th><th>显示文字 (label)</th><th>翻译验证</th></tr>
+        <tr>
+          <th>编码 (code)</th>
+          <th>显示文字 (label)</th>
+          <th>翻译验证</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="item in data" :key="item.value">
@@ -60,9 +64,11 @@ useDict(storeName: string, type: string): UseDictReturn
 </template>
 
 <script setup lang="ts">
-const { data, translate, loading, error, refresh } = useDict('status')
+const { data, translate, loading, error, refresh } = useDict('status');
 
-function doRefresh() { refresh() }
+function doRefresh() {
+  refresh();
+}
 </script>
 ```
 
@@ -90,15 +96,15 @@ function doRefresh() { refresh() }
 
 ```vue
 <template>
-  <el-tag :color="(statusItem?.color as string)" effect="dark">
+  <el-tag :color="statusItem?.color as string" effect="dark">
     {{ statusItem?.label }}
   </el-tag>
 </template>
 
 <script setup lang="ts">
-const { getDictItem } = useDict('status')
+const { getDictItem } = useDict('status');
 
-const statusItem = computed(() => getDictItem(1))
+const statusItem = computed(() => getDictItem(1));
 // → { value: 1, label: '启用', color: '#67C23A' }
 </script>
 ```
@@ -110,8 +116,8 @@ const statusItem = computed(() => getDictItem(1))
 字典项的 code 可能是 `number`（如 `0`），而你的业务数据可能是 `string`（如 `'0'`）。`translate()` 内部自动把两边都转成字符串比较：
 
 ```ts
-translate(0)   // → '禁用'
-translate('0') // → '禁用'
+translate(0); // → '禁用'
+translate('0'); // → '禁用'
 ```
 
 ## 手动刷新
@@ -120,10 +126,10 @@ translate('0') // → '禁用'
 
 ```vue
 <script setup lang="ts">
-const { data, refresh } = useDict('status')
+const { data, refresh } = useDict('status');
 
 function onDictUpdated() {
-  refresh()  // 后端通知字典有更新 → 清除缓存并重新请求
+  refresh(); // 后端通知字典有更新 → 清除缓存并重新请求
 }
 </script>
 ```
@@ -135,10 +141,10 @@ function onDictUpdated() {
 ```vue
 <script setup lang="ts">
 // 默认存储库 'dicts'
-const { data } = useDict('gender')
+const { data } = useDict('gender');
 
 // 指定存储库 'payment'
-const { data: payData } = useDict('payment', 'status')
+const { data: payData } = useDict('payment', 'status');
 </script>
 ```
 

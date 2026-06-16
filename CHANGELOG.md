@@ -1,6 +1,5 @@
 # Changelog
 
-
 ## v0.0.3
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.2...v0.0.3)
@@ -26,9 +25,9 @@
 ### 💅 Refactors
 
 - Rename DictItem.code to value, remove useDictOptions ([39fbac5](https://github.com/miaozhongfei/nuxt-dict/commit/39fbac5))
-- Remove old-style  API, unify storeName to opts object ([e3ff644](https://github.com/miaozhongfei/nuxt-dict/commit/e3ff644))
-- Remove old-style  API, unify storeName to opts object" ([ce343ec](https://github.com/miaozhongfei/nuxt-dict/commit/ce343ec))
-- Remove old-style  API, unify storeName to opts object ([9f6ad4d](https://github.com/miaozhongfei/nuxt-dict/commit/9f6ad4d))
+- Remove old-style API, unify storeName to opts object ([e3ff644](https://github.com/miaozhongfei/nuxt-dict/commit/e3ff644))
+- Remove old-style API, unify storeName to opts object" ([ce343ec](https://github.com/miaozhongfei/nuxt-dict/commit/ce343ec))
+- Remove old-style API, unify storeName to opts object ([9f6ad4d](https://github.com/miaozhongfei/nuxt-dict/commit/9f6ad4d))
 - Data/tree 改为 DeepReadonly 只读，防止外部直接修改 ([ad79274](https://github.com/miaozhongfei/nuxt-dict/commit/ad79274))
 
 ### 📖 Documentation
@@ -50,7 +49,6 @@
 
 ## v0.0.2
 
-
 ### 🚀 Enhancements
 
 - Initial commit ([a9d80bb](https://github.com/miaozhongfei/nuxt-dict/commit/a9d80bb))
@@ -63,4 +61,3 @@
 ### ❤️ Contributors
 
 - Miaozf <1103520414@qq.com>
-

@@ -18,14 +18,15 @@ description: اتصال به هر فرمت منبع داده دیکشنری — 
 
 ```ts
 interface DictAdapter {
-  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>
-  fetchVersion(storeName: string): Promise<string>
+  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>;
+  fetchVersion(storeName: string): Promise<string>;
 }
 ```
 
 ### fetchDict
 
 دریافت داده‌های دیکشنری. پارامترها:
+
 - `storeName`: نام مخزن (مثلاً `'dicts'` پیش‌فرض، یا نام‌های پیکربندی شده در `stores`)
 - `types`: لیست نوع‌های دیکشنری درخواستی، مانند `['gender', 'status']`
 - `locale`: زبان فعلی، مانند `'zh-CN'`
@@ -34,24 +35,24 @@ interface DictAdapter {
 
 ```ts
 interface DictResponse {
-  version: string
-  data: Record<string, DictEntry>
+  version: string;
+  data: Record<string, DictEntry>;
 }
 
 interface DictEntry {
-  type: string
-  items: DictItem[]
-  tree?: TreeNode[]
+  type: string;
+  items: DictItem[];
+  tree?: TreeNode[];
 }
 
 interface DictItem {
-  value: string | number
-  label: string
-  [key: string]: unknown  // فیلدهای اضافی
+  value: string | number;
+  label: string;
+  [key: string]: unknown; // فیلدهای اضافی
 }
 
 interface TreeNode extends DictItem {
-  children?: TreeNode[]
+  children?: TreeNode[];
 }
 ```
 
@@ -64,118 +65,122 @@ interface TreeNode extends DictItem {
 چهار آداپتور برای سناریوهای رایج — GraphQL، JSON محلی، تبدیل فرمت، و مسیریابی چند API:
 
 ::code-group
-  ```ts [GraphQL]
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        adapter: {
-          async fetchDict(storeName, { types, locale }) {
-            const query = `
-              query GetDict($types: [String!]!, $locale: String!) {
-                dict(types: $types, locale: $locale) {
-                  version
-                  data { type items { code label } }
-                }
+
+```ts [GraphQL]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      adapter: {
+        async fetchDict(storeName, { types, locale }) {
+          const query = `
+            query GetDict($types: [String!]!, $locale: String!) {
+              dict(types: $types, locale: $locale) {
+                version
+                data { type items { code label } }
               }
-            `
-            const res = await fetch('https://graphql.example.com/graphql', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ query, variables: { types, locale } }),
-            })
-            return (await res.json()).data.dict
-          },
-          async fetchVersion(storeName) {
-            const res = await fetch('https://graphql.example.com/graphql', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ query: '{ dictVersion }' }),
-            })
-            return (await res.json()).data.dictVersion
-          },
-        },
-      },
-    },
-  })
-  ```
-
-  ```ts [JSON محلی]
-  import dictData from './data/dictionary.json'
-
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        adapter: {
-          async fetchDict(storeName, { types }) {
-            const data: Record<string, any> = {}
-            for (const type of types) {
-              if (dictData[type]) data[type] = dictData[type]
             }
-            return { version: '1.0.0', data }
-          },
-          async fetchVersion(storeName) { return '1.0.0' },
-        },
-      },
-    },
-  })
-  ```
-
-  ```ts [تبدیل فرمت]
-  dict: {
-    api: {
-      adapter: {
-        async fetchDict(storeName, { types, locale }) {
-          const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`)
-          const json = await res.json()
-          const data: Record<string, any> = {}
-          for (const item of json.payload) {
-            data[item.dictType] = {
-              type: item.dictType,
-              items: item.options.map((opt: any) => ({
-                value: opt.dictCode,
-                label: opt.dictName,
-              })),
-            }
-          }
-          return { version: json.dataVersion || '1.0.0', data }
+          `;
+          const res = await fetch('https://graphql.example.com/graphql', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query, variables: { types, locale } }),
+          });
+          return (await res.json()).data.dict;
         },
         async fetchVersion(storeName) {
-          const res = await fetch('/api/custom-dict/version')
-          return (await res.json()).version
+          const res = await fetch('https://graphql.example.com/graphql', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: '{ dictVersion }' }),
+          });
+          return (await res.json()).data.dictVersion;
         },
       },
     },
   },
-  ```
+});
+```
 
-  ```ts [مسیریابی StoreName]
+```ts [JSON محلی]
+import dictData from './data/dictionary.json';
+
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
   dict: {
-    stores: {
-      payment: { dictEndpoint: '/v1/payment/dict' },
-      logistics: { dictEndpoint: '/v1/logistics/dict' },
-    },
     api: {
       adapter: {
-        async fetchDict(storeName, { types, locale }) {
-          const endpoints: Record<string, string> = {
-            dicts: 'https://default-api.example.com/dict/list',
-            payment: 'https://pay-api.example.com/v1/payment/dict',
-            logistics: 'https://logistics-api.example.com/v1/logistics/dict',
+        async fetchDict(storeName, { types }) {
+          const data: Record<string, any> = {};
+          for (const type of types) {
+            if (dictData[type]) data[type] = dictData[type];
           }
-          const url = endpoints[storeName] || endpoints.dicts
-          const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-          return res.json()
+          return { version: '1.0.0', data };
         },
         async fetchVersion(storeName) {
-          const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
-          return (await res.json()).version
+          return '1.0.0';
         },
       },
     },
   },
-  ```
+});
+```
+
+```ts [تبدیل فرمت]
+dict: {
+  api: {
+    adapter: {
+      async fetchDict(storeName, { types, locale }) {
+        const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`)
+        const json = await res.json()
+        const data: Record<string, any> = {}
+        for (const item of json.payload) {
+          data[item.dictType] = {
+            type: item.dictType,
+            items: item.options.map((opt: any) => ({
+              value: opt.dictCode,
+              label: opt.dictName,
+            })),
+          }
+        }
+        return { version: json.dataVersion || '1.0.0', data }
+      },
+      async fetchVersion(storeName) {
+        const res = await fetch('/api/custom-dict/version')
+        return (await res.json()).version
+      },
+    },
+  },
+},
+```
+
+```ts [مسیریابی StoreName]
+dict: {
+  stores: {
+    payment: { dictEndpoint: '/v1/payment/dict' },
+    logistics: { dictEndpoint: '/v1/logistics/dict' },
+  },
+  api: {
+    adapter: {
+      async fetchDict(storeName, { types, locale }) {
+        const endpoints: Record<string, string> = {
+          dicts: 'https://default-api.example.com/dict/list',
+          payment: 'https://pay-api.example.com/v1/payment/dict',
+          logistics: 'https://logistics-api.example.com/v1/logistics/dict',
+        }
+        const url = endpoints[storeName] || endpoints.dicts
+        const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
+        return res.json()
+      },
+      async fetchVersion(storeName) {
+        const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
+        return (await res.json()).version
+      },
+    },
+  },
+},
+```
+
 ::
 
 هر مخزن هنگام فراخوانی `fetchDict` / `fetchVersion`، ماژول به طور خودکار `storeName` متناظر را ارسال می‌کند — نیازی به تکرار `baseURL` در پیکربندی `stores` نیست.

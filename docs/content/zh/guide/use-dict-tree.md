@@ -20,13 +20,13 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 
 ## 返回值
 
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `tree` | `ShallowRef<TreeNode[] \| null>` | 完整的树形字典数据 |
-| `translate` | `(value: string \| number) => string` | 翻译任意层级的节点 |
-| `findPath` | `(value: string \| number) => string[]` | 路径回溯。输入叶子节点 code，返回从根到该节点的 label 数组 |
-| `loading` | `Ref<boolean>` | 是否正在加载 |
-| `refresh` | `() => Promise<void>` | 手动刷新 |
+| 属性        | 类型                                    | 说明                                                       |
+| ----------- | --------------------------------------- | ---------------------------------------------------------- |
+| `tree`      | `ShallowRef<TreeNode[] \| null>`        | 完整的树形字典数据                                         |
+| `translate` | `(value: string \| number) => string`   | 翻译任意层级的节点                                         |
+| `findPath`  | `(value: string \| number) => string[]` | 路径回溯。输入叶子节点 code，返回从根到该节点的 label 数组 |
+| `loading`   | `Ref<boolean>`                          | 是否正在加载                                               |
+| `refresh`   | `() => Promise<void>`                   | 手动刷新                                                   |
 
 ## findPath：路径回溯
 
@@ -53,7 +53,7 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 </template>
 
 <script setup lang="ts">
-const { findPath } = useDictTree('region')
+const { findPath } = useDictTree('region');
 </script>
 ```
 
@@ -71,8 +71,8 @@ const { findPath } = useDictTree('region')
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
-const selected = ref([])
+const { tree } = useDictTree('region');
+const selected = ref([]);
 </script>
 ```
 

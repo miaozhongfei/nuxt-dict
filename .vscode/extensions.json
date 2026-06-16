@@ -1,12 +1,4 @@
 {
-  "recommendations": [
-    "oxc.oxc-vscode",
-    "vue.volar",
-    "Nuxtr.nuxtr-vscode"
-  ],
-  "unwantedRecommendations": [
-    "octref.vetur",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode"
-  ]
+  "recommendations": ["oxc.oxc-vscode", "vue.volar", "Nuxtr.nuxtr-vscode"],
+  "unwantedRecommendations": ["octref.vetur", "dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
 }

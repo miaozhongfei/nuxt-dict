@@ -22,6 +22,7 @@ Write-back: Update both IndexedDB + Memory Cache
 ## Tier Details
 
 **Tier 1: Memory Cache**
+
 - Stored in JavaScript `Map` object
 - Lifetime: Cleared on page close
 - Capacity: `cache.memoryMax` (default 200)
@@ -29,10 +30,12 @@ Write-back: Update both IndexedDB + Memory Cache
 - Eviction: LRU (Least Recently Used)
 
 **Tier 2: IndexedDB**
+
 - Persistent storage, survives page reloads and browser restarts
 - Can be disabled: `cache.indexedDB.enabled`
 
 **Tier 3: API**
+
 - Request deduplication: Concurrent requests for the same dictionary type merge into one network call
 
 ## Read/Write Flow
@@ -44,6 +47,7 @@ Write-back: Update both IndexedDB + Memory Cache
 ## Version Detection
 
 On first access to a store's dictionary data (when calling `useDict` / `useDictTree` / `useDict`), the module lazily calls `fetchVersion()` and compares against the version stored in localStorage:
+
 - Match → Cache is valid
 - Mismatch → Clear all caches for that store
 - Failure → Ignore error, continue using cache
@@ -60,12 +64,12 @@ dict: {
 }
 ```
 
-| Scenario | Recommendation |
-|----------|---------------|
-| Rarely changing dicts | `ttl: 0`, rely on version invalidation |
-| Frequently changing dicts | `ttl: 600000` (10 min) |
-| Mobile | `memoryMax: 50` |
-| SSR-heavy | `indexedDB.enabled: false` |
+| Scenario                  | Recommendation                         |
+| ------------------------- | -------------------------------------- |
+| Rarely changing dicts     | `ttl: 0`, rely on version invalidation |
+| Frequently changing dicts | `ttl: 600000` (10 min)                 |
+| Mobile                    | `memoryMax: 50`                        |
+| SSR-heavy                 | `indexedDB.enabled: false`             |
 
 ## What You Learned
 

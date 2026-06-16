@@ -1,5 +1,4 @@
-
-const isDev = import.meta.env.DEV
+const isDev = import.meta.env.DEV;
 
 export default defineNuxtConfig({
   modules: ['../src/module', 'nuxt-skill-hub', '@element-plus/nuxt'],
@@ -51,8 +50,8 @@ export default defineNuxtConfig({
     locale: {
       default: 'zh-CN',
       source: 'cookie',
-      paramKey:'lang',
-      apiHeaderKey:''
+      paramKey: 'lang',
+      apiHeaderKey: '',
     },
     stores: {
       // dicts2 仓库使用独立的 API 端点（/api/dict/list2），返回不同数据
@@ -62,13 +61,12 @@ export default defineNuxtConfig({
     },
     ssr: {
       // prefetch: ['gender', 'status', 'region', 'industry'],
-      prefetch: []
+      prefetch: [],
     },
-
   },
   compatibilityDate: '2025-06-10',
   skillHub: {
     // 推荐：明确告诉它要生成给哪个 Agent
     targets: ['claude-code', 'opencode', 'agents'],
   },
-})
+});

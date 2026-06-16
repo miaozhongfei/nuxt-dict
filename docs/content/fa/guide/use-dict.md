@@ -23,14 +23,14 @@ useDict(storeName: string, type: string): UseDictReturn
 
 ## مقادیر بازگشتی
 
-| ویژگی | نوع | توضیح |
-|--------|------|-----------|
-| `data` | `ShallowRef<DictItem[] \| null>` | آرایه داده‌های خام دیکشنری. در ابتدا `null`، پس از بارگذاری `[{ value: 0, label: 'غیرفعال' }, ...]` می‌شود |
-| `translate` | `(value: string \| number) => string` | تابع ترجمه همزمان. کد را دریافت کرده و label متناظر را برمی‌گرداند. در صورت عدم وجود، کد را به صورت رشته برمی‌گرداند |
-| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | دریافت همزمان آیتم کامل دیکشنری. `{ value, label, ... }` برمی‌گرداند، در صورت عدم وجود `undefined` |
-| `loading` | `Ref<boolean>` | آیا در حال بارگذاری است |
-| `error` | `Ref<string \| null>` | پیام خطا در صورت شکست |
-| `refresh` | `() => Promise<void>` | بازنشانی دستی، کش را نادیده می‌گیرد |
+| ویژگی         | نوع                                                  | توضیح                                                                                                                |
+| ------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `data`        | `ShallowRef<DictItem[] \| null>`                     | آرایه داده‌های خام دیکشنری. در ابتدا `null`، پس از بارگذاری `[{ value: 0, label: 'غیرفعال' }, ...]` می‌شود           |
+| `translate`   | `(value: string \| number) => string`                | تابع ترجمه همزمان. کد را دریافت کرده و label متناظر را برمی‌گرداند. در صورت عدم وجود، کد را به صورت رشته برمی‌گرداند |
+| `getDictItem` | `(value: string \| number) => DictItem \| undefined` | دریافت همزمان آیتم کامل دیکشنری. `{ value, label, ... }` برمی‌گرداند، در صورت عدم وجود `undefined`                   |
+| `loading`     | `Ref<boolean>`                                       | آیا در حال بارگذاری است                                                                                              |
+| `error`       | `Ref<string \| null>`                                | پیام خطا در صورت شکست                                                                                                |
+| `refresh`     | `() => Promise<void>`                                | بازنشانی دستی، کش را نادیده می‌گیرد                                                                                  |
 
 ## مثال پایه
 
@@ -49,7 +49,11 @@ useDict(storeName: string, type: string): UseDictReturn
     <!-- جدول داده‌ها -->
     <table v-else border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;">
       <thead>
-        <tr><th>کد</th><th>برچسب</th><th>بررسی ترجمه</th></tr>
+        <tr>
+          <th>کد</th>
+          <th>برچسب</th>
+          <th>بررسی ترجمه</th>
+        </tr>
       </thead>
       <tbody>
         <tr v-for="item in data" :key="item.value">
@@ -64,10 +68,12 @@ useDict(storeName: string, type: string): UseDictReturn
 
 <script setup lang="ts">
 // فراخوانی useDict برای دریافت داده‌های دیکشنری
-const { data, translate, loading, error, refresh } = useDict('status')
+const { data, translate, loading, error, refresh } = useDict('status');
 
 // تابع بازنشانی دستی
-function doRefresh() { refresh() }
+function doRefresh() {
+  refresh();
+}
 </script>
 ```
 
@@ -95,15 +101,15 @@ function doRefresh() { refresh() }
 
 ```vue
 <template>
-  <el-tag :color="(statusItem?.color as string)" effect="dark">
+  <el-tag :color="statusItem?.color as string" effect="dark">
     {{ statusItem?.label }}
   </el-tag>
 </template>
 
 <script setup lang="ts">
-const { getDictItem } = useDict('status')
+const { getDictItem } = useDict('status');
 
-const statusItem = computed(() => getDictItem(1))
+const statusItem = computed(() => getDictItem(1));
 // → { value: 1, label: 'فعال', color: '#67C23A' }
 </script>
 ```
@@ -115,8 +121,8 @@ const statusItem = computed(() => getDictItem(1))
 کدهای آیتم دیکشنری ممکن است `number` باشند (مثلاً `0`)، در حالی که داده‌های کسب‌وکار شما `string` باشد (مثلاً `'0'`). `translate()` به طور خودکار هر دو طرف را به رشته تبدیل می‌کند:
 
 ```ts
-translate(0)   // → 'غیرفعال'
-translate('0') // → 'غیرفعال'
+translate(0); // → 'غیرفعال'
+translate('0'); // → 'غیرفعال'
 ```
 
 ## بازنشانی دستی
@@ -125,10 +131,12 @@ translate('0') // → 'غیرفعال'
 
 ```vue
 <script setup lang="ts">
-const { data, refresh } = useDict('status')
+const { data, refresh } = useDict('status');
 
 // backend اطلاع می‌دهد دیکشنری به‌روز شده ← کش را پاک کرده و دوباره درخواست بده
-function onDictUpdated() { refresh() }
+function onDictUpdated() {
+  refresh();
+}
 </script>
 ```
 
@@ -139,10 +147,10 @@ function onDictUpdated() { refresh() }
 ```vue
 <script setup lang="ts">
 // مخزن پیش‌فرض 'dicts'
-const { data } = useDict('gender')
+const { data } = useDict('gender');
 
 // مخزن 'payment'
-const { data: payData } = useDict('payment', 'status')
+const { data: payData } = useDict('payment', 'status');
 </script>
 ```
 
