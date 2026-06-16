@@ -34,12 +34,12 @@ Nuxt Dict 是一个 Nuxt 4 模块，帮你轻松管理项目中的**字典数据
 
 ## 文档导航
 
-| 章节 | 适合谁 |
-|------|--------|
-| [环境准备](/guide/environment) → [安装模块](/guide/installation) → [第一个字典](/guide/first-dict) | 零基础，第一次使用 |
-| [useDict](/guide/use-dict) ∼ [$dict](/guide/dollar-dict) | 了解每个 API 的详细用法 |
-| [多仓库](/advanced/multi-store) ∼ [配置全解](/advanced/full-config) | 需要在生产环境中深度使用 |
-| [Element Plus](/integration/element-plus) / [Vant](/integration/vant) | 对接 UI 库的完整示例 |
-| [API 速查表](/appendix/api-reference) / [常见问题](/appendix/faq) | 快速查阅 |
+| 章节                                                                                               | 适合谁                   |
+| -------------------------------------------------------------------------------------------------- | ------------------------ |
+| [环境准备](/guide/environment) → [安装模块](/guide/installation) → [第一个字典](/guide/first-dict) | 零基础，第一次使用       |
+| [useDict](/guide/use-dict) ∼ [$dict](/guide/dollar-dict)                                           | 了解每个 API 的详细用法  |
+| [多仓库](/advanced/multi-store) ∼ [配置全解](/advanced/full-config)                                | 需要在生产环境中深度使用 |
+| [Element Plus](/integration/element-plus) / [Vant](/integration/vant)                              | 对接 UI 库的完整示例     |
+| [API 速查表](/appendix/api-reference) / [常见问题](/appendix/faq)                                  | 快速查阅                 |
 
 准备好了吗？从 [环境准备](/guide/environment) 开始吧！

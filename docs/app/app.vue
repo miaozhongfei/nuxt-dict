@@ -76,8 +76,8 @@ mark {
 }
 
 /* RTL 页面中代码块保持从左到右 */
-[dir="rtl"] pre,
-[dir="rtl"] code {
+[dir='rtl'] pre,
+[dir='rtl'] code {
   direction: ltr;
   text-align: left;
 }

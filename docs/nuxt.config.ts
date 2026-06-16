@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-const isDev = import.meta.env.DEV
+const isDev = import.meta.env.DEV;
 
 export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxtjs/i18n', '@nuxt/content', '@nuxtjs/color-mode'],
@@ -24,9 +24,9 @@ export default defineNuxtConfig({
   },
   i18n: {
     locales: [
-      { code: 'zh', language: 'zh-CN', name: '中文', file: 'zh.json' ,dir: 'ltr'},
-      { code: 'en', language: 'en-US', name: 'English', file: 'en.json' ,dir: 'ltr'},
-      { code: 'fa', name: 'Farsi', language: 'fa-IR', file: 'fa.json' ,dir: 'rtl' },
+      { code: 'zh', language: 'zh-CN', name: '中文', file: 'zh.json', dir: 'ltr' },
+      { code: 'en', language: 'en-US', name: 'English', file: 'en.json', dir: 'ltr' },
+      { code: 'fa', name: 'Farsi', language: 'fa-IR', file: 'fa.json', dir: 'rtl' },
     ],
     strategy: 'prefix_except_default',
     defaultLocale: 'zh',
@@ -39,4 +39,4 @@ export default defineNuxtConfig({
       routes: ['/', '/en', '/fa'],
     },
   },
-})
+});

@@ -13,17 +13,12 @@ This chapter provides 6 complete examples showing how to use the dictionary modu
 
 ```vue
 <template>
-  <USelect
-    v-model="value"
-    :items="options"
-    placeholder="Select gender"
-    :loading="loading"
-  />
+  <USelect v-model="value" :items="options" placeholder="Select gender" :loading="loading" />
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDict('gender')
-const value = ref('')
+const { options, loading } = useDict('gender');
+const value = ref('');
 </script>
 ```
 
@@ -35,10 +30,10 @@ const value = ref('')
 </template>
 
 <script setup lang="ts">
-const { data: statusData } = useDict('status')
+const { data: statusData } = useDict('status');
 
 function getStatusColor(value: number) {
-  return (statusData.value?.find(i => i.value === code) as any)?.color
+  return (statusData.value?.find((i) => i.value === code) as any)?.color;
 }
 
 const columns = computed(() => [
@@ -53,12 +48,12 @@ const columns = computed(() => [
         label: $dict.translate('status', row.status) as string,
       }),
   },
-])
+]);
 
 const tableData = ref([
   { name: 'Alice', gender: 'female', status: 1 },
   { name: 'Bob', gender: 'male', status: 0 },
-])
+]);
 </script>
 ```
 
@@ -78,21 +73,21 @@ Nuxt UI has no native Cascader. Use `USelectMenu` with nested `children` for dri
 </template>
 
 <script setup lang="ts">
-const { tree, loading, translate } = useDictTree('region')
+const { tree, loading, translate } = useDictTree('region');
 
 // Convert tree nodes to USelectMenu-compatible nested format
 const cascaderItems = computed(() => {
   function convert(nodes: any[]): any[] {
-    return nodes.map(n => ({
+    return nodes.map((n) => ({
       label: n.label,
       value: n.value,
       children: n.children && n.children.length > 0 ? convert(n.children) : undefined,
-    }))
+    }));
   }
-  return tree.value ? convert(tree.value) : []
-})
+  return tree.value ? convert(tree.value) : [];
+});
 
-const selected = ref('')
+const selected = ref('');
 </script>
 ```
 
@@ -102,14 +97,20 @@ const selected = ref('')
 <template>
   <div class="flex flex-col gap-2">
     <URadioGroup v-model="radio" :items="options" :loading="loading" />
-    <UCheckbox v-for="opt in options" :key="opt.value" v-model="checkbox" :value="opt.value" :label="opt.label" />
+    <UCheckbox
+      v-for="opt in options"
+      :key="opt.value"
+      v-model="checkbox"
+      :value="opt.value"
+      :label="opt.label"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDict('gender')
-const radio = ref('')
-const checkbox = ref<string[]>([])
+const { options, loading } = useDict('gender');
+const radio = ref('');
+const checkbox = ref<string[]>([]);
 </script>
 ```
 
@@ -129,10 +130,10 @@ const checkbox = ref<string[]>([])
 </template>
 
 <script setup lang="ts">
-const { data, options } = useDict('status')
+const { data, options } = useDict('status');
 
 function getBadgeColor(value: string | number) {
-  return (data.value?.find(i => i.value === code) as any)?.color ?? 'neutral'
+  return (data.value?.find((i) => i.value === code) as any)?.color ?? 'neutral';
 }
 </script>
 ```
@@ -155,10 +156,10 @@ function getBadgeColor(value: string | number) {
 </template>
 
 <script setup lang="ts">
-const { options: gOpts, loading: gLoading } = useDict('gender')
-const { options: iOpts, loading: iLoading } = useDict('industry')
-const { options: sOpts, loading: sLoading } = useDict('status')
+const { options: gOpts, loading: gLoading } = useDict('gender');
+const { options: iOpts, loading: iLoading } = useDict('industry');
+const { options: sOpts, loading: sLoading } = useDict('status');
 
-const form = reactive({ gender: '', industry: '', status: '' })
+const form = reactive({ gender: '', industry: '', status: '' });
 </script>
 ```

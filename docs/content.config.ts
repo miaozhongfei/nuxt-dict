@@ -1,7 +1,7 @@
-import { defineCollection, defineContentConfig } from '@nuxt/content'
-import { z } from 'zod'
+import { defineCollection, defineContentConfig } from '@nuxt/content';
+import { z } from 'zod';
 
-const commonSchema = z.object({})
+const commonSchema = z.object({});
 
 export default defineContentConfig({
   collections: {
@@ -33,4 +33,4 @@ export default defineContentConfig({
       search: true,
     }),
   },
-})
+});

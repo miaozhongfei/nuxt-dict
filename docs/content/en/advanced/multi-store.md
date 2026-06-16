@@ -30,26 +30,30 @@ export default defineNuxtConfig({
             return {
               version: 'static-1.0',
               data: {
-                priority: { type: 'priority', items: [
-                  { value: 'high', label: `High Priority (${locale})` },
-                  { value: 'low', label: `Low Priority (${locale})` },
-                ] },
+                priority: {
+                  type: 'priority',
+                  items: [
+                    { value: 'high', label: `High Priority (${locale})` },
+                    { value: 'low', label: `Low Priority (${locale})` },
+                  ],
+                },
               },
-            }
+            };
           },
           async fetchVersion(_storeName) {
-            return 'static-1.0'
+            return 'static-1.0';
           },
         },
       },
     },
   },
-})
+});
 ```
 
 ## Inheritance Rules
 
 Unconfigured fields inherit from the global `api`. For `logistics`:
+
 - `baseURL` not set → inherits `''`
 - `dictEndpoint` set as `/api/logistics/dict` → overrides global
 - `versionEndpoint` not set → inherits global
@@ -71,16 +75,18 @@ Stores with custom adapters are used in composables exactly the same way as othe
   <div>
     <h3>Priority (static store — custom adapter)</h3>
     <select v-model="priority">
-      <option v-for="opt in staticOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+      <option v-for="opt in staticOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }}
+      </option>
     </select>
   </div>
 </template>
 
 <script setup lang="ts">
 // static store uses custom adapter, no network requests
-const { options: staticOptions } = useDict('static', 'priority')
+const { options: staticOptions } = useDict('static', 'priority');
 
-const priority = ref('')
+const priority = ref('');
 </script>
 ```
 
@@ -88,15 +94,15 @@ const priority = ref('')
 
 ```ts
 // Default store
-const { options: orderOptions } = useDict('order_status')
+const { options: orderOptions } = useDict('order_status');
 
 // payment store
-const { options: payOptions } = useDict('payment', 'pay_method')
+const { options: payOptions } = useDict('payment', 'pay_method');
 
 // useDict / useDictTree / $dict all support store parameter
-const { data } = useDict('payment', 'pay_status')
-const { tree } = useDictTree('logistics', 'delivery_region')
-$dict.translate('pay_status', 1, { storeName: 'payment' })
+const { data } = useDict('payment', 'pay_status');
+const { tree } = useDictTree('logistics', 'delivery_region');
+$dict.translate('pay_status', 1, { storeName: 'payment' });
 ```
 
 ## Independent Version Detection
@@ -120,6 +126,7 @@ Each store is identified by a **store name** (`dicts`, `payment`, `static`, etc.
 **2. What is an adapter?**
 
 An adapter is a "data-fetching tool". It has two jobs:
+
 - `fetchDict`: go get the dictionary data
 - `fetchVersion`: check if the version has changed
 
@@ -129,11 +136,11 @@ The module comes with a built-in **default REST adapter** — it automatically s
 
 A store can be in one of three states:
 
-| State | How you write it in `stores` | Effect |
-|-------|------------------------------|--------|
-| **Not declared** | Don't write it at all | The module doesn't know about it. When you call `useDict('myStore', 'type')`, it reuses the `dicts` adapter directly |
-| **Declared, but empty** | `myStore: {}` | The module knows this store exists, but all fields are empty. It creates an independent REST adapter, copying all address fields from the global `api` |
-| **Declared with fields** | `myStore: { baseURL: '...' }` | Uses the fields you set + copies unset fields from the global `api` |
+| State                    | How you write it in `stores`  | Effect                                                                                                                                                 |
+| ------------------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Not declared**         | Don't write it at all         | The module doesn't know about it. When you call `useDict('myStore', 'type')`, it reuses the `dicts` adapter directly                                   |
+| **Declared, but empty**  | `myStore: {}`                 | The module knows this store exists, but all fields are empty. It creates an independent REST adapter, copying all address fields from the global `api` |
+| **Declared with fields** | `myStore: { baseURL: '...' }` | Uses the fields you set + copies unset fields from the global `api`                                                                                    |
 
 **Code comparison of the three states:**
 
@@ -158,6 +165,7 @@ stores: {
 **Difference between State 1 and State 2:**
 
 Even though the endpoints are the same:
+
 - State 1: `payment` and `dicts` share one adapter and one cache — when `dicts` version updates, `payment` cache is also invalidated
 - State 2: `logistics` has its own adapter and cache — when `dicts` version updates, `logistics` is unaffected
 
@@ -167,12 +175,12 @@ Even though the endpoints are the same:
 
 Each store can configure four fields:
 
-| Field | Type | Purpose | Example |
-|-------|------|---------|---------|
-| `baseURL` | string | The server address | `https://pay-api.example.com` |
-| `dictEndpoint` | string | The endpoint path for fetching dictionary data | `/v1/dictionary` |
-| `versionEndpoint` | string | The endpoint path for fetching the version number | `/v1/dictionary/version` |
-| `adapter` | object | A custom tool to replace the default HTTP tool | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
+| Field             | Type   | Purpose                                           | Example                                       |
+| ----------------- | ------ | ------------------------------------------------- | --------------------------------------------- |
+| `baseURL`         | string | The server address                                | `https://pay-api.example.com`                 |
+| `dictEndpoint`    | string | The endpoint path for fetching dictionary data    | `/v1/dictionary`                              |
+| `versionEndpoint` | string | The endpoint path for fetching the version number | `/v1/dictionary/version`                      |
+| `adapter`         | object | A custom tool to replace the default HTTP tool    | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
 
 **The final request URL = `baseURL` + the corresponding endpoint.**
 
@@ -205,6 +213,7 @@ stores: {
 ```
 
 `payment` final result:
+
 - `baseURL` = `'https://pay-api.example.com'` ← uses your value
 - `dictEndpoint` = `'/dict/list'` ← copied from global
 - `versionEndpoint` = `'/dict/version'` ← copied from global
@@ -220,6 +229,7 @@ stores: {
 ```
 
 `logistics` final result:
+
 - `baseURL` = `'/api'` ← copied from global
 - `dictEndpoint` = `'/dict/list'` ← copied from global
 - `versionEndpoint` = `'/dict/version'` ← copied from global
@@ -254,6 +264,7 @@ api: {
 ```
 
 Default store `dicts` priority:
+
 1. Check if `api.adapter` is set → if yes, use it
 2. If not → auto-create a REST adapter (using the three global address fields)
 
@@ -272,6 +283,7 @@ stores: {
 ```
 
 `payment` store's logic:
+
 1. Check if `stores.payment.adapter` is set → it's not
 2. Does NOT look at `api.adapter` → **skips it**
 3. Auto-creates a REST adapter (using the inherited address fields)
@@ -355,13 +367,13 @@ Best for: Different stores use completely different data-fetching approaches (HT
 
 All possible cases listed:
 
-| Store Type | Condition | Adapter Used |
-|-----------|-----------|-------------|
-| `dicts` (default) | `api.adapter` is set | Uses `api.adapter` |
-| `dicts` (default) | `api.adapter` not set | Uses REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint` |
-| `xxx` (declared in `stores`) | `stores.xxx.adapter` is set | Uses `stores.xxx.adapter` (unaffected by `api.adapter`) |
+| Store Type                   | Condition                    | Adapter Used                                                                                                                                                                                      |
+| ---------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dicts` (default)            | `api.adapter` is set         | Uses `api.adapter`                                                                                                                                                                                |
+| `dicts` (default)            | `api.adapter` not set        | Uses REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                                                                             |
+| `xxx` (declared in `stores`) | `stores.xxx.adapter` is set  | Uses `stores.xxx.adapter` (unaffected by `api.adapter`)                                                                                                                                           |
 | `xxx` (declared in `stores`) | `stores.xxx.adapter` not set | Uses REST: `stores.xxx.baseURL ?? api.baseURL` + `stores.xxx.dictEndpoint ?? api.dictEndpoint` + `stores.xxx.versionEndpoint ?? api.versionEndpoint`. Has independent cache and version detection |
-| `yyy` (not declared) | — | Reuses the `dicts` adapter, shares the same cache |
+| `yyy` (not declared)         | —                            | Reuses the `dicts` adapter, shares the same cache                                                                                                                                                 |
 
 ### One-Sentence Summary
 

@@ -11,24 +11,31 @@ description: 将字典模块与 Vant 移动端组件配合使用的完整示例�
 
 ```vue
 <template>
-  <van-field v-model="selectedText" is-link readonly label="性别" placeholder="请选择性别" @click="showPicker = true" />
+  <van-field
+    v-model="selectedText"
+    is-link
+    readonly
+    label="性别"
+    placeholder="请选择性别"
+    @click="showPicker = true"
+  />
   <van-popup v-model:show="showPicker" round position="bottom">
     <van-picker :columns="pickerColumns" @confirm="onConfirm" @cancel="showPicker = false" />
   </van-popup>
 </template>
 
 <script setup lang="ts">
-const { options } = useDict('gender')
-const showPicker = ref(false)
-const selectedText = ref('')
+const { options } = useDict('gender');
+const showPicker = ref(false);
+const selectedText = ref('');
 
 const pickerColumns = computed(() =>
-  options.value.map(opt => ({ text: opt.label, value: opt.value }))
-)
+  options.value.map((opt) => ({ text: opt.label, value: opt.value })),
+);
 
 function onConfirm({ selectedOptions }: any) {
-  selectedText.value = selectedOptions[0]?.text ?? ''
-  showPicker.value = false
+  selectedText.value = selectedOptions[0]?.text ?? '';
+  showPicker.value = false;
 }
 </script>
 ```
@@ -44,14 +51,18 @@ function onConfirm({ selectedOptions }: any) {
 </template>
 
 <script setup lang="ts">
-const { options: statusOptions } = useDict('status')
-const { options: genderOptions } = useDict('gender')
+const { options: statusOptions } = useDict('status');
+const { options: genderOptions } = useDict('gender');
 
-const status = ref('')
-const gender = ref('')
+const status = ref('');
+const gender = ref('');
 
-const statusCols = computed(() => statusOptions.value.map(o => ({ text: o.label, value: o.value })))
-const genderCols = computed(() => genderOptions.value.map(o => ({ text: o.label, value: o.value })))
+const statusCols = computed(() =>
+  statusOptions.value.map((o) => ({ text: o.label, value: o.value })),
+);
+const genderCols = computed(() =>
+  genderOptions.value.map((o) => ({ text: o.label, value: o.value })),
+);
 </script>
 ```
 
@@ -59,30 +70,47 @@ const genderCols = computed(() => genderOptions.value.map(o => ({ text: o.label,
 
 ```vue
 <template>
-  <van-field v-model="cascaderText" is-link readonly label="区域" placeholder="请选择区域" @click="showCascader = true" />
+  <van-field
+    v-model="cascaderText"
+    is-link
+    readonly
+    label="区域"
+    placeholder="请选择区域"
+    @click="showCascader = true"
+  />
   <van-popup v-model:show="showCascader" round position="bottom">
-    <van-cascader v-model="cascaderValue" title="请选择区域" :options="vantTree" @close="showCascader = false" @finish="onFinish" />
+    <van-cascader
+      v-model="cascaderValue"
+      title="请选择区域"
+      :options="vantTree"
+      @close="showCascader = false"
+      @finish="onFinish"
+    />
   </van-popup>
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
-const showCascader = ref(false)
-const cascaderValue = ref('')
-const cascaderText = ref('')
+const { tree } = useDictTree('region');
+const showCascader = ref(false);
+const cascaderValue = ref('');
+const cascaderText = ref('');
 
 const vantTree = computed(() => {
-  if (!tree.value) return []
-  return toVant(tree.value)
-})
+  if (!tree.value) return [];
+  return toVant(tree.value);
+});
 
 function toVant(nodes: any[]): any[] {
-  return nodes.map(n => ({ text: n.label, value: n.value, children: n.children ? toVant(n.children) : undefined }))
+  return nodes.map((n) => ({
+    text: n.label,
+    value: n.value,
+    children: n.children ? toVant(n.children) : undefined,
+  }));
 }
 
 function onFinish({ selectedOptions }: any) {
-  cascaderText.value = selectedOptions.map((o: any) => o.text).join(' / ')
-  showCascader.value = false
+  cascaderText.value = selectedOptions.map((o: any) => o.text).join(' / ');
+  showCascader.value = false;
 }
 </script>
 ```
@@ -97,7 +125,7 @@ function onFinish({ selectedOptions }: any) {
 </template>
 
 <script setup lang="ts">
-const { options } = useDict('gender')
-const radio = ref('')
+const { options } = useDict('gender');
+const radio = ref('');
 </script>
 ```

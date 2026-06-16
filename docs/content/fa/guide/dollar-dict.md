@@ -59,54 +59,56 @@ $dict.getDictItem(type: string, value: string | number, opts: { storeName?: stri
 ## مثال‌های استفاده
 
 ::code-group
-  ```vue [پایه]
-  <template>
-    <div>
-      <p>کد جنسیت 'male' ← {{ $dict.translate('gender', 'male') }}</p>
-      <!-- خروجی: مرد -->
 
-      <p>کد وضعیت 0 ← {{ $dict.translate('status', 0) }}</p>
-      <!-- خروجی: غیرفعال -->
+```vue [پایه]
+<template>
+  <div>
+    <p>کد جنسیت 'male' ← {{ $dict.translate('gender', 'male') }}</p>
+    <!-- خروجی: مرد -->
 
-      <p>مسیر کامل کد منطقه 440104 ← {{ $dict.translatePath('region', '440104') }}</p>
-      <!-- خروجی: Guangdong / Guangzhou / Yuexiu -->
-    </div>
-  </template>
-  ```
+    <p>کد وضعیت 0 ← {{ $dict.translate('status', 0) }}</p>
+    <!-- خروجی: غیرفعال -->
 
-  ```vue [در جدول]
-  <template>
-    <table>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.name }}</td>
-        <td>{{ $dict.translate('status', user.status) }}</td>
-        <td>{{ $dict.translate('gender', user.gender) }}</td>
-      </tr>
-    </table>
-  </template>
-  ```
+    <p>مسیر کامل کد منطقه 440104 ← {{ $dict.translatePath('region', '440104') }}</p>
+    <!-- خروجی: Guangdong / Guangzhou / Yuexiu -->
+  </div>
+</template>
+```
 
-  ```vue [ترجمه دسته‌ای (translateData)]
-  <script setup>
-  const tableData = [
-    { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
-    { id: 2, gender: 'female', status: 1, name: 'Li Si' },
-  ]
-  const processed = tableData.map(row =>
-    $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } })
-  )
-  // برای مخزن پیش‌فرض string، برای مخزن دیگر { type, storeName? }
-  </script>
-  <template>
-    <table>
-      <tr v-for="row in processed" :key="row.id">
-        <td>{{ row.name }}</td>
-        <td>{{ row.gender_label }}</td>
-        <td>{{ row.status_label }}</td>
-      </tr>
-    </table>
-  </template>
-  ```
+```vue [در جدول]
+<template>
+  <table>
+    <tr v-for="user in users" :key="user.id">
+      <td>{{ user.name }}</td>
+      <td>{{ $dict.translate('status', user.status) }}</td>
+      <td>{{ $dict.translate('gender', user.gender) }}</td>
+    </tr>
+  </table>
+</template>
+```
+
+```vue [ترجمه دسته‌ای (translateData)]
+<script setup>
+const tableData = [
+  { id: 1, gender: 'male', status: 0, name: 'Zhang San' },
+  { id: 2, gender: 'female', status: 1, name: 'Li Si' },
+];
+const processed = tableData.map((row) =>
+  $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } }),
+);
+// برای مخزن پیش‌فرض string، برای مخزن دیگر { type, storeName? }
+</script>
+<template>
+  <table>
+    <tr v-for="row in processed" :key="row.id">
+      <td>{{ row.name }}</td>
+      <td>{{ row.gender_label }}</td>
+      <td>{{ row.status_label }}</td>
+    </tr>
+  </table>
+</template>
+```
+
 ::
 
 ## translatePath با جداکننده سفارشی
@@ -174,14 +176,14 @@ $dict.translateData(
 
 <script setup>
 // useDict داده‌ها را پیش‌بارگذاری می‌کند
-useDict('status')
+useDict('status');
 
 // دریافت شیء کامل DictItem با دسترسی به color و سایر ویژگی‌ها
-const statusItem = computed(() => $dict.getDictItem('status', 1))
+const statusItem = computed(() => $dict.getDictItem('status', 1));
 // → { value: 1, label: 'فعال', color: '#67C23A' }
 
 // مخزن دیگر
-const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' })
+const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 </script>
 ```
 
@@ -189,12 +191,12 @@ const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' })
 
 ## مقایسه با useDict.translate
 
-| معیار | `$dict.translate()` | `useDict().translate()` |
-|--------|---------------------|------------------------|
-| نیاز به mount کامپوننت | خیر | `useDict` در `onMounted` بارگذاری می‌شود |
-| داده منبع | کش سراسری حافظه | `data` ref کامپوننت فعلی |
-| زمان بارگذاری | هر زمان قابل فراخوانی | پس از mount کامپوننت |
-| کاربرد مناسب | ترجمه سریع، اشتراک بین کامپوننت‌ها | مواقعی که به وضعیت loading/error نیاز دارید |
+| معیار                  | `$dict.translate()`                | `useDict().translate()`                     |
+| ---------------------- | ---------------------------------- | ------------------------------------------- |
+| نیاز به mount کامپوننت | خیر                                | `useDict` در `onMounted` بارگذاری می‌شود    |
+| داده منبع              | کش سراسری حافظه                    | `data` ref کامپوننت فعلی                    |
+| زمان بارگذاری          | هر زمان قابل فراخوانی              | پس از mount کامپوننت                        |
+| کاربرد مناسب           | ترجمه سریع، اشتراک بین کامپوننت‌ها | مواقعی که به وضعیت loading/error نیاز دارید |
 
 > **بهترین روش:** یک نوع دیکشنری را یکبار در یک کامپوننت ریشه با `useDict` بارگذاری کنید، سپس در همه جا از `$dict.translate()` استفاده کنید.
 

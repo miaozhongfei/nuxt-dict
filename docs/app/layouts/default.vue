@@ -69,13 +69,16 @@ function onTocMove(id: string) {
   }
 }
 
-watch(() => route.path, () => {
-  nextTick(() => {
-    if (mainRef.value) {
-      mainRef.value.scrollTop = 0;
-    }
-  });
-});
+watch(
+  () => route.path,
+  () => {
+    nextTick(() => {
+      if (mainRef.value) {
+        mainRef.value.scrollTop = 0;
+      }
+    });
+  },
+);
 
 const sidebarGroups = [
   {
@@ -166,10 +169,19 @@ const navItems = computed(() => {
       </template>
       <template #right>
         <UButton color="neutral" variant="ghost" size="sm" @click="toggleColorMode($event)">
-          <UIcon :name="colorMode.preference === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'" class="w-4 h-4" />
+          <UIcon
+            :name="colorMode.preference === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
+            class="w-4 h-4"
+          />
         </UButton>
         <SearchDialog />
-        <UButton color="neutral" variant="ghost" size="sm" to="https://github.com/miaozhongfei/nuxt-dict" target="_blank">
+        <UButton
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          to="https://github.com/miaozhongfei/nuxt-dict"
+          target="_blank"
+        >
           <UIcon name="i-simple-icons:github" class="w-4 h-4" />
         </UButton>
         <USelect
@@ -188,7 +200,10 @@ const navItems = computed(() => {
           <UNavigationMenu :items="navItems" orientation="vertical" class="text-sm" highlight />
         </aside>
 
-        <main ref="mainRef" class="flex-1 min-w-0 overflow-y-auto py-8 scrollbar-hide scroll-smooth">
+        <main
+          ref="mainRef"
+          class="flex-1 min-w-0 overflow-y-auto py-8 scrollbar-hide scroll-smooth"
+        >
           <slot />
         </main>
 

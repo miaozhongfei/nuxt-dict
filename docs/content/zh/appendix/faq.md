@@ -6,6 +6,7 @@ description: 使用字典模块时遇到的最常见问题及解决方法。
 ## 页面显示 code 原文而不是翻译后的文字
 
 可能原因：
+
 1. 字典数据还没加载完成。确保在 `v-if="data"` 条件下使用 translate
 2. 字典类型名写错了。确认 `useDict('gender')` 中的类型名和后端接口返回的一致
 3. API 接口地址配置不对。检查 `dict.api.baseURL` 和 `dict.api.dictEndpoint`

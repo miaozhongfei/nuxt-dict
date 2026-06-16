@@ -43,55 +43,60 @@ $dict.getDictItem(type: string, value: string | number, opts: { storeName?: stri
 ## 使用示例
 
 ::code-group
-  ```vue [基础用法]
-  <template>
-    <p>性别代码 'male' → {{ $dict.translate('gender', 'male') }}</p>
-    <!-- 输出: 男 -->
 
-    <p>状态代码 0 → {{ $dict.translate('status', 0) }}</p>
-    <!-- 输出: 禁用 -->
+```vue [基础用法]
+<template>
+  <p>性别代码 'male' → {{ $dict.translate('gender', 'male') }}</p>
+  <!-- 输出: 男 -->
 
-    <p>区域代码 440104 → {{ $dict.translatePath('region', '440104') }}</p>
-    <!-- 输出: 广东 / 广州 / 越秀区 -->
+  <p>状态代码 0 → {{ $dict.translate('status', 0) }}</p>
+  <!-- 输出: 禁用 -->
 
-    <p>自定义分隔符 → {{ $dict.translatePath('region', '440104', { storeName: 'dicts', separator: ' → ' }) }}</p>
-    <!-- 输出: 广东 → 广州 → 越秀区 -->
-  </template>
-  ```
+  <p>区域代码 440104 → {{ $dict.translatePath('region', '440104') }}</p>
+  <!-- 输出: 广东 / 广州 / 越秀区 -->
 
-  ```vue [表格列中使用]
-  <template>
-    <table>
-      <tr v-for="user in users" :key="user.id">
-        <td>{{ user.name }}</td>
-        <td>{{ $dict.translate('status', user.status) }}</td>
-        <td>{{ $dict.translate('gender', user.gender) }}</td>
-      </tr>
-    </table>
-  </template>
-  ```
+  <p>
+    自定义分隔符 →
+    {{ $dict.translatePath('region', '440104', { storeName: 'dicts', separator: ' → ' }) }}
+  </p>
+  <!-- 输出: 广东 → 广州 → 越秀区 -->
+</template>
+```
 
-  ```vue [批量翻译 (translateData)]
-  <script setup>
-  const tableData = [
-    { id: 1, gender: 'male', status: 0, name: '张三' },
-    { id: 2, gender: 'female', status: 1, name: '李四' },
-  ]
-  const processed = tableData.map(row =>
-    $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } })
-  )
-  // 默认仓库时传 string，跨仓库时传 { type, storeName? }
-  </script>
-  <template>
-    <table>
-      <tr v-for="row in processed" :key="row.id">
-        <td>{{ row.name }}</td>
-        <td>{{ row.gender_label }}</td>
-        <td>{{ row.status_label }}</td>
-      </tr>
-    </table>
-  </template>
-  ```
+```vue [表格列中使用]
+<template>
+  <table>
+    <tr v-for="user in users" :key="user.id">
+      <td>{{ user.name }}</td>
+      <td>{{ $dict.translate('status', user.status) }}</td>
+      <td>{{ $dict.translate('gender', user.gender) }}</td>
+    </tr>
+  </table>
+</template>
+```
+
+```vue [批量翻译 (translateData)]
+<script setup>
+const tableData = [
+  { id: 1, gender: 'male', status: 0, name: '张三' },
+  { id: 2, gender: 'female', status: 1, name: '李四' },
+];
+const processed = tableData.map((row) =>
+  $dict.translateData(row, { gender: 'gender', status: { type: 'status', storeName: 'dicts2' } }),
+);
+// 默认仓库时传 string，跨仓库时传 { type, storeName? }
+</script>
+<template>
+  <table>
+    <tr v-for="row in processed" :key="row.id">
+      <td>{{ row.name }}</td>
+      <td>{{ row.gender_label }}</td>
+      <td>{{ row.status_label }}</td>
+    </tr>
+  </table>
+</template>
+```
+
 ::
 
 ## getDictItem —— 获取完整字典项对象
@@ -107,14 +112,14 @@ $dict.getDictItem(type: string, value: string | number, opts: { storeName?: stri
 
 <script setup>
 // useDict 预加载数据
-useDict('status')
+useDict('status');
 
 // 获取完整 DictItem 对象，可直接访问 color 等扩展属性
-const statusItem = computed(() => $dict.getDictItem('status', 1))
+const statusItem = computed(() => $dict.getDictItem('status', 1));
 // → { value: 1, label: '启用', color: '#67C23A' }
 
 // 跨仓库
-const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' })
+const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 </script>
 ```
 
@@ -139,19 +144,17 @@ const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' })
 const tableData = [
   { id: 1, xb: 'male', zt: 0, name: '张三' },
   { id: 2, xb: 'female', zt: 1, name: '李四' },
-]
+];
 
 // 批量翻译：传入映射表 { 原字段: 字典类型 } → 返回追加了翻译字段的新对象
-const processed = tableData.map(row =>
-  $dict.translateData(row, { xb: 'gender', zt: 'status' })
-)
+const processed = tableData.map((row) => $dict.translateData(row, { xb: 'gender', zt: 'status' }));
 // [{ xb: 'male', xb_label: '男', zt: 0, zt_label: '禁用', ... }, ...]
 
 // 跨仓库示例：{ type, storeName? } 指定非默认仓库
 $dict.translateData(
   { orderStatus: 1 },
-  { orderStatus: { type: 'pay_status', storeName: 'payment' } }
-)
+  { orderStatus: { type: 'pay_status', storeName: 'payment' } },
+);
 // → { orderStatus: 1, orderStatus_label: '已支付' }
 </script>
 ```
@@ -160,11 +163,11 @@ $dict.translateData(
 
 ## 与 useDict.translate 的区别
 
-| 对比 | `$dict.translate()` | `useDict().translate()` |
-|------|--------------------|-----------------------|
-| 需要组件挂载 | 不需要 | `useDict` 在 `onMounted` 中加载 |
-| 依赖的数据 | 全局内存缓存 | 当前组件的 `data` ref |
-| 适用场景 | 快速翻译、多组件共享 | 需要 loading/error 状态的场景 |
+| 对比         | `$dict.translate()`  | `useDict().translate()`         |
+| ------------ | -------------------- | ------------------------------- |
+| 需要组件挂载 | 不需要               | `useDict` 在 `onMounted` 中加载 |
+| 依赖的数据   | 全局内存缓存         | 当前组件的 `data` ref           |
+| 适用场景     | 快速翻译、多组件共享 | 需要 loading/error 状态的场景   |
 
 > **最佳实践：** 同一个字典类型，在应用的某个根组件中用 `useDict` 加载一次，之后所有地方都用 `$dict.translate()` 翻译。
 

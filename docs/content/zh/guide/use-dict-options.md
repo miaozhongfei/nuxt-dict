@@ -21,79 +21,83 @@ useDict(storeName: string, type: string): useDictReturn
 
 ## 返回值
 
-| 属性 | 类型 | 说明 |
-|------|------|------|
-| `data` | `ShallowRef<DictItem[] \| null>` | 字典数据数组，每项为 `{ value, label, ...扩展字段 }` |
-| `translate` | `(value: string \| number) => string` | 同步翻译函数 |
-| `loading` | `Ref<boolean>` | 是否正在加载 |
-| `refresh` | `() => Promise<void>` | 手动刷新 |
+| 属性        | 类型                                  | 说明                                                 |
+| ----------- | ------------------------------------- | ---------------------------------------------------- |
+| `data`      | `ShallowRef<DictItem[] \| null>`      | 字典数据数组，每项为 `{ value, label, ...扩展字段 }` |
+| `translate` | `(value: string \| number) => string` | 同步翻译函数                                         |
+| `loading`   | `Ref<boolean>`                        | 是否正在加载                                         |
+| `refresh`   | `() => Promise<void>`                 | 手动刷新                                             |
 
 `DictItem` 的 `value` 字段天然对应 UI 组件库的 `value`，无需额外映射即可直接绑定。
 
 ## 使用示例
 
 ::code-group
-  ```vue [Nuxt UI]
-  <template>
-    <USelect v-model="selected" :items="data" placeholder="请选择" />
-  </template>
 
-  <script setup lang="ts">
-  const { data } = useDict('industry')
-  const selected = ref('')
-  </script>
-  ```
+```vue [Nuxt UI]
+<template>
+  <USelect v-model="selected" :items="data" placeholder="请选择" />
+</template>
 
-  ```vue [Element Plus]
-  <template>
-    <el-select v-model="selected" placeholder="请选择行业" :loading="loading">
-      <el-option v-for="opt in data" :key="opt.value" :label="opt.label" :value="opt.value" />
-    </el-select>
-  </template>
+<script setup lang="ts">
+const { data } = useDict('industry');
+const selected = ref('');
+</script>
+```
 
-  <script setup lang="ts">
-  const { data, loading } = useDict('industry')
-  const selected = ref('')
-  </script>
-  ```
+```vue [Element Plus]
+<template>
+  <el-select v-model="selected" placeholder="请选择行业" :loading="loading">
+    <el-option v-for="opt in data" :key="opt.value" :label="opt.label" :value="opt.value" />
+  </el-select>
+</template>
 
-  ```vue [Vant]
-  <template>
-    <van-field v-model="selectedLabel" readonly placeholder="请选择" @click="showPicker = true" />
-    <van-popup v-model:show="showPicker" round position="bottom">
-      <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
-    </van-popup>
-  </template>
+<script setup lang="ts">
+const { data, loading } = useDict('industry');
+const selected = ref('');
+</script>
+```
 
-  <script setup lang="ts">
-  const { data } = useDict('gender')
-  const selected = ref('')
-  const selectedLabel = ref('')
-  const showPicker = ref(false)
-  const columns = computed(() => data?.map(item => ({ text: item.label, value: item.value })) || [])
-  function onConfirm(picked: { selectedOptions: Array<{ text: string; value: string }> }) {
-    selected.value = picked.selectedOptions[0].value
-    selectedLabel.value = picked.selectedOptions[0].text
-    showPicker.value = false
-  }
-  </script>
-  ```
+```vue [Vant]
+<template>
+  <van-field v-model="selectedLabel" readonly placeholder="请选择" @click="showPicker = true" />
+  <van-popup v-model:show="showPicker" round position="bottom">
+    <van-picker :columns="columns" @confirm="onConfirm" @cancel="showPicker = false" />
+  </van-popup>
+</template>
 
-  ```vue [原生 HTML Select]
-  <template>
-    <select v-model="selected">
-      <option value="">请选择</option>
-      <option v-for="opt in data" :key="opt.value" :value="opt.value">
-        {{ opt.label }}
-      </option>
-    </select>
-  </template>
+<script setup lang="ts">
+const { data } = useDict('gender');
+const selected = ref('');
+const selectedLabel = ref('');
+const showPicker = ref(false);
+const columns = computed(
+  () => data?.map((item) => ({ text: item.label, value: item.value })) || [],
+);
+function onConfirm(picked: { selectedOptions: Array<{ text: string; value: string }> }) {
+  selected.value = picked.selectedOptions[0].value;
+  selectedLabel.value = picked.selectedOptions[0].text;
+  showPicker.value = false;
+}
+</script>
+```
 
-  <script setup lang="ts">
-  const { data } = useDict('gender')
-  const selected = ref('')
-  </script>
-  ```
+```vue [原生 HTML Select]
+<template>
+  <select v-model="selected">
+    <option value="">请选择</option>
+    <option v-for="opt in data" :key="opt.value" :value="opt.value">
+      {{ opt.label }}
+    </option>
+  </select>
+</template>
+
+<script setup lang="ts">
+const { data } = useDict('gender');
+const selected = ref('');
+</script>
+```
+
 ::
 
 ## 注意事项

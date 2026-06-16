@@ -17,8 +17,8 @@ Full examples of using the dictionary module with common Element Plus components
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDict('gender')
-const value = ref('')
+const { options, loading } = useDict('gender');
+const value = ref('');
 </script>
 ```
 
@@ -44,16 +44,16 @@ const value = ref('')
 </template>
 
 <script setup lang="ts">
-const { data: statusData } = useDict('status')
+const { data: statusData } = useDict('status');
 
 function getStatusColor(value: number) {
-  return (statusData.value?.find(i => i.value === code) as any)?.color
+  return (statusData.value?.find((i) => i.value === code) as any)?.color;
 }
 
 const tableData = ref([
   { name: 'John', gender: 'male', status: 1 },
   { name: 'Jane', gender: 'female', status: 0 },
-])
+]);
 </script>
 ```
 
@@ -71,8 +71,8 @@ const tableData = ref([
 </template>
 
 <script setup lang="ts">
-const { tree } = useDictTree('region')
-const selected = ref<string[]>([])
+const { tree } = useDictTree('region');
+const selected = ref<string[]>([]);
 </script>
 ```
 
@@ -86,8 +86,8 @@ const selected = ref<string[]>([])
 </template>
 
 <script setup lang="ts">
-const { options, loading } = useDict('gender')
-const radio = ref('')
+const { options, loading } = useDict('gender');
+const radio = ref('');
 </script>
 ```
 
@@ -95,16 +95,21 @@ const radio = ref('')
 
 ```vue
 <template>
-  <el-tag v-for="opt in options" :key="opt.value" :color="getColor(opt.value)" style="margin-right:8px;">
+  <el-tag
+    v-for="opt in options"
+    :key="opt.value"
+    :color="getColor(opt.value)"
+    style="margin-right:8px;"
+  >
     {{ opt.label }}
   </el-tag>
 </template>
 
 <script setup lang="ts">
-const { data, options } = useDict('industry')
+const { data, options } = useDict('industry');
 
 function getColor(value: string | number) {
-  return (data.value?.find(i => i.value === code) as any)?.color
+  return (data.value?.find((i) => i.value === code) as any)?.color;
 }
 </script>
 ```
@@ -113,10 +118,10 @@ function getColor(value: string | number) {
 
 ```vue
 <script setup lang="ts">
-const { options: gOpts, loading: gLoading } = useDict('gender')
-const { options: iOpts, loading: iLoading } = useDict('industry')
-const { tree: rTree } = useDictTree('region')
+const { options: gOpts, loading: gLoading } = useDict('gender');
+const { options: iOpts, loading: iLoading } = useDict('industry');
+const { tree: rTree } = useDictTree('region');
 
-const form = reactive({ gender: '', industry: '', region: [] })
+const form = reactive({ gender: '', industry: '', region: [] });
 </script>
 ```

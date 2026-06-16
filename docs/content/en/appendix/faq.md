@@ -6,6 +6,7 @@ description: Most common issues encountered when using the dictionary module and
 ## Page shows raw codes instead of translated text
 
 Possible causes:
+
 1. Dictionary data hasn't loaded yet. Use `v-if="data"` before translate
 2. Wrong dictionary type name. Verify the type in `useDict('gender')` matches the backend API
 3. API configuration is wrong. Check `dict.api.baseURL` and `dict.api.dictEndpoint`

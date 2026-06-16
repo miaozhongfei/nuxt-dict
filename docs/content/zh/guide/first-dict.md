@@ -12,38 +12,41 @@ description: 从零开始，用 useDict 写出你的第一个字典下拉框。
 在 `server/api/dict/` 目录下创建一个文件 `list.get.ts`：
 
 ::code-group
-  ```ts [server/api/dict/list.get.ts]
-  export default defineEventHandler(() => {
-    return {
-      version: '1.0.0',
-      data: {
-        gender: {
-          type: 'gender',
-          items: [
-            { value: 'male', label: '男' },
-            { value: 'female', label: '女' },
-            { value: 'other', label: '其他' },
-          ],
-        },
-      },
-    }
-  })
-  ```
 
-  ```ts [nuxt.config.ts]
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        baseURL: '',                       // 为空表示请求本地接口
-        dictEndpoint: '/api/dict/list',    // 字典列表接口路径
+```ts [server/api/dict/list.get.ts]
+export default defineEventHandler(() => {
+  return {
+    version: '1.0.0',
+    data: {
+      gender: {
+        type: 'gender',
+        items: [
+          { value: 'male', label: '男' },
+          { value: 'female', label: '女' },
+          { value: 'other', label: '其他' },
+        ],
       },
     },
-  })
-  ```
+  };
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      baseURL: '', // 为空表示请求本地接口
+      dictEndpoint: '/api/dict/list', // 字典列表接口路径
+    },
+  },
+});
+```
+
 ::
 
 这个接口返回的数据结构是：
+
 - `version`：版本号，用于判断数据是否更新过
 - `data`：一个对象，key 是字典类型名（如 `gender`），value 是字典项列表
 
@@ -66,16 +69,18 @@ description: 从零开始，用 useDict 写出你的第一个字典下拉框。
           {{ opt.label }}
         </option>
       </select>
-      <p style="margin-top:12px;">你选择的是：<strong>{{ selected }}</strong></p>
+      <p style="margin-top:12px;">
+        你选择的是：<strong>{{ selected }}</strong>
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-const { options, loading, error } = useDict('gender')
-const selected = ref('')
+const { options, loading, error } = useDict('gender');
+const selected = ref('');
 </script>
 ```
 
@@ -86,6 +91,7 @@ pnpm dev
 ```
 
 打开 `http://localhost:3000/`，你应该看到：
+
 1. 一个下拉框，有"请选择性别"、"男"、"女"、"其他"四个选项
 2. 选择一个选项后，下方显示你选了什么
 
@@ -99,6 +105,7 @@ pnpm dev
 - `loading` / `error` 分别表示加载中 / 加载失败
 
 `useDict` 内部做了这些事：
+
 1. 先检查内存缓存中有没有 `gender` 的数据
 2. 没有的话检查 IndexedDB（浏览器数据库）
 3. 再没有的话向后端 `/api/dict/list?types=gender` 发请求

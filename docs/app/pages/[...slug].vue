@@ -32,7 +32,9 @@ useSeoMeta(page.value.seo);
   <div v-if="page" :dir="localeProperties?.dir ?? 'ltr'">
     <!-- 渲染 frontmatter title/description，模拟 Nuxt Content 官网效果 -->
     <h1 class="text-4xl font-bold tracking-tight text-(--ui-text-highlighted)">{{ page.title }}</h1>
-    <p v-if="page.description" class="mt-2 text-lg text-(--ui-text-muted)">{{ page.description }}</p>
+    <p v-if="page.description" class="mt-2 text-lg text-(--ui-text-muted)">
+      {{ page.description }}
+    </p>
     <ContentRenderer :value="page" />
   </div>
 </template>

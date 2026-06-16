@@ -1,18 +1,30 @@
-import { fileURLToPath } from 'url';
-
-import { addImportsDir, addPlugin, addTypeTemplate, createResolver, defineNuxtModule, useLogger } from '@nuxt/kit';
+import {
+  addImportsDir,
+  addPlugin,
+  addTypeTemplate,
+  createResolver,
+  defineNuxtModule,
+  useLogger,
+} from '@nuxt/kit';
+import type { Resolver } from '@nuxt/kit';
 import type { Nuxt } from '@nuxt/schema';
 
 import pkg from '../package.json';
-import type { ModuleOptions } from './runtime/types';
 import { defaultOptions } from './runtime/options';
+import type { ModuleOptions } from './runtime/types';
 import { createLogger } from './runtime/utils/logger';
-import type { Resolver } from '@nuxt/kit';
 
 export type { ModuleOptions };
-export type { DictManager } from './runtime/core/dict-manager'
-export type { DictTranslator, DictItem, TreeNode, TranslateOptions, TranslatePathOptions, GetDictItemOptions } from './runtime/types'
-export { createDictTranslator } from './runtime/utils/dict-translator'
+export type { DictManager } from './runtime/core/dict-manager';
+export type {
+  DictTranslator,
+  DictItem,
+  TreeNode,
+  TranslateOptions,
+  TranslatePathOptions,
+  GetDictItemOptions,
+} from './runtime/types';
+export { createDictTranslator } from './runtime/utils/dict-translator';
 
 /**
  * 注册类型模板：NuxtApp 扩展声明 + 仓库名字面量联合类型。
@@ -158,17 +170,17 @@ declare module '#app' {
 
  export {}
 `,
-  })
+  });
 
   // 生成仓库名字面量联合类型，用于编译期校验 storeName 参数
   addTypeTemplate({
     filename: 'types/nuxt-dict-store-names.d.ts',
     getContents: () => {
-      const storeNames = ['dicts', ...Object.keys(stores ?? {})]
-      const union = storeNames.map((s) => `'${s}'`).join(' | ')
-      return `export type StoreKey = ${union}\n`
+      const storeNames = ['dicts', ...Object.keys(stores ?? {})];
+      const union = storeNames.map((s) => `'${s}'`).join(' | ');
+      return `export type StoreKey = ${union}\n`;
     },
-  })
+  });
 }
 
 /**
@@ -197,19 +209,17 @@ export default defineNuxtModule<ModuleOptions>().with({
     }
     const resolver = createResolver(import.meta.url);
 
-    const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url));
-
     // 将解析后的选项写入 runtimeConfig，供运行时插件读取
     _nuxt.options.runtimeConfig.public.dict = _options;
 
     // 确保运行时目录被转译（支持现代 ES 语法）
-    _nuxt.options.build.transpile.push(resolver.resolve(runtimeDir));
+    _nuxt.options.build.transpile.push(resolver.resolve('./runtime'));
 
-    // 注册插件
-    addPlugin({ src: resolver.resolve(runtimeDir, 'plugins', 'dict.ts') });
+    // 注册插件（无扩展名，Nuxt 构建时自动解析对应文件）
+    addPlugin(resolver.resolve('./runtime/plugins/dict'));
 
     // 注册 composables 目录，自动导入 useDict / useDictTree / useLocale
-    addImportsDir(resolver.resolve(runtimeDir, 'composables'));
+    addImportsDir(resolver.resolve('./runtime/composables'));
 
     registerTypeTemplates(resolver, _options.stores);
 

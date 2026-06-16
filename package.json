@@ -4,19 +4,18 @@
   "description": "Nuxt 数据字典模块，提供扁平/树形字典翻译、多语言国际化、三级缓存与 SSR 预取。",
   "keywords": [
     "@lacqjs/nuxt-dict",
+    "dict",
     "nuxt",
-    "nuxt-dict",
-    "dict"
+    "nuxt-dict"
   ],
+  "homepage": "https://miaozhongfei.github.io/nuxt-dict/",
   "license": "MIT",
   "author": {
     "name": "miaozhongfei",
     "email": "miaozhongfei@example.com"
   },
-  "repository": "miaozhongfei/nuxt-dict",
-  "homepage": "https://miaozhongfei.github.io/nuxt-dict/",
-  "documentation": "https://miaozhongfei.github.io/nuxt-dict/",
   "contributors": [],
+  "repository": "miaozhongfei/nuxt-dict",
   "files": [
     "dist"
   ],
@@ -52,10 +51,11 @@
     "docs:generate": "nuxi generate docs",
     "docs:cleanup": "pnpx rimraf docs/.nuxt docs/.output docs/dist docs/node_modules docs/.data",
     "playground:cleanup": "pnpx rimraf playground/.nuxt playground/.output playground/dist playground/node_modules",
-    "release": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push --follow-tags",
-    "release:major": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release --major && pnpm publish && git push --follow-tags",
-    "release:e2e": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push --follow-tags",
-    "release:e2e:major": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --major && pnpm publish && git push --follow-tags",
+    "demo:base-api:dev": "nuxi dev examples/demo-base-api",
+    "release": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push origin dev --follow-tags",
+    "release:major": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release --major && pnpm publish && git push origin dev --follow-tags",
+    "release:e2e": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push origin dev --follow-tags",
+    "release:e2e:major": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --major && pnpm publish && git push origin dev --follow-tags",
     "lint": "oxlint . && oxlint docs --no-error-on-unmatched-pattern",
     "lint:fix": "oxlint --fix . && oxlint --fix docs --no-error-on-unmatched-pattern",
     "fmt": "oxfmt",
@@ -90,5 +90,6 @@
     "pnpm": ">=10.22.0",
     "yarn": ">=1.22.22"
   },
-  "packageManager": "pnpm@10.22.0"
+  "packageManager": "pnpm@10.22.0",
+  "documentation": "https://miaozhongfei.github.io/nuxt-dict/"
 }

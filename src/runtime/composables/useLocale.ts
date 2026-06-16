@@ -1,7 +1,8 @@
-import { useNuxtApp, useCookie, useRuntimeConfig } from '#imports'
-import type { DictManager } from '../core/dict-manager'
-import type { ResolvedModuleOptions } from '../types'
-import { defaultOptions } from '../options'
+import { useNuxtApp, useCookie, useRuntimeConfig } from '#imports';
+
+import type { DictManager } from '../core/dict-manager';
+import { defaultOptions } from '../options';
+import type { ResolvedModuleOptions } from '../types';
 
 /**
  * 获取/切换当前语言。
@@ -23,10 +24,10 @@ import { defaultOptions } from '../options'
  * // <button @click="setLocale('zh-CN')">中文</button>
  */
 export function useLocale() {
-  const nuxtApp = useNuxtApp()
-  const manager = nuxtApp.$dictManager as DictManager
+  const nuxtApp = useNuxtApp();
+  const manager = nuxtApp.$dictManager as DictManager;
 
-  const options = (useRuntimeConfig().public.dict ?? defaultOptions) as ResolvedModuleOptions
+  const options = (useRuntimeConfig().public.dict ?? defaultOptions) as ResolvedModuleOptions;
 
   /**
    * 切换语言并持久化到 cookie。
@@ -35,19 +36,19 @@ export function useLocale() {
    * @param {string} newLocale - 目标语言代码，如 'en-US'、'zh-CN'
    */
   function setLocale(newLocale: string) {
-    manager.setLocale(newLocale)
+    manager.setLocale(newLocale);
 
     if (import.meta.client) {
-      const langCookie = useCookie(options.locale.cookieKey, { maxAge: 60 * 60 * 24 * 365 })
-      langCookie.value = newLocale
+      const langCookie = useCookie(options.locale.cookieKey, { maxAge: 60 * 60 * 24 * 365 });
+      langCookie.value = newLocale;
     }
   }
 
-  const locales: string[] = []
+  const locales: string[] = [];
 
   return {
     locale: manager.locale,
     setLocale,
     locales,
-  }
+  };
 }

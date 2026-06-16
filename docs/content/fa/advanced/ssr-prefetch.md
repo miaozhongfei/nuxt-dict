@@ -36,7 +36,7 @@ export default defineNuxtConfig({
       prefetch: ['gender', 'status', 'region', 'industry'],
     },
   },
-})
+});
 ```
 
 `prefetch` یک آرایه رشته‌ای است که نوع‌های دیکشنری که باید در سمت سرور پیش‌واکشی شوند را فهرست می‌کند. ماژول در زمان رندر سمت سرور، به طور همزمان داده‌های تمام این دیکشنری‌ها را دریافت می‌کند.
@@ -70,10 +70,10 @@ export default defineNuxtConfig({
 // پیاده‌سازی داخلی ماژول
 async function executePrefetch(manager, types) {
   try {
-    await Promise.all(types.map(type => manager.getDict(type)))
+    await Promise.all(types.map((type) => manager.getDict(type)));
   } catch {
     // شکست پیش‌واکشی تکی فقط یک هشدار ثبت می‌کند، رندر صفحه را مسدود نمی‌کند
-    logger.warn('SSR prefetch failed:', e)
+    logger.warn('SSR prefetch failed:', e);
   }
 }
 ```

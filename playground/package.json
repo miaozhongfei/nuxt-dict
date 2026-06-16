@@ -7,11 +7,11 @@
     "e2e": "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 playwright test"
   },
   "devDependencies": {
-    "@lacqjs/nuxt-dict": "workspace:*",
-    "nuxt": "^4.4.8",
-    "@playwright/test": "^1.57.0",
     "@element-plus/nuxt": "^1.1.5",
-    "vant": "^4.9.24",
-    "nuxt-skill-hub": "^0.1.0"
+    "@lacqjs/nuxt-dict": "workspace:*",
+    "@playwright/test": "^1.57.0",
+    "nuxt": "^4.4.8",
+    "nuxt-skill-hub": "^0.1.0",
+    "vant": "^4.9.24"
   }
 }

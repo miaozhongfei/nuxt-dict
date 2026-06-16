@@ -9,8 +9,8 @@ description: 对接任意格式的字典数据源 —— GraphQL、Firestore、�
 
 ```ts
 interface DictAdapter {
-  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>
-  fetchVersion(storeName: string): Promise<string>
+  fetchDict(storeName: string, options: { types: string[]; locale: string }): Promise<DictResponse>;
+  fetchVersion(storeName: string): Promise<string>;
 }
 ```
 
@@ -19,110 +19,114 @@ interface DictAdapter {
 以下四种适配器覆盖常见场景——GraphQL、本地 JSON、格式转换、多 API 路由：
 
 ::code-group
-  ```ts [GraphQL 适配器]
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        adapter: {
-          async fetchDict(storeName, { types, locale }) {
-            const query = `{ dict(types: [${types.map(t => `"${t}"`)}], locale: "${locale}") { version data { type items { code label } tree { code label children { code label } } } } }`
-            const res = await fetch('https://graphql.example.com', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ query }),
-            })
-            return (await res.json()).data.dict
-          },
-          async fetchVersion(storeName) {
-            const res = await fetch('https://graphql.example.com', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ query: '{ dictVersion }' }),
-            })
-            return (await res.json()).data.dictVersion
-          },
-        },
-      },
-    },
-  })
-  ```
 
-  ```ts [本地 JSON 适配器]
-  import dictData from './data/dictionary.json'
-
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        adapter: {
-          async fetchDict(storeName, { types }) {
-            const data: Record<string, any> = {}
-            for (const type of types) {
-              if (dictData[type]) data[type] = dictData[type]
-            }
-            return { version: '1.0.0', data }
-          },
-          async fetchVersion(storeName) { return '1.0.0' },
-        },
-      },
-    },
-  })
-  ```
-
-  ```ts [格式转换]
+```ts [GraphQL 适配器]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
   dict: {
     api: {
       adapter: {
         async fetchDict(storeName, { types, locale }) {
-          const res = await fetch(`/api/custom-dict?codes=${types.join(',')}`)
-          const json = await res.json()
-          // 将后端格式转换为模块期望的 DictResponse 格式
-          const data: Record<string, any> = {}
-          for (const item of json.payload) {
-            data[item.dictType] = {
-              type: item.dictType,
-              items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
-            }
-          }
-          return { version: json.dataVersion || '1.0.0', data }
+          const query = `{ dict(types: [${types.map((t) => `"${t}"`)}], locale: "${locale}") { version data { type items { code label } tree { code label children { code label } } } } }`;
+          const res = await fetch('https://graphql.example.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query }),
+          });
+          return (await res.json()).data.dict;
         },
         async fetchVersion(storeName) {
-          const res = await fetch('/api/custom-dict/version')
-          return (await res.json()).version
+          const res = await fetch('https://graphql.example.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ query: '{ dictVersion }' }),
+          });
+          return (await res.json()).data.dictVersion;
         },
       },
     },
   },
-  ```
+});
+```
 
-  ```ts [StoreName 路由]
+```ts [本地 JSON 适配器]
+import dictData from './data/dictionary.json';
+
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
   dict: {
-    stores: {
-      payment: { dictEndpoint: '/v1/payment/dict' },
-      logistics: { dictEndpoint: '/v1/logistics/dict' },
-    },
     api: {
       adapter: {
-        async fetchDict(storeName, { types, locale }) {
-          // 根据 storeName 选择不同的 API 端点
-          const endpoints: Record<string, string> = {
-            dicts: 'https://default-api.example.com/dict/list',
-            payment: 'https://pay-api.example.com/v1/payment/dict',
-            logistics: 'https://logistics-api.example.com/v1/logistics/dict',
+        async fetchDict(storeName, { types }) {
+          const data: Record<string, any> = {};
+          for (const type of types) {
+            if (dictData[type]) data[type] = dictData[type];
           }
-          const url = endpoints[storeName] || endpoints.dicts
-          const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-          return res.json()
+          return { version: '1.0.0', data };
         },
         async fetchVersion(storeName) {
-          const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
-          return (await res.json()).version
+          return '1.0.0';
         },
       },
     },
   },
-  ```
+});
+```
+
+```ts [格式转换]
+dict: {
+  api: {
+    adapter: {
+      async fetchDict(storeName, { types, locale }) {
+        const res = await fetch(`/api/custom-dict?codes=${types.join(',')}`)
+        const json = await res.json()
+        // 将后端格式转换为模块期望的 DictResponse 格式
+        const data: Record<string, any> = {}
+        for (const item of json.payload) {
+          data[item.dictType] = {
+            type: item.dictType,
+            items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
+          }
+        }
+        return { version: json.dataVersion || '1.0.0', data }
+      },
+      async fetchVersion(storeName) {
+        const res = await fetch('/api/custom-dict/version')
+        return (await res.json()).version
+      },
+    },
+  },
+},
+```
+
+```ts [StoreName 路由]
+dict: {
+  stores: {
+    payment: { dictEndpoint: '/v1/payment/dict' },
+    logistics: { dictEndpoint: '/v1/logistics/dict' },
+  },
+  api: {
+    adapter: {
+      async fetchDict(storeName, { types, locale }) {
+        // 根据 storeName 选择不同的 API 端点
+        const endpoints: Record<string, string> = {
+          dicts: 'https://default-api.example.com/dict/list',
+          payment: 'https://pay-api.example.com/v1/payment/dict',
+          logistics: 'https://logistics-api.example.com/v1/logistics/dict',
+        }
+        const url = endpoints[storeName] || endpoints.dicts
+        const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
+        return res.json()
+      },
+      async fetchVersion(storeName) {
+        const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
+        return (await res.json()).version
+      },
+    },
+  },
+},
+```
+
 ::
 
 每个仓库调用 `fetchDict` / `fetchVersion` 时，模块会自动传入对应的 `storeName`，你无需在 `stores` 配置中重复定义 `baseURL`。

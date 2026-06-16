@@ -19,38 +19,41 @@ description: از صفر، اولین dropdown دیکشنری خود را با u
 یک فایل در `server/api/dict/list.get.ts` ایجاد کنید:
 
 ::code-group
-  ```ts [server/api/dict/list.get.ts]
-  export default defineEventHandler(() => {
-    return {
-      version: '1.0.0',
-      data: {
-        gender: {
-          type: 'gender',
-          items: [
-            { value: 'male', label: 'مرد' },
-            { value: 'female', label: 'زن' },
-            { value: 'other', label: 'سایر' },
-          ],
-        },
-      },
-    }
-  })
-  ```
 
-  ```ts [nuxt.config.ts]
-  export default defineNuxtConfig({
-    modules: ['@lacqjs/nuxt-dict'],
-    dict: {
-      api: {
-        baseURL: '',                       // خالی یعنی API محلی
-        dictEndpoint: '/api/dict/list',    // مسیر API لیست دیکشنری
+```ts [server/api/dict/list.get.ts]
+export default defineEventHandler(() => {
+  return {
+    version: '1.0.0',
+    data: {
+      gender: {
+        type: 'gender',
+        items: [
+          { value: 'male', label: 'مرد' },
+          { value: 'female', label: 'زن' },
+          { value: 'other', label: 'سایر' },
+        ],
       },
     },
-  })
-  ```
+  };
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      baseURL: '', // خالی یعنی API محلی
+      dictEndpoint: '/api/dict/list', // مسیر API لیست دیکشنری
+    },
+  },
+});
+```
+
 ::
 
 ساختار داده بازگشتی:
+
 - `version`: شماره نسخه، برای تشخیص به‌روزرسانی داده‌ها
 - `data`: یک شیء که کلید آن نام نوع دیکشنری (مثلاً `gender`) و مقدار آن لیست آیتم‌های آن نوع است
 
@@ -75,27 +78,25 @@ description: از صفر، اولین dropdown دیکشنری خود را با u
     <div v-else>
       <select v-model="selected" style="width:100%;padding:8px;font-size:16px;">
         <option value="">لطفاً جنسیت را انتخاب کنید</option>
-        <option
-          v-for="opt in options"
-          :key="opt.value"
-          :value="opt.value"
-        >
+        <option v-for="opt in options" :key="opt.value" :value="opt.value">
           {{ opt.label }}
         </option>
       </select>
-      <p style="margin-top:12px;">انتخاب شما: <strong>{{ selected }}</strong></p>
+      <p style="margin-top:12px;">
+        انتخاب شما: <strong>{{ selected }}</strong>
+      </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
 // فراخوانی useDict برای دریافت گزینه‌های دیکشنری
-const { options, loading, error } = useDict('gender')
+const { options, loading, error } = useDict('gender');
 
 // مقدار انتخاب شده توسط کاربر
-const selected = ref('')
+const selected = ref('');
 </script>
 ```
 
@@ -127,11 +128,13 @@ pnpm dev
 `useDict('gender')` به ماژول می‌گوید: "من به داده‌های دیکشنری با نوع gender نیاز دارم"
 
 سه مقدار بازگشتی:
+
 - `options`: داده‌های دیکشنری با فرمت `[{ label: 'مرد', value: 'male' }, ...]` که مستقیماً برای dropdown قابل استفاده است
 - `loading`: آیا در حال بارگذاری است (`true` / `false`)
 - `error`: پیام خطا در صورت شکست بارگذاری
 
 `useDict` در داخل این کارها را انجام می‌دهد:
+
 1. ابتدا بررسی می‌کند آیا داده‌های `gender` در کش حافظه وجود دارد
 2. اگر نه، IndexedDB (پایگاه داده مرورگر) را بررسی می‌کند
 3. اگر باز هم پیدا نشد، به `/api/dict/list?types=gender` درخواست ارسال می‌کند

@@ -36,26 +36,30 @@ export default defineNuxtConfig({
             return {
               version: 'static-1.0',
               data: {
-                priority: { type: 'priority', items: [
-                  { value: 'high', label: `高优先级 (${locale})` },
-                  { value: 'low', label: `低优先级 (${locale})` },
-                ] },
+                priority: {
+                  type: 'priority',
+                  items: [
+                    { value: 'high', label: `高优先级 (${locale})` },
+                    { value: 'low', label: `低优先级 (${locale})` },
+                  ],
+                },
               },
-            }
+            };
           },
           async fetchVersion(_storeName) {
-            return 'static-1.0'
+            return 'static-1.0';
           },
         },
       },
     },
   },
-})
+});
 ```
 
 ## 继承规则
 
 `stores` 中每个仓库未配置的字段从全局 `api` 继承。以 `logistics` 为例：
+
 - `baseURL` 未配置 → 继承全局 `''`（本地接口）
 - `dictEndpoint` 配置了 `/api/logistics/dict` → 覆盖全局值
 - `versionEndpoint` 未配置 → 继承全局值
@@ -77,16 +81,18 @@ export default defineNuxtConfig({
   <div>
     <h3>优先级（static 仓库 — 自定义适配器）</h3>
     <select v-model="priority">
-      <option v-for="opt in staticOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+      <option v-for="opt in staticOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }}
+      </option>
     </select>
   </div>
 </template>
 
 <script setup lang="ts">
 // static 仓库走自定义适配器，不发起网络请求
-const { options: staticOptions } = useDict('static', 'priority')
+const { options: staticOptions } = useDict('static', 'priority');
 
-const priority = ref('')
+const priority = ref('');
 </script>
 ```
 
@@ -97,7 +103,9 @@ const priority = ref('')
   <div>
     <h3>订单状态（主系统）</h3>
     <select v-model="orderStatus">
-      <option v-for="opt in orderOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+      <option v-for="opt in orderOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }}
+      </option>
     </select>
 
     <h3>支付方式（支付系统）</h3>
@@ -109,12 +117,12 @@ const priority = ref('')
 
 <script setup lang="ts">
 // 默认仓库
-const { options: orderOptions } = useDict('order_status')
+const { options: orderOptions } = useDict('order_status');
 // payment 仓库
-const { options: payOptions } = useDict('payment', 'pay_method')
+const { options: payOptions } = useDict('payment', 'pay_method');
 
-const orderStatus = ref('')
-const payMethod = ref('')
+const orderStatus = ref('');
+const payMethod = ref('');
 </script>
 ```
 
@@ -122,13 +130,13 @@ const payMethod = ref('')
 
 ```ts
 // useDict
-const { data: payData } = useDict('payment', 'pay_status')
+const { data: payData } = useDict('payment', 'pay_status');
 
 // useDictTree
-const { tree: locTree } = useDictTree('logistics', 'delivery_region')
+const { tree: locTree } = useDictTree('logistics', 'delivery_region');
 
 // $dict
-$dict.translate('pay_status', 1, { storeName: 'payment' })
+$dict.translate('pay_status', 1, { storeName: 'payment' });
 ```
 
 ## 各仓库独立的版本检测
@@ -152,6 +160,7 @@ $dict.translate('pay_status', 1, { storeName: 'payment' })
 **2. 什么是适配器（adapter）？**
 
 适配器就是一个"拿数据的小工具"。它有两个任务：
+
 - `fetchDict`：去拿字典数据
 - `fetchVersion`：去看看版本有没有变
 
@@ -161,11 +170,11 @@ $dict.translate('pay_status', 1, { storeName: 'payment' })
 
 一个仓库可以处于下面三种状态之一：
 
-| 状态 | 在 `stores` 里怎么写 | 效果 |
-|------|---------------------|------|
-| **未声明** | 完全不写 | 模块不知道有这个东西。你在代码里用 `useDict('myStore', 'type')` 时，直接复用 `dicts` 的适配器 |
-| **声明了，但为空** | `myStore: {}` | 模块知道有这个仓库，但所有字段都是空的。会创建一个独立的 REST 适配器，地址字段全部从全局 `api` 复制 |
-| **声明了，配了字段** | `myStore: { baseURL: '...' }` | 用你配的字段 + 没配的字段从全局 `api` 复制 |
+| 状态                 | 在 `stores` 里怎么写          | 效果                                                                                                |
+| -------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------- |
+| **未声明**           | 完全不写                      | 模块不知道有这个东西。你在代码里用 `useDict('myStore', 'type')` 时，直接复用 `dicts` 的适配器       |
+| **声明了，但为空**   | `myStore: {}`                 | 模块知道有这个仓库，但所有字段都是空的。会创建一个独立的 REST 适配器，地址字段全部从全局 `api` 复制 |
+| **声明了，配了字段** | `myStore: { baseURL: '...' }` | 用你配的字段 + 没配的字段从全局 `api` 复制                                                          |
 
 **三种状态对比代码：**
 
@@ -190,6 +199,7 @@ stores: {
 **状态 1 vs 状态 2 的区别：**
 
 虽然端点一样，但是：
+
 - 状态 1：`payment` 和 `dicts` 共享一个适配器、一套缓存——`dicts` 更新了版本，`payment` 也跟着失效
 - 状态 2：`logistics` 有自己独立的适配器、独立的缓存——`dicts` 更新了版本，`logistics` 不受影响
 
@@ -199,12 +209,12 @@ stores: {
 
 每个仓库可配四个字段：
 
-| 字段 | 类型 | 作用 | 例子 |
-|------|------|------|------|
-| `baseURL` | 字符串 | 服务器的地址 | `https://pay-api.example.com` |
-| `dictEndpoint` | 字符串 | 获取字典数据的接口路径 | `/v1/dictionary` |
-| `versionEndpoint` | 字符串 | 获取版本号的接口路径 | `/v1/dictionary/version` |
-| `adapter` | 对象 | 替代默认 HTTP 工具的自定义工具 | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
+| 字段              | 类型   | 作用                           | 例子                                          |
+| ----------------- | ------ | ------------------------------ | --------------------------------------------- |
+| `baseURL`         | 字符串 | 服务器的地址                   | `https://pay-api.example.com`                 |
+| `dictEndpoint`    | 字符串 | 获取字典数据的接口路径         | `/v1/dictionary`                              |
+| `versionEndpoint` | 字符串 | 获取版本号的接口路径           | `/v1/dictionary/version`                      |
+| `adapter`         | 对象   | 替代默认 HTTP 工具的自定义工具 | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
 
 **最终请求的完整 URL = `baseURL` + 对应端点。**
 
@@ -237,6 +247,7 @@ stores: {
 ```
 
 `payment` 最终效果：
+
 - `baseURL` = `'https://pay-api.example.com'` ← 用自己写的
 - `dictEndpoint` = `'/dict/list'` ← 从全局复制
 - `versionEndpoint` = `'/dict/version'` ← 从全局复制
@@ -252,6 +263,7 @@ stores: {
 ```
 
 `logistics` 最终效果：
+
 - `baseURL` = `'/api'` ← 从全局复制
 - `dictEndpoint` = `'/dict/list'` ← 从全局复制
 - `versionEndpoint` = `'/dict/version'` ← 从全局复制
@@ -286,6 +298,7 @@ api: {
 ```
 
 默认仓库 `dicts` 的优先级：
+
 1. 先看 `api.adapter` 有没有配 → 有就直接用
 2. 没配 → 自动创建 REST 适配器（用全局的三个地址字段）
 
@@ -304,6 +317,7 @@ stores: {
 ```
 
 `payment` 仓库的逻辑：
+
 1. 先看 `stores.payment.adapter` 有没有配 → 没配
 2. 不会去看 `api.adapter` → **跳过**
 3. 自动创建 REST 适配器（用继承后的地址字段）
@@ -387,13 +401,13 @@ stores: {
 
 把所有可能的情况列出来：
 
-| 仓库类型 | 条件 | 使用的适配器 |
-|---------|------|------------|
-| `dicts`（默认仓库） | 有 `api.adapter` | 用 `api.adapter` |
-| `dicts`（默认仓库） | 没有 `api.adapter` | 用 REST：`api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint` |
-| `xxx`（在 `stores` 声明） | 有 `stores.xxx.adapter` | 用 `stores.xxx.adapter`（不受 `api.adapter` 影响） |
+| 仓库类型                  | 条件                      | 使用的适配器                                                                                                                                                                 |
+| ------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dicts`（默认仓库）       | 有 `api.adapter`          | 用 `api.adapter`                                                                                                                                                             |
+| `dicts`（默认仓库）       | 没有 `api.adapter`        | 用 REST：`api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                                                          |
+| `xxx`（在 `stores` 声明） | 有 `stores.xxx.adapter`   | 用 `stores.xxx.adapter`（不受 `api.adapter` 影响）                                                                                                                           |
 | `xxx`（在 `stores` 声明） | 没有 `stores.xxx.adapter` | 用 REST：`stores.xxx.baseURL ?? api.baseURL` + `stores.xxx.dictEndpoint ?? api.dictEndpoint` + `stores.xxx.versionEndpoint ?? api.versionEndpoint`。有独立缓存、独立版本检测 |
-| `yyy`（未声明） | — | 复用 `dicts` 的适配器，共享同一套缓存 |
+| `yyy`（未声明）           | —                         | 复用 `dicts` 的适配器，共享同一套缓存                                                                                                                                        |
 
 ### 总结一句话
 

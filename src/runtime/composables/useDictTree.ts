@@ -1,9 +1,11 @@
-import { shallowRef, ref, watch, onMounted } from 'vue'
-import type { ShallowRef, DeepReadonly } from 'vue'
-import { useNuxtApp } from '#imports'
-import type { DictManager } from '../core/dict-manager'
-import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache'
-import type { TreeNode, UseDictTreeReturn, StoreKey, TranslateOptions } from '../types'
+import { shallowRef, ref, watch, onMounted } from 'vue';
+import type { ShallowRef, DeepReadonly } from 'vue';
+
+import { useNuxtApp } from '#imports';
+
+import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache';
+import type { DictManager } from '../core/dict-manager';
+import type { TreeNode, UseDictTreeReturn, StoreKey, TranslateOptions } from '../types';
 
 /**
  * 使用树形字典数据，支持翻译和路径查找。
@@ -21,21 +23,21 @@ import type { TreeNode, UseDictTreeReturn, StoreKey, TranslateOptions } from '..
  * // 指定存储库 'dicts2'
  * const { tree, translate } = useDictTree('dicts2', 'region')
  */
-export function useDictTree(type: string): UseDictTreeReturn
-export function useDictTree(storeName: StoreKey, type: string): UseDictTreeReturn
+export function useDictTree(type: string): UseDictTreeReturn;
+export function useDictTree(storeName: StoreKey, type: string): UseDictTreeReturn;
 export function useDictTree(storeOrType: string, maybeType?: string): UseDictTreeReturn {
-  const nuxtApp = useNuxtApp()
-  const manager = nuxtApp.$dictManager as DictManager
+  const nuxtApp = useNuxtApp();
+  const manager = nuxtApp.$dictManager as DictManager;
 
-  const storeName = (maybeType === undefined ? DEFAULT_STORE_NAME : storeOrType) as StoreKey
-  const dictType = maybeType ?? storeOrType
+  const storeName = (maybeType === undefined ? DEFAULT_STORE_NAME : storeOrType) as StoreKey;
+  const dictType = maybeType ?? storeOrType;
 
-  const tree = shallowRef<TreeNode[] | null>(null)
+  const tree = shallowRef<TreeNode[] | null>(null);
   // String(code) → TreeNode 索引映射，O(1) 查找替代 O(N) 递归遍历
-  const nodeMap = new Map<string, TreeNode>()
+  const nodeMap = new Map<string, TreeNode>();
   // String(code) → 完整层级路径 索引映射
-  const pathMap = new Map<string, string[]>()
-  const loading = ref(false)
+  const pathMap = new Map<string, string[]>();
+  const loading = ref(false);
 
   /**
    * 同步翻译树中任意节点的 value → label。
@@ -48,17 +50,17 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
    * @returns {string} 翻译后的文本，未命中时返回 value 的字符串形式
    */
   function translate(value: string | number, opts?: TranslateOptions): string {
-    const targetStore = opts?.storeName ?? storeName
-    const field = opts?.field ?? 'label'
+    const targetStore = opts?.storeName ?? storeName;
+    const field = opts?.field ?? 'label';
     // 跨仓库场景：当前 tree ref 只持有本仓库数据，回退到 manager
     if (targetStore !== storeName) {
-      return manager.translate(dictType, value, { storeName: targetStore, field })
+      return manager.translate(dictType, value, { storeName: targetStore, field });
     }
     // 默认场景：读 tree.value 保持响应式依赖，从 nodeMap O(1) 查找
-    if (!tree.value) return String(value)
-    const node = nodeMap.get(String(value))
-    if (!node) return String(value)
-    return (node[field] as string | undefined) ?? node.label
+    if (!tree.value) return String(value);
+    const node = nodeMap.get(String(value));
+    if (!node) return String(value);
+    return (node[field] as string | undefined) ?? node.label;
   }
 
   /**
@@ -73,8 +75,8 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
    * findPath('440104')  // → ['广东', '广州', '越秀区']
    */
   function findPath(value: string | number): string[] {
-    if (!tree.value) return []
-    return pathMap.get(String(value)) ?? []
+    if (!tree.value) return [];
+    return pathMap.get(String(value)) ?? [];
   }
 
   /**
@@ -83,13 +85,13 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
    * @returns {Promise<void>}
    */
   async function load(): Promise<void> {
-    loading.value = true
+    loading.value = true;
     try {
-      const entry = await manager.getDict(dictType, storeName)
-      tree.value = entry.tree ?? null
-      if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap)
+      const entry = await manager.getDict(dictType, storeName);
+      tree.value = entry.tree ?? null;
+      if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
@@ -99,22 +101,28 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
    * @returns {Promise<void>}
    */
   async function refresh(): Promise<void> {
-    loading.value = true
+    loading.value = true;
     try {
-      const entry = await manager.refresh(dictType, storeName)
-      tree.value = entry.tree ?? null
-      if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap)
+      const entry = await manager.refresh(dictType, storeName);
+      tree.value = entry.tree ?? null;
+      if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
-  onMounted(load)
+  onMounted(load);
 
   // 监听语言切换，自动重新加载树形字典数据
-  watch(() => manager.locale.value, load)
+  watch(() => manager.locale.value, load);
 
-  return { tree: tree as unknown as Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>, translate, findPath, loading, refresh }
+  return {
+    tree: tree as unknown as Readonly<ShallowRef<DeepReadonly<TreeNode[] | null>>>,
+    translate,
+    findPath,
+    loading,
+    refresh,
+  };
 }
 
 /**
@@ -133,12 +141,12 @@ function buildMaps(
   ancestors: string[] = [],
 ): void {
   for (const node of nodes) {
-    const code = String(node.value)
-    const path = [...ancestors, node.label]
-    nodeMap.set(code, node)
-    pathMap.set(code, path)
+    const code = String(node.value);
+    const path = [...ancestors, node.label];
+    nodeMap.set(code, node);
+    pathMap.set(code, path);
     if (node.children && node.children.length > 0) {
-      buildMaps(node.children, nodeMap, pathMap, path)
+      buildMaps(node.children, nodeMap, pathMap, path);
     }
   }
 }
