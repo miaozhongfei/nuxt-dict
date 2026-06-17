@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.0.5
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.4...v0.0.5)
+
+### 🩹 Fixes
+
+- 语言切换时保留 UI 组件选中值，修复全部 lint warning ([39b660a](https://github.com/miaozhongfei/nuxt-dict/commit/39b660a))
+
+### 💅 Refactors
+
+- Remove old-style  API, unify storeName to opts object ([e3ff644](https://github.com/miaozhongfei/nuxt-dict/commit/e3ff644))
+- Remove old-style  API, unify storeName to opts object" ([ce343ec](https://github.com/miaozhongfei/nuxt-dict/commit/ce343ec))
+
+### 🏡 Chore
+
+- **release:** V0.0.3 ([8b16299](https://github.com/miaozhongfei/nuxt-dict/commit/8b16299))
+- Nuxt dev 自动更新 .nuxtrc 版本号至 0.0.4 ([256e5df](https://github.com/miaozhongfei/nuxt-dict/commit/256e5df))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+- Miaozf <1103520414@qq.com>
+
 ## v0.0.4
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.2...v0.0.4)
