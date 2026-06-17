@@ -98,8 +98,8 @@ const { tree } = useDictTree('region');
 
 const { $dict } = useNuxtApp();
 
-const gender = ref('');
-const regionValue = ref<string[]>([]);
+const gender = useState('demo-gender', () => '');
+const regionValue = useState<string[]>('demo-region', () => []);
 
 const tableData = [
   { name: '张三', gender: 'male', status: 1, industry: 'it' },

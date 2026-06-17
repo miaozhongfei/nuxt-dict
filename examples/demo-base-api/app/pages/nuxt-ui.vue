@@ -64,7 +64,7 @@ useDict('industry');
 
 const { $dict } = useNuxtApp();
 
-const gender = ref('');
+const gender = useState('demo-gender', () => '');
 
 const genderItems = computed(() =>
   (genderData.value ?? []).map((o) => ({ label: o.label, value: o.value })),

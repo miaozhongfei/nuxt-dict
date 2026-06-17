@@ -95,7 +95,7 @@ const {
   loading: industryLoading,
 } = useDict('industry');
 
-const selectedGender = ref('');
+const selectedGender = useState('demo-gender', () => '');
 
 function doGenderRefresh() {
   genderRefresh();
