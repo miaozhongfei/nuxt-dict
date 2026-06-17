@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.1.5",
-    "@lacqjs/nuxt-dict": "^0.0.3",
+    "@lacqjs/nuxt-dict": "^0.0.4",
     "@nuxt/ui": "^4.8.2",
     "@nuxtjs/i18n": "^10.4.0",
     "@pinia/nuxt": "^0.11.3",
@@ -24,6 +24,7 @@
     "nuxt": "^4.4.8",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",
+    "vant": "^4.9.24",
     "vue": "^3.5.35",
     "zod": "^4.4.3"
   },

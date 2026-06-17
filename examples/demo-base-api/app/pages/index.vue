@@ -1,45 +1,42 @@
 <template>
   <div>
-    <h2>nuxt-dict：仅配置 base API 示例</h2>
-    <p>
-      本示例在 server 端口模拟字典接口，生产环境只需修改 nuxt.config.ts 中的
-      <code>dict.api.baseURL</code>
-      即可替换为 Java 后端或第三方接口。
-    </p>
+    <h1>{{ t('home.title') }}</h1>
+    <p>{{ t('home.subtitle') }}</p>
 
-    <!-- gender 字典 -->
-    <section>
-      <h3>gender 字典</h3>
-      <div v-if="genderLoading">加载中...</div>
-      <div v-else>
-        <select v-model="selectedGender">
-          <option v-for="item in genderData" :key="item.value" :value="item.value">
-            {{ item.label }}
-          </option>
-        </select>
-        <p>选中：{{ genderTranslate(selectedGender) }}</p>
-      </div>
-    </section>
+    <div class="demo-tip">
+      {{ t('home.apiNote') }}
+    </div>
 
-    <!-- status 字典 -->
-    <section>
-      <h3>status 字典</h3>
-      <div v-if="statusLoading">加载中...</div>
-      <div v-else>
-        <p v-for="item in statusData" :key="item.value">
-          {{ item.label }}（code：{{ item.value }}，color：{{
-            statusTranslate(item.value, { field: 'color' })
-          }}）
-        </p>
-      </div>
-    </section>
+    <div class="home-grid">
+      <NuxtLink :to="localePath('/use-dict')" class="home-card">
+        <h3>useDict</h3>
+        <p>扁平字典加载、翻译、刷新、错误处理</p>
+      </NuxtLink>
+      <NuxtLink :to="localePath('/use-dict-tree')" class="home-card">
+        <h3>useDictTree</h3>
+        <p>树形字典渲染 + findPath 路径查找</p>
+      </NuxtLink>
+      <NuxtLink :to="localePath('/dollar-dict')" class="home-card">
+        <h3>$dict 同步翻译</h3>
+        <p>translate / translatePath / translateData / getDictItem</p>
+      </NuxtLink>
+      <NuxtLink :to="localePath('/element-plus')" class="home-card">
+        <h3>Element Plus</h3>
+        <p>el-select / el-tag / el-table / el-cascader</p>
+      </NuxtLink>
+      <NuxtLink :to="localePath('/vant')" class="home-card">
+        <h3>Vant</h3>
+        <p>van-dropdown-menu / van-picker</p>
+      </NuxtLink>
+      <NuxtLink :to="localePath('/nuxt-ui')" class="home-card">
+        <h3>Nuxt UI</h3>
+        <p>USelectMenu / UBadge / UTable</p>
+      </NuxtLink>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { data: genderData, translate: genderTranslate, loading: genderLoading } = useDict('gender');
-
-const { data: statusData, translate: statusTranslate, loading: statusLoading } = useDict('status');
-
-const selectedGender = ref('');
+const { t } = useI18n();
+const localePath = useLocalePath();
 </script>

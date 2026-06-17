@@ -285,7 +285,7 @@ export class DictManager {
     const entry = this.memoryCache.get(key);
     if (!entry) return String(value);
 
-    const item = entry.data.items.find((i: DictItem) => this.codeMatch(i.value, value));
+    const item = entry.data?.items?.find((i: DictItem) => this.codeMatch(i.value, value));
     if (!item) return String(value);
     return (item[field] as string | undefined) ?? item.label;
   }

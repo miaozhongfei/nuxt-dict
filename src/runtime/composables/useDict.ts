@@ -1,4 +1,4 @@
-import { shallowRef, ref, watch, onMounted, onBeforeUnmount } from 'vue';
+import { shallowRef, ref, watch, onMounted, onBeforeUnmount, triggerRef } from 'vue';
 import type { ShallowRef, DeepReadonly } from 'vue';
 
 import { useNuxtApp } from '#imports';
@@ -45,7 +45,14 @@ async function fetchDictData(
     const entry = await (mode === 'refresh'
       ? manager.refresh(dictType, storeName)
       : manager.getDict(dictType, storeName));
-    data.value = entry.items;
+    // 原地更新数组内容，保持 data 引用不变
+    // 避免语言切换时全量替换引用导致 UI 组件（如 el-select）丢失选中状态
+    if (data.value) {
+      data.value.splice(0, data.value.length, ...entry.items);
+      triggerRef(data);
+    } else {
+      data.value = entry.items;
+    }
     // 预建 String(code) → DictItem 索引，O(1) 查找替代 O(N) .find()
     if (itemMap) {
       itemMap.clear();
@@ -97,6 +104,7 @@ function trackInstance(type: string, instanceId: symbol): void {
  */
 export function useDict(type: string): UseDictReturn;
 export function useDict(storeName: StoreKey, type: string): UseDictReturn;
+// eslint-disable-next-line max-lines-per-function
 export function useDict(storeOrType: string, maybeType?: string): UseDictReturn {
   const nuxtApp = useNuxtApp();
   const manager = nuxtApp.$dictManager as DictManager;
