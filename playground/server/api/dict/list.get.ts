@@ -1,4 +1,5 @@
-﻿export default defineEventHandler((event) => {
+﻿// eslint-disable-next-line max-lines-per-function
+export default defineEventHandler((event) => {
   const query = getQuery(event);
   const locale = (query.lang as string) || 'zh-CN';
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { ShallowRef, Ref, DeepReadonly } from 'vue';
 
 /** 仓库名字面量联合类型，由 addTypeTemplate 根据 stores 配置动态生成 */

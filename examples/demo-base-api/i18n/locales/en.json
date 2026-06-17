@@ -1,45 +1,16 @@
 {
   "nav": {
-    "guide": "Guide",
-    "api": "API Reference",
-    "integration": "Integration"
-  },
-  "sidebar": {
-    "welcome": "Getting Started",
-    "environment": "Environment Setup",
-    "installation": "Installation",
-    "first-dict": "Your First Dictionary",
-    "core": "Core Features",
-    "use-dict": "useDict",
-    "use-dict-options": "useDict with UI Libs",
-    "use-dict-tree": "useDictTree",
-    "use-locale": "useLocale",
-    "dollar-dict": "$dict Translator",
-    "advanced": "Advanced",
-    "multi-store": "Multi-Store",
-    "custom-adapter": "Custom Adapter",
-    "ssr-prefetch": "SSR Prefetch",
-    "cache-system": "Cache System",
-    "full-config": "Full Config Reference",
-    "integration": "Integration",
-    "element-plus": "Element Plus",
+    "home": "Home",
+    "useDict": "useDict",
+    "useDictTree": "useDictTree",
+    "dollarDict": "$dict Translate",
+    "elementPlus": "Element Plus",
     "vant": "Vant",
-    "nuxt-ui": "Nuxt UI",
-    "vanilla": "Vanilla Vue",
-    "i18n": "i18n",
-    "appendix": "Appendix",
-    "api-reference": "API Reference",
-    "faq": "FAQ",
-    "config-templates": "Config Templates"
+    "nuxtUi": "Nuxt UI"
   },
-  "common": {
-    "prev": "Previous",
-    "next": "Next",
-    "edit": "Edit this page",
-    "toc": "On this page"
-  },
-  "lang": {
-    "switch": "中文",
-    "searchCurrent": "Current language only"
+  "home": {
+    "title": "nuxt-dict Demo",
+    "subtitle": "Only api.baseURL configured, everything else at defaults. Covers all core APIs and popular UI library integrations.",
+    "apiNote": "Dictionary APIs are mocked on the server side. In production, simply change dict.api.baseURL in nuxt.config.ts to point to your Java backend or third-party API."
   }
 }

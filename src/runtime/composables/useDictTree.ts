@@ -1,4 +1,4 @@
-import { shallowRef, ref, watch, onMounted } from 'vue';
+import { shallowRef, ref, watch, onMounted, triggerRef } from 'vue';
 import type { ShallowRef, DeepReadonly } from 'vue';
 
 import { useNuxtApp } from '#imports';
@@ -25,6 +25,7 @@ import type { TreeNode, UseDictTreeReturn, StoreKey, TranslateOptions } from '..
  */
 export function useDictTree(type: string): UseDictTreeReturn;
 export function useDictTree(storeName: StoreKey, type: string): UseDictTreeReturn;
+// eslint-disable-next-line max-lines-per-function
 export function useDictTree(storeOrType: string, maybeType?: string): UseDictTreeReturn {
   const nuxtApp = useNuxtApp();
   const manager = nuxtApp.$dictManager as DictManager;
@@ -88,7 +89,14 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
     loading.value = true;
     try {
       const entry = await manager.getDict(dictType, storeName);
-      tree.value = entry.tree ?? null;
+      const newTree = entry.tree ?? null;
+      // 原地更新树数据，保持 tree 引用不变，避免级联选择器等 UI 组件丢失状态
+      if (tree.value && newTree) {
+        tree.value.splice(0, tree.value.length, ...newTree);
+        triggerRef(tree);
+      } else {
+        tree.value = newTree;
+      }
       if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap);
     } finally {
       loading.value = false;
@@ -104,7 +112,14 @@ export function useDictTree(storeOrType: string, maybeType?: string): UseDictTre
     loading.value = true;
     try {
       const entry = await manager.refresh(dictType, storeName);
-      tree.value = entry.tree ?? null;
+      const newTree = entry.tree ?? null;
+      // 原地更新树数据，保持 tree 引用不变
+      if (tree.value && newTree) {
+        tree.value.splice(0, tree.value.length, ...newTree);
+        triggerRef(tree);
+      } else {
+        tree.value = newTree;
+      }
       if (entry.tree) buildMaps(entry.tree, nodeMap, pathMap);
     } finally {
       loading.value = false;
