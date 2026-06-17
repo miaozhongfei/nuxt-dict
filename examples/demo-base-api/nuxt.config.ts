@@ -2,6 +2,8 @@
 
 const isDev = import.meta.env.DEV;
 
+const APP_BASEURL = '/demo-base-api/';
+
 export default defineNuxtConfig({
   modules: [
     '@nuxt/ui',
@@ -13,6 +15,7 @@ export default defineNuxtConfig({
     '@element-plus/nuxt',
     '@lacqjs/nuxt-dict',
   ],
+  css: ['~/assets/css/main.css'],
   // 开发工具 - 开发体验
   devtools: { enabled: isDev },
   devServer: {
@@ -24,7 +27,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-06-10',
   // GitHub Pages 部署：项目站点 /nuxt-dict/ 为应用基础路径
   app: {
-    baseURL: '/demo-base-api/',
+    baseURL: APP_BASEURL,
   },
   i18n: {
     locales: [
@@ -44,7 +47,7 @@ export default defineNuxtConfig({
    */
   dict: {
     api: {
-      baseURL: '/api',
+      baseURL: `${APP_BASEURL}api`,
     },
   },
 });

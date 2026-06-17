@@ -26,7 +26,7 @@ function toggleColorMode(e: MouseEvent) {
     overlay.style.setProperty('--y', y);
     overlay.style.background = oldBg;
     overlay.style.clipPath = `circle(150% at ${x} ${y})`;
-    document.body.appendChild(overlay);
+    document.body.append(overlay);
 
     // 4. 动画：从全屏缩到点击处（reveal 新主题）
     requestAnimationFrame(() => {
@@ -53,7 +53,7 @@ const { data: page } = await useAsyncData(
   pageKey,
   async () => {
     const collection = ('content_' + locale.value) as keyof Collections;
-    return queryCollection(collection).path(slug.value).first() || null;
+    return (await queryCollection(collection).path(slug.value).first()) || null;
   },
   { watch: [locale, slug] },
 );
@@ -63,7 +63,7 @@ const tocLinks = computed(() => (page.value as any)?.body?.toc?.links || []);
 const mainRef = ref<HTMLElement>();
 
 function onTocMove(id: string) {
-  const el = document.getElementById(id);
+  const el = document.querySelector(`#${id}`) as HTMLElement | null;
   if (el && mainRef.value) {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -136,7 +136,7 @@ const sidebarGroups = [
 
 // UNavigationMenu 格式：根据当前路由自动展开所在分组
 const navItems = computed(() => {
-  const currentPath = route.path.replace(/^\/(en|fa)/, '') || '/';
+  const currentPath = route.path.replace(/^\/(en|fa)/u, '') || '/';
   let hasOpen = false;
   const groups = sidebarGroups.map((group) => {
     const open = group.items.some((item) => currentPath.startsWith(item.to));

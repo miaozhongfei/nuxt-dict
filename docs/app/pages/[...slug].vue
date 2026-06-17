@@ -16,7 +16,7 @@ const { data: page } = await useAsyncData(
   pageKey,
   async () => {
     const collection = ('content_' + locale.value) as keyof Collections;
-    return queryCollection(collection).path(slug.value).first() || null;
+    return (await queryCollection(collection).path(slug.value).first()) || null;
   },
   { watch: [locale, slug] },
 );
