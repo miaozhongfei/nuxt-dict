@@ -65,6 +65,12 @@ const selected = ref([]);
 
 `useDictTree` supports arbitrary depth. Both `translate` and `findPath` recurse correctly regardless of tree depth.
 
+## Scope & Reactivity
+
+`useDictTree` shares the same reactivity model as `useDict`: component-level, auto-fetches on mount. `tree` is a `ShallowRef` — template re-renders on data change. See [useDict Scope](/guide/use-dict#scope--reactivity).
+
+:read-more{to="/guide/use-dict"}
+
 ## Notes
 
 > `findPath` only searches within already loaded `tree` data. Ensure `tree.value` is not `null` before calling it.

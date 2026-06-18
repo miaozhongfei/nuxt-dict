@@ -28,6 +28,14 @@
           {{ t('nav.dollarDict') }}
         </NuxtLink>
         <NuxtLink
+          :to="localePath('/scope-compare')"
+          class="layout-nav__link"
+          active-class="layout-nav__link--active"
+          exact-active-class="layout-nav__link--active"
+        >
+          {{ t('nav.scopeCompare') }}
+        </NuxtLink>
+        <NuxtLink
           :to="localePath('/element-plus')"
           class="layout-nav__link"
           active-class="layout-nav__link--active"

@@ -4,6 +4,7 @@
     "useDict": "useDict",
     "useDictTree": "useDictTree",
     "dollarDict": "$dict Translate",
+    "scopeCompare": "Scope",
     "elementPlus": "Element Plus",
     "vant": "Vant",
     "nuxtUi": "Nuxt UI"

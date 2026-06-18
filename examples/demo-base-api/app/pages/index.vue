@@ -20,6 +20,10 @@
         <h3>$dict 同步翻译</h3>
         <p>translate / translatePath / translateData / getDictItem</p>
       </NuxtLink>
+      <NuxtLink :to="localePath('/scope-compare')" class="home-card">
+        <h3>作用域对比</h3>
+        <p>useDict/$dict 的作用域、响应式、适用场景对比</p>
+      </NuxtLink>
       <NuxtLink :to="localePath('/element-plus')" class="home-card">
         <h3>Element Plus</h3>
         <p>el-select / el-tag / el-table / el-cascader</p>

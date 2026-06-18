@@ -6,6 +6,11 @@
       等场景使用。使用前需通过 <code>useDict</code> 或 <code>useDictTree</code> 加载数据到缓存。
     </p>
 
+    <div class="demo-tip">
+      <b>作用域</b>：全局同步非响应式。直接读管理器内存缓存，不触发 Vue 重渲染。适合 computed
+      计算属性、表格 formatter 等不需要响应式更新的场景。在模板中使用时仅显示静态快照。
+    </div>
+
     <!-- 1. translate -->
     <div class="demo-card">
       <div class="demo-card__header">
@@ -124,7 +129,8 @@
         <span style="color: #6b7280; font-size: 0.85rem">— 批量翻译</span>
       </div>
       <p class="demo-card__desc">
-        对数据对象中的多个编码字段批量翻译，返回追加了 <code>_label</code> 后缀字段的新对象（不修改原对象）。
+        对数据对象中的多个编码字段批量翻译，返回追加了
+        <code>_label</code> 后缀字段的新对象（不修改原对象）。
       </p>
 
       <div style="display: flex; gap: 1.5rem; flex-wrap: wrap">

@@ -16,8 +16,13 @@
         将 <code>data</code> 直接作为 <code>&lt;el-option&gt;</code> 的 v-for 数据源。
       </p>
 
-      <el-select v-model="gender" placeholder="请选择性别" style="width: 200px;">
-        <el-option v-for="item in genderData" :key="item.value" :label="item.label" :value="item.value" />
+      <el-select v-model="gender" placeholder="请选择性别" style="width: 200px">
+        <el-option
+          v-for="item in genderData"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
       </el-select>
 
       <div class="demo-result" v-if="gender">
@@ -35,8 +40,14 @@
         字典项 <code>color</code> 扩展字段直接传给 <code>el-tag</code> 的 <code>:color</code> prop。
       </p>
 
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <el-tag v-for="item in statusData" :key="item.value" :color="(item as any).color" effect="dark" size="large">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+        <el-tag
+          v-for="item in statusData"
+          :key="item.value"
+          :color="(item as any).color"
+          effect="dark"
+          size="large"
+        >
           {{ item.label }}
         </el-tag>
       </div>
@@ -48,11 +59,9 @@
         <span class="demo-card__badge">el-table</span>
         <span style="color: #6b7280; font-size: 0.85rem">— $dict.translate 表格翻译</span>
       </div>
-      <p class="demo-card__desc">
-        表格列中使用 <code>$dict.translate(type, val)</code> 同步翻译。
-      </p>
+      <p class="demo-card__desc">表格列中使用 <code>$dict.translate(type, val)</code> 同步翻译。</p>
 
-      <el-table :data="tableData" border style="width: 100%;">
+      <el-table :data="tableData" border style="width: 100%">
         <el-table-column prop="name" label="姓名" width="80" />
         <el-table-column prop="gender" label="性别" width="100">
           <template #default="{ row }">
@@ -61,7 +70,11 @@
         </el-table-column>
         <el-table-column prop="status" label="状态" width="120">
           <template #default="{ row }">
-            <el-tag :color="$dict.translate('status', row.status, { field: 'color' })" effect="dark" size="small">
+            <el-tag
+              :color="$dict.translate('status', row.status, { field: 'color' })"
+              effect="dark"
+              size="small"
+            >
               {{ $dict.translate('status', row.status) }}
             </el-tag>
           </template>
@@ -77,10 +90,16 @@
         <span style="color: #6b7280; font-size: 0.85rem">— region 级联选择</span>
       </div>
       <p class="demo-card__desc">
-        将 <code>TreeNode[]</code> 递归映射为 <code>el-cascader</code> 的 <code>:options</code> 格式。
+        将 <code>TreeNode[]</code> 递归映射为 <code>el-cascader</code> 的
+        <code>:options</code> 格式。
       </p>
 
-      <el-cascader v-model="regionValue" :options="cascaderOptions" placeholder="请选择地区" style="width: 320px;" />
+      <el-cascader
+        v-model="regionValue"
+        :options="cascaderOptions"
+        placeholder="请选择地区"
+        style="width: 320px"
+      />
 
       <div class="demo-result" v-if="regionValue.length">
         选中：<b>{{ regionValue.join(' / ') }}</b>

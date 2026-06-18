@@ -4,6 +4,7 @@
     "useDict": "useDict",
     "useDictTree": "useDictTree",
     "dollarDict": "$dict 同步翻译",
+    "scopeCompare": "作用域",
     "elementPlus": "Element Plus",
     "vant": "Vant",
     "nuxtUi": "Nuxt UI"

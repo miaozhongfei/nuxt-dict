@@ -82,6 +82,12 @@ el-cascader 需要 `value` / `label` / `children` 三个字段，我们的 `Tree
 
 `useDictTree` 支持任意深度的树形数据。`translate` 和 `findPath` 都能正确递归查找。
 
+## 作用域与响应式行为
+
+`useDictTree` 与 `useDict` 行为一致：组件级响应式，挂载时自动加载。`tree` 为 `ShallowRef`，数据变化时自动重渲染。详见 [useDict 作用域](/guide/use-dict#作用域与响应式行为)。
+
+:read-more{to="/guide/use-dict"}
+
 ## 注意事项
 
 > `findPath` 只在已加载的 `tree` 数据中查找，不会发起额外的网络请求。确保 `tree.value` 不为 `null`。

@@ -161,15 +161,17 @@ $dict.translateData(
 
 > `mapping` 中值为 `string` 时使用默认仓库。需要指定仓库时用 `{ type: 'status', storeName: 'dicts2' }`。后缀可通过第三个参数自定义，默认 `'_label'`。
 
-## 与 useDict.translate 的区别
+## 与 useDict / $dict 的作用域区别
 
-| 对比         | `$dict.translate()`  | `useDict().translate()`         |
-| ------------ | -------------------- | ------------------------------- |
-| 需要组件挂载 | 不需要               | `useDict` 在 `onMounted` 中加载 |
-| 依赖的数据   | 全局内存缓存         | 当前组件的 `data` ref           |
-| 适用场景     | 快速翻译、多组件共享 | 需要 loading/error 状态的场景   |
+| 特性         | useDict               | $dict                            |
+| ------------ | --------------------- | -------------------------------- |
+| **作用域**   | 组件内部              | 全局                             |
+| **响应式**   | ✅ 数据变化触发重渲染 | ❌ 不触发重渲染                  |
+| **调用位置** | `<script setup>` 顶层 | 任意位置（模板 / computed / JS） |
+| **加载方式** | 挂载后自动请求        | 读取已有缓存                     |
+| **适合场景** | 模板绑定              | computed / formatter / JS 逻辑   |
 
-> **最佳实践：** 同一个字典类型，在应用的某个根组件中用 `useDict` 加载一次，之后所有地方都用 `$dict.translate()` 翻译。
+`useDict` 在组件内管理字典数据，适合模板绑定场景。`$dict` 直接从全局缓存读取，不产生响应式副作用，适合 computed 和表格 formatter。
 
 ## 本章你学会了
 

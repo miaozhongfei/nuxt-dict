@@ -8,6 +8,12 @@
       <code>@nuxtjs/i18n</code> 统一控制。
     </p>
 
+    <div class="demo-tip">
+      <b>作用域</b>：组件级响应式。在
+      <code>&lt;script setup&gt;</code> 中调用，组件挂载时自动加载，数据变化后模板自动重渲染。适合
+      select 选项、列表渲染等模板绑定场景。
+    </div>
+
     <!-- 1. gender — 基础选择 -->
     <div class="demo-card">
       <div class="demo-card__header">

@@ -3,6 +3,13 @@
     <h1>useDictTree — 树形字典</h1>
     <p>加载 region 省市区树形字典，演示递归渲染层级结构和 <code>findPath</code> 路径查找。</p>
 
+    <div class="demo-tip">
+      <b>作用域</b>：组件级响应式。与 <code>useDict</code> 相同，组件挂载时自动加载，<code
+        >tree</code
+      >
+      变化后模板自动重渲染。
+    </div>
+
     <!-- 1. 树形渲染 -->
     <div class="demo-card">
       <div class="demo-card__header">

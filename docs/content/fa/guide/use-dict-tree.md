@@ -85,6 +85,12 @@ const cascaderOptions = computed(() => tree.value ?? []);
 
 `useDictTree` از درخت‌های با هر عمقی پشتیبانی می‌کند. `translate` و `findPath` هر دو به درستی جستجوی بازگشتی انجام می‌دهند.
 
+## محدوده و رفتار واکنش‌گرا
+
+`useDictTree` همان مدل واکنش‌گرایی `useDict` را دارد: سطح کامپوننت، بارگذاری خودکار در زمان mount. `tree` یک `ShallowRef` است. [محدوده useDict](/guide/use-dict#محدوده-و-رفتار-واکنش‌گرا) را ببینید.
+
+:read-more{to="/guide/use-dict"}
+
 ## نکات
 
 > `findPath` فقط در داده‌های `tree` که قبلاً بارگذاری شده‌اند جستجو می‌کند و درخواست شبکه اضافی ارسال نمی‌کند. قبل از فراخوانی مطمئن شوید `tree.value` برابر `null` نباشد.

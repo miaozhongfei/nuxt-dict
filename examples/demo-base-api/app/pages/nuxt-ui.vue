@@ -17,7 +17,12 @@
         <code>:items</code>。
       </p>
 
-      <USelectMenu v-model="gender" :items="genderItems" placeholder="请选择性别" style="width: 200px;" />
+      <USelectMenu
+        v-model="gender"
+        :items="genderItems"
+        placeholder="请选择性别"
+        style="width: 200px"
+      />
 
       <div class="demo-result" v-if="gender">
         选中：<b>{{ gender }}</b>
@@ -35,8 +40,14 @@
         <code>color</code> prop。
       </p>
 
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <UBadge v-for="item in statusBadges" :key="item.value" :color="item.color" variant="soft" size="md">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+        <UBadge
+          v-for="item in statusBadges"
+          :key="item.value"
+          :color="item.color"
+          variant="soft"
+          size="md"
+        >
           {{ item.label }}
         </UBadge>
       </div>

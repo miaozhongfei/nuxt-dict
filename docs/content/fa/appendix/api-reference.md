@@ -19,6 +19,8 @@ useDict(storeName: string, type: string): UseDictReturn
 | `error`       | `Ref<string \| null>`                                | اطلاعات خطا                                           |
 | `refresh`     | `() => Promise<void>`                                | بازنشانی دستی                                         |
 
+**محدوده**: سطح کامپوننت، واکنش‌گرا. در سطح بالای `<script setup>` فراخوانی شود؛ بارگذاری خودکار در mount؛ تمپلیت با تغییر داده به‌روز می‌شود.
+
 ## useDictTree
 
 ```ts
@@ -33,6 +35,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | `findPath`  | `(value: string \| number) => string[]` | بازگشت مسیر            |
 | `loading`   | `Ref<boolean>`                          | وضعیت بارگذاری         |
 | `refresh`   | `() => Promise<void>`                   | بازنشانی دستی          |
+
+**محدوده**: سطح کامپوننت، واکنش‌گرا — مشابه `useDict`. بارگذاری خودکار داده‌های درختی در mount.
 
 ## useLocale
 
@@ -54,6 +58,8 @@ useLocale(): { locale, setLocale, locales }
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })`         |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → شیء جدید با فیلدهای ترجمه شده برمی‌گرداند                           |
 | `getDictItem`   | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → شیء کامل DictItem برمی‌گرداند |
+
+**محدوده**: سراسری، همگام، غیر واکنش‌گرا. مستقیماً از کش حافظه مدیریت می‌خواند؛ بدون رندر مجدد Vue. مناسب برای computed و formatter جدول. نیاز به بارگذاری داده از طریق `useDict` / `useDictTree` دارد.
 
 ## تعاریف نوع
 

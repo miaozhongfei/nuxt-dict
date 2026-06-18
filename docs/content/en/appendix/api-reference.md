@@ -19,6 +19,8 @@ useDict(storeName: string, type: string): UseDictReturn
 | `error`       | `Ref<string \| null>`                                | Error info                                                |
 | `refresh`     | `() => Promise<void>`                                | Manual refresh                                            |
 
+**Scope**: Component-level, reactive. Call at the top of `<script setup>`; auto-fetches on mount; template auto-updates on data change.
+
 ## useDictTree
 
 ```
@@ -33,6 +35,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | `findPath`  | `(value: string \| number) => string[]` | Path backtracking    |
 | `loading`   | `Ref<boolean>`                          | Loading state        |
 | `refresh`   | `() => Promise<void>`                   | Manual refresh       |
+
+**Scope**: Component-level, reactive — same as `useDict`. Auto-fetches tree data on mount.
 
 ## useLocale
 
@@ -54,6 +58,8 @@ useLocale(): { locale, setLocale, locales }
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })`        |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → returns new object with translated fields appended                 |
 | `getDictItem`   | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → returns full DictItem object |
+
+**Scope**: Global, synchronous, non-reactive. Reads directly from the manager's memory cache; no Vue re-render. Best for computed properties and table formatters. Requires data to be loaded via `useDict` / `useDictTree` first.
 
 ## Type Definitions
 
