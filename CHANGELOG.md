@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.0.8
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.7...v0.0.8)
+
+### 🩹 Fixes
+
+- 添加 runtime 子路径导出，修复 stub 构建下 defineDictAdapter 运行时不可用 ([ef28595](https://github.com/miaozhongfei/nuxt-dict/commit/ef28595))
+
+### 💅 Refactors
+
+- 移动 define-adapter 到 core/ 并注册 auto-import，用户无需手动导入 ([c65002b](https://github.com/miaozhongfei/nuxt-dict/commit/c65002b))
+
+### 🏡 Chore
+
+- 同步 .nuxtrc 版本号 ([d45a8d8](https://github.com/miaozhongfei/nuxt-dict/commit/d45a8d8))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.7
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.6...v0.0.7)
