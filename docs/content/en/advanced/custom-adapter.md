@@ -10,8 +10,6 @@ description: Connect to any dictionary data source format — GraphQL, Firestore
 An adapter implements two methods from the `DictAdapter` interface. The module provides a `defineDictAdapter()` helper for full TypeScript type inference:
 
 ```ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 // defineDictAdapter() returns the object as-is at runtime, only provides type checking
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) { /* ... */ },
@@ -37,8 +35,6 @@ Adapters are defined in separate files. There are two ways to register them:
 Place the adapter file at `~/dict/dict-adapter.ts` and the module discovers it automatically — no configuration needed:
 
 ```ts [~/dict/dict-adapter.ts]
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 // Module auto-discovers ~/dict/dict-adapter.ts, no nuxt.config.ts setup required
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
@@ -78,8 +74,6 @@ Four adapter examples covering common scenarios — GraphQL, local JSON, format 
 
 ```ts [GraphQL Adapter]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
     // Build the GraphQL query string
@@ -128,8 +122,6 @@ export default defineDictAdapter({
 
 ```ts [Format Conversion]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 export default defineDictAdapter({
   async fetchDict(storeName, { types }) {
     const res = await fetch(`/api/custom-dict?codes=${types.join(',')}`)
@@ -153,8 +145,6 @@ export default defineDictAdapter({
 
 ```ts [Route by StoreName]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
     // Route to different API endpoints based on storeName

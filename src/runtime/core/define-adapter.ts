@@ -10,8 +10,7 @@ import type { DictAdapter } from '../types';
  * @returns {DictAdapter} 原样返回传入的适配器对象
  *
  * @example
- * // ~/dict/dict-adapter.ts
- * import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+ * // ~/dict/dict-adapter.ts — defineDictAdapter 已自动导入，无需 import
  *
  * export default defineDictAdapter({
  *   async fetchDict(storeName, { types, locale }) {

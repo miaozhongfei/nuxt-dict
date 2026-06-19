@@ -17,8 +17,6 @@ description: اتصال به هر فرمت منبع داده دیکشنری — 
 آداپتور سفارشی باید رابط `DictAdapter` را پیاده‌سازی کند. ماژول تابع کمکی `defineDictAdapter()` را برای استنتاج کامل نوع TypeScript فراهم می‌کند:
 
 ```ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 // defineDictAdapter() در زمان اجرا شیء را بدون تغییر برمی‌گرداند، فقط بررسی نوع ارائه می‌دهد
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) { /* ... */ },
@@ -81,8 +79,6 @@ interface TreeNode extends DictItem {
 فایل آداپتور را در `~/dict/dict-adapter.ts` قرار دهید و ماژول آن را به طور خودکار کشف می‌کند — نیازی به پیکربندی نیست:
 
 ```ts [~/dict/dict-adapter.ts]
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 // ماژول به طور خودکار ~/dict/dict-adapter.ts را کشف می‌کند، نیازی به تنظیم nuxt.config.ts نیست
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
@@ -122,8 +118,6 @@ export default defineNuxtConfig({
 
 ```ts [GraphQL]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
     // ساخت رشته پرس‌وجوی GraphQL
@@ -179,8 +173,6 @@ export default defineDictAdapter({
 
 ```ts [تبدیل فرمت]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
     const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`)
@@ -207,8 +199,6 @@ export default defineDictAdapter({
 
 ```ts [مسیریابی StoreName]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
-
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
     // انتخاب نقطه پایانی API بر اساس storeName

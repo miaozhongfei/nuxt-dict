@@ -95,8 +95,8 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5(@element-plus/icons-vue@2.3.2(vue@3.5.38(typescript@5.9.3)))(element-plus@2.14.2(vue@3.5.38(typescript@5.9.3)))(magicast@0.5.3)
       '@lacqjs/nuxt-dict':
-        specifier: ^0.0.7
-        version: 0.0.7(magicast@0.5.3)
+        specifier: ^0.0.8
+        version: 0.0.8(magicast@0.5.3)
       '@nuxt/ui':
         specifier: ^4.8.2
         version: 4.8.2(@internationalized/date@3.12.2)(@internationalized/number@3.6.7)(@nuxt/content@3.14.0(better-sqlite3@12.10.0)(magicast@0.5.3))(@tiptap/extensions@3.26.1(@tiptap/core@3.26.1(@tiptap/pm@3.26.1))(@tiptap/pm@3.26.1))(@tiptap/y-tiptap@3.0.5(prosemirror-model@1.25.8)(prosemirror-state@1.4.4)(prosemirror-view@1.41.9)(y-protocols@1.0.7(yjs@13.6.31))(yjs@13.6.31))(async-validator@4.2.5)(db0@0.3.4(better-sqlite3@12.10.0))(embla-carousel@8.6.0)(ioredis@5.11.1)(magicast@0.5.3)(tailwindcss@4.3.1)(typescript@5.9.3)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue-router@5.1.0(@vue/compiler-sfc@3.5.38)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3))(yjs@13.6.31)(zod@4.4.3)
@@ -150,8 +150,8 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5(@element-plus/icons-vue@2.3.2(vue@3.5.38(typescript@5.9.3)))(element-plus@2.14.2(vue@3.5.38(typescript@5.9.3)))(magicast@0.5.3)
       '@lacqjs/nuxt-dict':
-        specifier: ^0.0.7
-        version: 0.0.7(magicast@0.5.3)
+        specifier: ^0.0.8
+        version: 0.0.8(magicast@0.5.3)
       '@nuxt/ui':
         specifier: ^4.8.2
         version: 4.8.2(@internationalized/date@3.12.2)(@internationalized/number@3.6.7)(@nuxt/content@3.14.0(better-sqlite3@12.10.0)(magicast@0.5.3))(@tiptap/extensions@3.26.1(@tiptap/core@3.26.1(@tiptap/pm@3.26.1))(@tiptap/pm@3.26.1))(@tiptap/y-tiptap@3.0.5(prosemirror-model@1.25.8)(prosemirror-state@1.4.4)(prosemirror-view@1.41.9)(y-protocols@1.0.7(yjs@13.6.31))(yjs@13.6.31))(async-validator@4.2.5)(db0@0.3.4(better-sqlite3@12.10.0))(embla-carousel@8.6.0)(ioredis@5.11.1)(magicast@0.5.3)(tailwindcss@4.3.1)(typescript@5.9.3)(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue-router@5.1.0(@vue/compiler-sfc@3.5.38)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.38(typescript@5.9.3)))(vite@7.3.5(@types/node@25.9.3)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.38(typescript@5.9.3)))(vue@3.5.38(typescript@5.9.3))(yjs@13.6.31)(zod@4.4.3)
@@ -1110,8 +1110,8 @@ packages:
   '@kwsites/promise-deferred@1.1.1':
     resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
 
-  '@lacqjs/nuxt-dict@0.0.7':
-    resolution: {integrity: sha512-zPnVCfxl31AbHvN29iGZoC4jT+cK+oJLZgEWyws1qOiku26n8nBJYudySXs+8h3shTf5EIQM/nlj0rGTxN3gNw==}
+  '@lacqjs/nuxt-dict@0.0.8':
+    resolution: {integrity: sha512-JGcz8WZAYFfHYZWvaqbtsRBPM/jx1NAo4TdFUOulorLCHt6CkIOlfEMZ37kAdBHRtwH0JrHtlccaNfF+pyE4IQ==}
     engines: {node: '>=22.0.0', npm: '>=10.0.0', pnpm: '>=10.22.0', yarn: '>=1.22.22'}
 
   '@mapbox/node-pre-gyp@2.0.3':
@@ -7793,7 +7793,7 @@ snapshots:
 
   '@kwsites/promise-deferred@1.1.1': {}
 
-  '@lacqjs/nuxt-dict@0.0.7(magicast@0.5.3)':
+  '@lacqjs/nuxt-dict@0.0.8(magicast@0.5.3)':
     dependencies:
       '@nuxt/kit': 4.4.8(magicast@0.5.3)
       compare-versions: 6.1.1
