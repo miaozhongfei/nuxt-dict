@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import {
+  addImports,
   addImportsDir,
   addPlugin,
   addTemplate,
@@ -30,7 +31,7 @@ export type {
   GetDictItemOptions,
 } from './runtime/types';
 export { createDictTranslator } from './runtime/utils/dict-translator';
-export { defineDictAdapter } from './runtime/utils/define-adapter';
+export { defineDictAdapter } from './runtime/core/define-adapter';
 
 /**
  * 注册类型模板：NuxtApp 扩展声明 + 仓库名字面量联合类型。
@@ -320,6 +321,9 @@ declare module '#build/nuxt-dict/adapters' {
 
     // 注册 composables 目录，自动导入 useDict / useDictTree / useLocale
     addImportsDir(resolver.resolve('./runtime/composables'));
+
+    // 注册 defineDictAdapter 自动导入，用户无需手动 import 即可在 adapter 文件中直接使用
+    addImports([{ name: 'defineDictAdapter', from: resolver.resolve('./runtime/core/define-adapter') }]);
 
     registerTypeTemplates(resolver, _options.stores);
 
