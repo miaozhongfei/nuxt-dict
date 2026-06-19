@@ -30,36 +30,6 @@ export default defineNuxtConfig({
 });
 ```
 
-```ts [GraphQL]
-export default defineNuxtConfig({
-  modules: ['@lacqjs/nuxt-dict'],
-  dict: {
-    api: {
-      adapter: {
-        async fetchDict(storeName, { types, locale }) {
-          const res = await fetch('https://gql.example.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              query: `{ dict(types: [${types.map((t) => `"${t}"`).join(',')}], locale: "${locale}") { version data { type items { code label } } } }`,
-            }),
-          });
-          return (await res.json()).data.dict;
-        },
-        async fetchVersion(storeName) {
-          const res = await fetch('https://gql.example.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: '{ dictVersion }' }),
-          });
-          return (await res.json()).data.dictVersion;
-        },
-      },
-    },
-  },
-});
-```
-
 ```ts [چند مخزنی]
 export default defineNuxtConfig({
   modules: ['@lacqjs/nuxt-dict'],
@@ -71,39 +41,6 @@ export default defineNuxtConfig({
     stores: {
       payment: { baseURL: 'https://pay-api.example.com', dictEndpoint: '/v1/dictionary' },
       logistics: { dictEndpoint: '/api/logistics/dict' },
-    },
-  },
-});
-```
-
-```ts [آداپتور سفارشی مخزن]
-export default defineNuxtConfig({
-  modules: ['@lacqjs/nuxt-dict'],
-  dict: {
-    api: { baseURL: '', dictEndpoint: '/api/dict/list' },
-    stores: {
-      // مخزن نام‌گذاری شده با آداپتور سفارشی — بدون درخواست HTTP
-      static: {
-        adapter: {
-          async fetchDict(_storeName, { types, locale }) {
-            return {
-              version: 'static-1.0',
-              data: {
-                priority: {
-                  type: 'priority',
-                  items: [
-                    { value: 'high', label: `بالا (${locale})` },
-                    { value: 'low', label: `پایین (${locale})` },
-                  ],
-                },
-              },
-            };
-          },
-          async fetchVersion(_storeName) {
-            return 'static-1.0';
-          },
-        },
-      },
     },
   },
 });
@@ -147,6 +84,97 @@ export default defineNuxtConfig({
     },
     ssr: {
       prefetch: ['gender', 'status', 'industry'],
+    },
+  },
+});
+```
+
+::
+
+## آداپتور GraphQL
+
+آداپتورها در فایل‌های مستقل با استفاده از `defineDictAdapter()` تعریف می‌شوند. فایل را در `~/dict/dict-adapter.ts` (مسیر قراردادی آداپتور سراسری) قرار دهید، ماژول آن را به صورت خودکار شناسایی می‌کند.
+
+::code-group
+
+```ts [~/dict/dict-adapter.ts]
+// آداپتور سراسری GraphQL — جایگزین درخواست‌های REST پیش‌فرض
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    // دریافت داده‌های دیکشنری از طریق GraphQL
+    const res = await fetch('https://gql.example.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `{ dict(types: [${types.map((t) => `"${t}"`).join(',')}], locale: "${locale}") { version data { type items { code label } } } }`,
+      }),
+    });
+    return (await res.json()).data.dict;
+  },
+  async fetchVersion(storeName) {
+    // دریافت نسخه از طریق GraphQL
+    const res = await fetch('https://gql.example.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: '{ dictVersion }' }),
+    });
+    return (await res.json()).data.dictVersion;
+  },
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      // مسیر قراردادی ~/dict/dict-adapter.ts به صورت خودکار شناسایی می‌شود، یا صریحاً مشخص کنید:
+      // adapter: '~/dict/dict-adapter',
+    },
+  },
+});
+```
+
+::
+
+## آداپتور سفارشی مخزن
+
+هر مخزن می‌تواند از فایل آداپتور مستقل خود استفاده کند. مسیر قراردادی `~/dict/{storeName}-adapter.ts` به صورت خودکار توسط ماژول شناسایی می‌شود.
+
+::code-group
+
+```ts [~/dict/static-adapter.ts]
+// آداپتور سفارشی مخزن static — بازگشت داده‌های ثابت، بدون درخواست HTTP
+export default defineDictAdapter({
+  async fetchDict(_storeName, { types, locale }) {
+    return {
+      version: 'static-1.0',
+      data: {
+        priority: {
+          type: 'priority',
+          items: [
+            { value: 'high', label: `بالا (${locale})` },
+            { value: 'low', label: `پایین (${locale})` },
+          ],
+        },
+      },
+    };
+  },
+  async fetchVersion(_storeName) {
+    return 'static-1.0';
+  },
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: { baseURL: '', dictEndpoint: '/api/dict/list' },
+    stores: {
+      // مسیر قراردادی ~/dict/static-adapter.ts به صورت خودکار شناسایی می‌شود، یا صریحاً مشخص کنید:
+      // static: { adapter: '~/dict/static-adapter' },
+      static: {},
     },
   },
 });

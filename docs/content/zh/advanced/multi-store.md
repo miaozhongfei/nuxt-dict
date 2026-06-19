@@ -28,30 +28,35 @@ export default defineNuxtConfig({
       payment: { baseURL: 'https://pay-api.example.com', dictEndpoint: '/v1/dictionary' },
       // 仓库 logistics：独立端点但同域名
       logistics: { dictEndpoint: '/api/logistics/dict' },
-      // 仓库 static：走自定义适配器，不发起网络请求
-      static: {
-        adapter: {
-          async fetchDict(_storeName, { types, locale }) {
-            // 直接返回硬编码或本地数据，适用于静态字典或本地文件
-            return {
-              version: 'static-1.0',
-              data: {
-                priority: {
-                  type: 'priority',
-                  items: [
-                    { value: 'high', label: `高优先级 (${locale})` },
-                    { value: 'low', label: `低优先级 (${locale})` },
-                  ],
-                },
-              },
-            };
-          },
-          async fetchVersion(_storeName) {
-            return 'static-1.0';
-          },
+      // 仓库 static：走自定义适配器文件，不发起网络请求
+      // 约定路径 ~/dict/static-adapter.ts 自动发现
+      static: {},
+    },
+  },
+});
+```
+
+`static` 仓库的适配器定义在独立文件中：
+
+```ts [~/dict/static-adapter.ts]
+// static 仓库的自定义适配器——直接返回硬编码数据，不发起 HTTP 请求
+export default defineDictAdapter({
+  async fetchDict(_storeName, { types, locale }) {
+    return {
+      version: 'static-1.0',
+      data: {
+        priority: {
+          type: 'priority',
+          items: [
+            { value: 'high', label: `高优先级 (${locale})` },
+            { value: 'low', label: `低优先级 (${locale})` },
+          ],
         },
       },
-    },
+    };
+  },
+  async fetchVersion(_storeName) {
+    return 'static-1.0';
   },
 });
 ```
@@ -64,11 +69,11 @@ export default defineNuxtConfig({
 - `dictEndpoint` 配置了 `/api/logistics/dict` → 覆盖全局值
 - `versionEndpoint` 未配置 → 继承全局值
 
-> `adapter` 字段比较特殊——它**不参与继承**。如果你没有为某个仓库配置 `adapter`，模块会自动为其创建默认的 REST 适配器（使用该仓库继承后的 endpoint 配置），而不是从全局 `api.adapter` 复制。
+> `adapter` 字段比较特殊——它**不参与继承**。如果你没有为某个仓库配置 `adapter`，模块会自动为其创建默认的 REST 适配器（使用该仓库继承后的 endpoint 配置），而不是从全局 `api.adapter` 复制。`adapter` 的值是一个文件路径字符串（如 `'~/dict/static-adapter'`），指向使用 `defineDictAdapter()` 导出适配器的文件。
 
 ## 仓库使用自定义适配器
 
-每个命名仓库都可以配置独立的自定义适配器（`adapter` 字段），代替默认的 REST 请求。适用于以下场景：
+每个命名仓库都可以配置独立的自定义适配器文件（`adapter` 字段传入文件路径字符串），代替默认的 REST 请求。适配器文件使用 `defineDictAdapter()` 定义，约定路径 `~/dict/{storeName}-adapter.ts` 可被模块自动发现。适用于以下场景：
 
 - 字典数据来自本地文件或静态配置，不需要 HTTP 请求
 - 不同仓库的后端接口格式差异大，需要各自独立的适配逻辑
@@ -89,7 +94,7 @@ export default defineNuxtConfig({
 </template>
 
 <script setup lang="ts">
-// static 仓库走自定义适配器，不发起网络请求
+// static 仓库走自定义适配器文件，不发起网络请求
 const { options: staticOptions } = useDict('static', 'priority');
 
 const priority = ref('');
@@ -159,12 +164,12 @@ $dict.translate('pay_status', 1, { storeName: 'payment' });
 
 **2. 什么是适配器（adapter）？**
 
-适配器就是一个"拿数据的小工具"。它有两个任务：
+适配器就是一个"拿数据的小工具"。它定义在独立文件中，使用 `defineDictAdapter()` 创建，有两个任务：
 
 - `fetchDict`：去拿字典数据
 - `fetchVersion`：去看看版本有没有变
 
-模块自带一个**默认 REST 适配器**——它会自动发 HTTP 请求去你配的地址拿数据。如果你不需要 HTTP（比如读本地文件），或者后端接口格式不一样，你可以自己写一个适配器替换它。
+模块自带一个**默认 REST 适配器**——它会自动发 HTTP 请求去你配的地址拿数据。如果你不需要 HTTP（比如读本地文件），或者后端接口格式不一样，你可以自己写一个适配器文件替换它。
 
 ### 仓库的三种存在方式
 
@@ -190,9 +195,9 @@ stores: {
   // → 独立的 REST 适配器，端点继承为 /api/dict/list
   // → 有自己独立的缓存和版本号
 
-  // 状态 3：static 配了 adapter
-  static: { adapter: { ... } },
-  // → 用自己的自定义适配器，不走 HTTP
+  // 状态 3：static 配了 adapter（文件路径）
+  static: { adapter: '~/dict/static-adapter' },
+  // → 用自己的自定义适配器文件，不走 HTTP
 }
 ```
 
@@ -209,12 +214,12 @@ stores: {
 
 每个仓库可配四个字段：
 
-| 字段              | 类型   | 作用                           | 例子                                          |
-| ----------------- | ------ | ------------------------------ | --------------------------------------------- |
-| `baseURL`         | 字符串 | 服务器的地址                   | `https://pay-api.example.com`                 |
-| `dictEndpoint`    | 字符串 | 获取字典数据的接口路径         | `/v1/dictionary`                              |
-| `versionEndpoint` | 字符串 | 获取版本号的接口路径           | `/v1/dictionary/version`                      |
-| `adapter`         | 对象   | 替代默认 HTTP 工具的自定义工具 | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
+| 字段              | 类型   | 作用                           | 例子                            |
+| ----------------- | ------ | ------------------------------ | ------------------------------- |
+| `baseURL`         | 字符串 | 服务器的地址                   | `https://pay-api.example.com`   |
+| `dictEndpoint`    | 字符串 | 获取字典数据的接口路径         | `/v1/dictionary`                |
+| `versionEndpoint` | 字符串 | 获取版本号的接口路径           | `/v1/dictionary/version`        |
+| `adapter`         | 字符串 | 自定义适配器的文件路径         | `'~/dict/static-adapter'`       |
 
 **最终请求的完整 URL = `baseURL` + 对应端点。**
 
@@ -293,20 +298,21 @@ stores: {
 api: {
   baseURL: '/api',
   dictEndpoint: '/dict/list',
-  adapter: myCustomAdapter,   // ← 全局自定义适配器
+  adapter: '~/dict/dict-adapter',   // ← 全局自定义适配器文件路径
 }
 ```
 
 默认仓库 `dicts` 的优先级：
 
-1. 先看 `api.adapter` 有没有配 → 有就直接用
-2. 没配 → 自动创建 REST 适配器（用全局的三个地址字段）
+1. 先看 `api.adapter` 有没有配文件路径 → 有就加载对应的适配器文件
+2. 没配 → 检查约定路径 `~/dict/dict-adapter.ts` 是否存在 → 存在则自动加载
+3. 都没有 → 自动创建 REST 适配器（用全局的三个地址字段）
 
 **2.2 命名仓库（`stores.xxx`）**
 
 ```ts [nuxt.config.ts]
 api: {
-  adapter: myCustomAdapter,   // ← 这个适配器命名仓库看不见！
+  adapter: '~/dict/dict-adapter',   // ← 这个适配器文件路径命名仓库看不见！
 }
 stores: {
   payment: {
@@ -318,9 +324,10 @@ stores: {
 
 `payment` 仓库的逻辑：
 
-1. 先看 `stores.payment.adapter` 有没有配 → 没配
-2. 不会去看 `api.adapter` → **跳过**
-3. 自动创建 REST 适配器（用继承后的地址字段）
+1. 先看 `stores.payment.adapter` 有没有配文件路径 → 没配
+2. 检查约定路径 `~/dict/payment-adapter.ts` 是否存在 → 不存在
+3. 不会去看 `api.adapter` → **跳过**
+4. 自动创建 REST 适配器（用继承后的地址字段）
 
 所以 `payment` 最终走的是 `https://pay-api.example.com/dict/list`（REST），而不是你全局配的自定义适配器。
 
@@ -328,54 +335,71 @@ stores: {
 
 ```ts [nuxt.config.ts]
 // 假设适配器可以继承，会出现这个尴尬的情况：
-api: { adapter: myGlobalAdapter }
+api: { adapter: '~/dict/dict-adapter' }
 
 stores: {
   payment: {},
   logistics: {},
   static: {},
 }
-// payment、logistics、static 三个仓库「共享同一个适配器对象」
-// myGlobalAdapter.fetchDict 被调用时，靠 storeName 参数区分
+// payment、logistics、static 三个仓库都会加载同一个适配器文件
+// 适配器的 fetchDict 被调用时，靠 storeName 参数区分
 // 这不是"继承数据"，这是"用一个工具处理多个来源"
 ```
 
-如果真的想用一个工具处理多个仓库，直接在适配器里按 `storeName` 路由就好——没必要靠"继承"把同一个对象复制到每个仓库。
+如果真的想用一个工具处理多个仓库，直接在适配器里按 `storeName` 路由就好——没必要靠"继承"把同一个文件复制到每个仓库。
 
 **2.3 全局适配器和命名仓库适配器的关系**
 
 两种方式能实现同样的效果，但适用场景不同：
 
-**方式 A：全局适配器 + storeName 路由**
+**方式 A：全局适配器文件 + storeName 路由**
+
+::code-group
+
+```ts [~/dict/dict-adapter.ts]
+// 全局适配器——根据 storeName 路由到不同的地址
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    const urls: Record<string, string> = {
+      dicts: '/api/dict/list',
+      payment: 'https://pay-api.example.com/v1/dictionary',
+      logistics: '/api/logistics/dict',
+    }
+    const url = urls[storeName]
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
+    return res.json()
+  },
+  async fetchVersion(storeName) {
+    const res = await fetch(`/api/version?store=${storeName}`)
+    return (await res.json()).version
+  },
+});
+```
 
 ```ts [nuxt.config.ts]
-api: {
-  adapter: {
-    async fetchDict(storeName, { types, locale }) {
-      const urls: Record<string, string> = {
-        dicts: '/api/dict/list',
-        payment: 'https://pay-api.example.com/v1/dictionary',
-        logistics: '/api/logistics/dict',
-      }
-      const url = urls[storeName]
-      const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-      return res.json()
-    },
-    async fetchVersion(storeName) {
-      const res = await fetch(`/api/version?store=${storeName}`)
-      return (await res.json()).version
-    },
-  },
-}
+// 约定路径 ~/dict/dict-adapter.ts 自动发现
 stores: {
   payment: {},     // 声明了，让模块知道有这个仓库，但配不配端点无所谓
   logistics: {},   // 因为适配器内部已经做了路由
 }
 ```
 
+::
+
 适用于：所有仓库用同一个协议（HTTP），只是地址不同，适配器逻辑完全一样。
 
-**方式 B：每个仓库独立适配器**
+**方式 B：每个仓库独立适配器文件**
+
+::code-group
+
+```ts [~/dict/static-adapter.ts]
+// static 仓库的自定义适配器——完全自定义，不走 HTTP
+export default defineDictAdapter({
+  async fetchDict() { return { version: '1.0', data: { /* ... */ } } },
+  async fetchVersion() { return '1.0' },
+});
+```
 
 ```ts [nuxt.config.ts]
 api: { baseURL: '', dictEndpoint: '/api/dict/list' },
@@ -385,15 +409,12 @@ stores: {
     dictEndpoint: '/v1/dictionary',
     // 不写 adapter → 自动创建 REST 适配器
   },
-  static: {
-    adapter: {
-      // 完全自定义，不走 HTTP
-      async fetchDict() { return { version: '1.0', data: { ... } } },
-      async fetchVersion() { return '1.0' },
-    },
-  },
+  // 约定路径 ~/dict/static-adapter.ts 自动发现
+  static: {},
 }
 ```
+
+::
 
 适用于：不同仓库用完全不同的获取数据方式（HTTP vs 本地文件 vs GraphQL）。
 
@@ -401,17 +422,17 @@ stores: {
 
 把所有可能的情况列出来：
 
-| 仓库类型                  | 条件                      | 使用的适配器                                                                                                                                                                 |
-| ------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dicts`（默认仓库）       | 有 `api.adapter`          | 用 `api.adapter`                                                                                                                                                             |
-| `dicts`（默认仓库）       | 没有 `api.adapter`        | 用 REST：`api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                                                          |
-| `xxx`（在 `stores` 声明） | 有 `stores.xxx.adapter`   | 用 `stores.xxx.adapter`（不受 `api.adapter` 影响）                                                                                                                           |
-| `xxx`（在 `stores` 声明） | 没有 `stores.xxx.adapter` | 用 REST：`stores.xxx.baseURL ?? api.baseURL` + `stores.xxx.dictEndpoint ?? api.dictEndpoint` + `stores.xxx.versionEndpoint ?? api.versionEndpoint`。有独立缓存、独立版本检测 |
-| `yyy`（未声明）           | —                         | 复用 `dicts` 的适配器，共享同一套缓存                                                                                                                                        |
+| 仓库类型                  | 条件                      | 使用的适配器                                                                                                                                                                                   |
+| ------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dicts`（默认仓库）       | 有 `api.adapter`          | 加载 `api.adapter` 指定的适配器文件                                                                                                                                                            |
+| `dicts`（默认仓库）       | 没有 `api.adapter`        | 检查约定路径 `~/dict/dict-adapter.ts` → 存在则加载；否则用 REST：`api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                    |
+| `xxx`（在 `stores` 声明） | 有 `stores.xxx.adapter`   | 加载 `stores.xxx.adapter` 指定的适配器文件（不受 `api.adapter` 影响）                                                                                                                          |
+| `xxx`（在 `stores` 声明） | 没有 `stores.xxx.adapter` | 检查约定路径 `~/dict/xxx-adapter.ts` → 存在则加载；否则用 REST：继承后的地址字段。有独立缓存、独立版本检测                                                                                      |
+| `yyy`（未声明）           | —                         | 复用 `dicts` 的适配器，共享同一套缓存                                                                                                                                                          |
 
 ### 总结一句话
 
-> 三个地址（baseURL / dictEndpoint / versionEndpoint）你写不写都会补上——没写就抄全局。适配器你写就用你的，没写就给你装 HTTP 工具，绝不会去抄全局的。
+> 三个地址（baseURL / dictEndpoint / versionEndpoint）你写不写都会补上——没写就抄全局。适配器你配了文件路径就用你的，没配就检查约定路径（`~/dict/dict-adapter.ts` 或 `~/dict/{storeName}-adapter.ts`），约定路径也没有就给你装 HTTP 工具，绝不会去抄全局的。
 
 ## 本章你学会了
 

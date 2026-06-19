@@ -94,6 +94,27 @@ interface StoreApiOptions {
   baseURL?: string;
   dictEndpoint?: string;
   versionEndpoint?: string;
-  adapter?: DictAdapter;
+  adapter?: string; // 自定义适配器文件路径，如 '~/dict/dict-adapter.ts'
 }
+```
+
+## defineDictAdapter
+
+```ts
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+```
+
+类型辅助函数，用于在独立文件中定义自定义适配器。原样返回传入的适配器对象，仅提供类型约束。
+
+```ts [~/dict/dict-adapter.ts]
+import { defineDictAdapter } from '#imports'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, options) {
+    // 自定义获取逻辑
+  },
+  async fetchVersion(storeName) {
+    // 自定义版本获取逻辑
+  },
+})
 ```

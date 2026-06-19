@@ -35,30 +35,35 @@ export default defineNuxtConfig({
       logistics: {
         dictEndpoint: '/api/logistics/dict',
       },
-      // مخزن static: استفاده از آداپتور سفارشی، بدون درخواست HTTP
-      static: {
-        adapter: {
-          async fetchDict(_storeName, { types, locale }) {
-            // بازگشت مستقیم داده‌های ثابت یا محلی
-            return {
-              version: 'static-1.0',
-              data: {
-                priority: {
-                  type: 'priority',
-                  items: [
-                    { value: 'high', label: `اولویت بالا (${locale})` },
-                    { value: 'low', label: `اولویت پایین (${locale})` },
-                  ],
-                },
-              },
-            };
-          },
-          async fetchVersion(_storeName) {
-            return 'static-1.0';
-          },
+      // مخزن static: استفاده از فایل آداپتور سفارشی، بدون درخواست HTTP
+      // مسیر قراردادی ~/dict/static-adapter.ts به صورت خودکار شناسایی می‌شود
+      static: {},
+    },
+  },
+});
+```
+
+آداپتور مخزن `static` در یک فایل مستقل تعریف شده است:
+
+```ts [~/dict/static-adapter.ts]
+// آداپتور سفارشی مخزن static — بازگشت مستقیم داده‌های ثابت، بدون درخواست HTTP
+export default defineDictAdapter({
+  async fetchDict(_storeName, { types, locale }) {
+    return {
+      version: 'static-1.0',
+      data: {
+        priority: {
+          type: 'priority',
+          items: [
+            { value: 'high', label: `اولویت بالا (${locale})` },
+            { value: 'low', label: `اولویت پایین (${locale})` },
+          ],
         },
       },
-    },
+    };
+  },
+  async fetchVersion(_storeName) {
+    return 'static-1.0';
   },
 });
 ```
@@ -76,11 +81,11 @@ export default defineNuxtConfig({
 - `dictEndpoint` به صورت `/api/logistics/dict` پیکربندی شده ← بازنویسی `/api/dict/list` سراسری
 - `versionEndpoint` پیکربندی نشده ← به ارث بردن `/api/dict/version` سراسری
 
-> فیلد `adapter` خاص است — **به ارث نمی‌رسد**. اگر برای یک مخزن `adapter` پیکربندی نکنید، ماژول به طور خودکار یک آداپتور REST پیش‌فرض برای آن ایجاد می‌کند (با استفاده از پیکربندی endpoint به ارث برده شده آن مخزن) به جای کپی کردن `api.adapter` سراسری.
+> فیلد `adapter` خاص است — **به ارث نمی‌رسد**. اگر برای یک مخزن `adapter` پیکربندی نکنید، ماژول به طور خودکار یک آداپتور REST پیش‌فرض برای آن ایجاد می‌کند (با استفاده از پیکربندی endpoint به ارث برده شده آن مخزن) به جای کپی کردن `api.adapter` سراسری. مقدار `adapter` یک رشته مسیر فایل است (مثلاً `'~/dict/static-adapter'`) که به فایلی اشاره می‌کند که آداپتور را با `defineDictAdapter()` صادر می‌کند.
 
 ## آداپتور سفارشی برای هر مخزن
 
-هر مخزن نام‌گذاری شده می‌تواند آداپتور سفارشی خود را (فیلد `adapter`) پیکربندی کند و جایگزین درخواست REST پیش‌فرض شود. این برای موارد زیر مفید است:
+هر مخزن نام‌گذاری شده می‌تواند فایل آداپتور سفارشی خود را پیکربندی کند (یک رشته مسیر فایل به فیلد `adapter` ارسال کنید) و جایگزین درخواست REST پیش‌فرض شود. فایل‌های آداپتور با استفاده از `defineDictAdapter()` تعریف می‌شوند و مسیر قراردادی `~/dict/{storeName}-adapter.ts` به صورت خودکار توسط ماژول شناسایی می‌شود. این برای موارد زیر مفید است:
 
 - داده‌های دیکشنری از فایل‌های محلی یا پیکربندی ثابت می‌آیند و نیازی به HTTP نیست
 - مخازن مختلف فرمت‌های backend بسیار متفاوتی دارند و نیاز به منطق آداپتور مستقل دارند
@@ -101,7 +106,7 @@ export default defineNuxtConfig({
 </template>
 
 <script setup lang="ts">
-// مخزن static از آداپتور سفارشی استفاده می‌کند، بدون درخواست شبکه
+// مخزن static از فایل آداپتور سفارشی استفاده می‌کند، بدون درخواست شبکه
 const { options: staticOptions } = useDict('static', 'priority');
 
 const priority = ref('');
@@ -209,12 +214,12 @@ const { tree: locTree } = useDictTree('logistics', 'delivery_region');
 
 **۲. آداپتور (adapter) چیست؟**
 
-آداپتور یک "ابزار دریافت داده" است. دو وظیفه دارد:
+آداپتور یک "ابزار دریافت داده" است. در یک فایل مستقل با استفاده از `defineDictAdapter()` تعریف می‌شود و دو وظیفه دارد:
 
 - `fetchDict`: رفتن و دریافت داده‌های دیکشنری
 - `fetchVersion`: بررسی اینکه آیا نسخه تغییر کرده است
 
-ماژول با یک **آداپتور REST پیش‌فرض** داخلی همراه است — به طور خودکار درخواست‌های HTTP به آدرسی که پیکربندی کرده‌اید ارسال می‌کند. اگر به HTTP نیاز ندارید (مثلاً خواندن فایل‌های محلی)، یا فرمت backend شما متفاوت است، می‌توانید آداپتور خود را بنویسید و جایگزین کنید.
+ماژول با یک **آداپتور REST پیش‌فرض** داخلی همراه است — به طور خودکار درخواست‌های HTTP به آدرسی که پیکربندی کرده‌اید ارسال می‌کند. اگر به HTTP نیاز ندارید (مثلاً خواندن فایل‌های محلی)، یا فرمت backend شما متفاوت است، می‌توانید فایل آداپتور خود را بنویسید و جایگزین کنید.
 
 ### سه حالت وجود یک مخزن
 
@@ -240,9 +245,9 @@ stores: {
   // → آداپتور REST مستقل، endpoint به صورت /api/dict/list به ارث می‌رسد
   // → کش و تشخیص نسخه مستقل خود را دارد
 
-  // حالت ۳: static آداپتور پیکربندی شده دارد
-  static: { adapter: { ... } },
-  // → از آداپتور سفارشی خود استفاده می‌کند، بدون درخواست HTTP
+  // حالت ۳: static فایل آداپتور پیکربندی شده دارد
+  static: { adapter: '~/dict/static-adapter' },
+  // → از فایل آداپتور سفارشی خود استفاده می‌کند، بدون درخواست HTTP
 }
 ```
 
@@ -259,12 +264,12 @@ stores: {
 
 هر مخزن می‌تواند چهار فیلد را پیکربندی کند:
 
-| فیلد              | نوع  | هدف                                           | مثال                                          |
-| ----------------- | ---- | --------------------------------------------- | --------------------------------------------- |
-| `baseURL`         | رشته | آدرس سرور                                     | `https://pay-api.example.com`                 |
-| `dictEndpoint`    | رشته | مسیر endpoint برای دریافت داده‌های دیکشنری    | `/v1/dictionary`                              |
-| `versionEndpoint` | رشته | مسیر endpoint برای دریافت شماره نسخه          | `/v1/dictionary/version`                      |
-| `adapter`         | شیء  | ابزار سفارشی برای جایگزینی ابزار HTTP پیش‌فرض | `{ fetchDict(...) {}, fetchVersion(...) {} }` |
+| فیلد              | نوع  | هدف                                        | مثال                            |
+| ----------------- | ---- | ------------------------------------------ | ------------------------------- |
+| `baseURL`         | رشته | آدرس سرور                                  | `https://pay-api.example.com`   |
+| `dictEndpoint`    | رشته | مسیر endpoint برای دریافت داده‌های دیکشنری | `/v1/dictionary`                |
+| `versionEndpoint` | رشته | مسیر endpoint برای دریافت شماره نسخه       | `/v1/dictionary/version`        |
+| `adapter`         | رشته | مسیر فایل آداپتور سفارشی                   | `'~/dict/static-adapter'`       |
 
 **URL نهایی درخواست = `baseURL` + endpoint متناظر.**
 
@@ -286,7 +291,7 @@ payment: {
 
 اگر یک مخزن `baseURL`، `dictEndpoint` یا `versionEndpoint` را تنظیم نکند، به طور خودکار از پیکربندی `api` سراسری کپی می‌شوند.
 
-**مثال ۱: یکی تنظیم شده، دو تا缺失**
+**مثال ۱: یکی تنظیم شده، دو تا نشده**
 
 ```ts [nuxt.config.ts]
 api: { baseURL: '/api', dictEndpoint: '/dict/list', versionEndpoint: '/dict/version' }
@@ -343,19 +348,20 @@ stores: {
 api: {
   baseURL: '/api',
   dictEndpoint: '/dict/list',
-  adapter: myCustomAdapter,   // ← آداپتور سفارشی سراسری
+  adapter: '~/dict/dict-adapter',   // ← مسیر فایل آداپتور سفارشی سراسری
 }
 ```
 
 اولویت مخزن پیش‌فرض `dicts`:
-۱. بررسی می‌کند که آیا `api.adapter` تنظیم شده → اگر بله، از آن استفاده کن
-۲. اگر نه → به طور خودکار آداپتور REST ایجاد کن (با استفاده از سه فیلد آدرس سراسری)
+۱. بررسی می‌کند که آیا `api.adapter` مسیر فایل دارد → اگر بله، فایل آداپتور را بارگذاری کن
+۲. اگر نه → بررسی مسیر قراردادی `~/dict/dict-adapter.ts` → اگر وجود داشته باشد، به صورت خودکار بارگذاری کن
+۳. هیچکدام → به طور خودکار آداپتور REST ایجاد کن (با استفاده از سه فیلد آدرس سراسری)
 
 **۲.۲ مخازن نام‌گذاری شده (`stores.xxx`)**
 
 ```ts [nuxt.config.ts]
 api: {
-  adapter: myCustomAdapter,   // ← مخازن نام‌گذاری شده این آداپتور را نمی‌بینند!
+  adapter: '~/dict/dict-adapter',   // ← مخازن نام‌گذاری شده این آداپتور را نمی‌بینند!
 }
 stores: {
   payment: {
@@ -366,9 +372,10 @@ stores: {
 ```
 
 منطق مخزن `payment`:
-۱. بررسی می‌کند که آیا `stores.payment.adapter` تنظیم شده → تنظیم نشده
-۲. به `api.adapter` نگاه نمی‌کند → **از آن می‌گذرد**
-۳. به طور خودکار آداپتور REST ایجاد می‌کند (با استفاده از فیلدهای آدرس به ارث برده شده)
+۱. بررسی می‌کند که آیا `stores.payment.adapter` مسیر فایل دارد → ندارد
+۲. بررسی مسیر قراردادی `~/dict/payment-adapter.ts` → وجود ندارد
+۳. به `api.adapter` نگاه نمی‌کند → **از آن می‌گذرد**
+۴. به طور خودکار آداپتور REST ایجاد می‌کند (با استفاده از فیلدهای آدرس به ارث برده شده)
 
 بنابراین `payment` در نهایت `https://pay-api.example.com/dict/list` (REST) را فراخوانی می‌کند، نه آداپتور سفارشی سراسری شما را.
 
@@ -376,54 +383,71 @@ stores: {
 
 ```ts [nuxt.config.ts]
 // اگر وراثت آداپتور مجاز بود، این وضعیت awkward رخ می‌داد:
-api: { adapter: myGlobalAdapter }
+api: { adapter: '~/dict/dict-adapter' }
 
 stores: {
   payment: {},
   logistics: {},
   static: {},
 }
-// payment، logistics و static همه «یک شیء آداپتور را به اشتراک می‌گذارند»
-// myGlobalAdapter.fetchDict برای هر سه فراخوانی می‌شود، فقط با storeName متمایز می‌شود
+// payment، logistics و static همه فایل آداپتور یکسانی را بارگذاری می‌کردند
+// fetchDict آداپتور برای هر سه فراخوانی می‌شد، فقط با storeName متمایز می‌شد
 // این «به ارث بردن داده» نیست — این «استفاده از یک ابزار برای مدیریت چندین منبع» است
 ```
 
-اگر واقعاً می‌خواهید یک ابزار چندین مخزن را مدیریت کند، فقط داخل آداپتور بر اساس `storeName` مسیریابی کنید — نیازی به «به ارث بردن» همان شیء به هر مخزن نیست.
+اگر واقعاً می‌خواهید یک ابزار چندین مخزن را مدیریت کند، فقط داخل آداپتور بر اساس `storeName` مسیریابی کنید — نیازی به «به ارث بردن» همان فایل به هر مخزن نیست.
 
 **۲.۳ رابطه بین آداپتور سراسری و آداپتورهای هر مخزن**
 
 هر دو رویکرد نتایج مشابهی دارند، اما برای سناریوهای مختلف مناسب هستند:
 
-**رویکرد A: آداپتور سراسری + مسیریابی storeName**
+**رویکرد A: فایل آداپتور سراسری + مسیریابی storeName**
+
+::code-group
+
+```ts [~/dict/dict-adapter.ts]
+// آداپتور سراسری — مسیریابی به آدرس‌های مختلف بر اساس storeName
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    const urls: Record<string, string> = {
+      dicts: '/api/dict/list',
+      payment: 'https://pay-api.example.com/v1/dictionary',
+      logistics: '/api/logistics/dict',
+    }
+    const url = urls[storeName]
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
+    return res.json()
+  },
+  async fetchVersion(storeName) {
+    const res = await fetch(`/api/version?store=${storeName}`)
+    return (await res.json()).version
+  },
+});
+```
 
 ```ts [nuxt.config.ts]
-api: {
-  adapter: {
-    async fetchDict(storeName, { types, locale }) {
-      const urls: Record<string, string> = {
-        dicts: '/api/dict/list',
-        payment: 'https://pay-api.example.com/v1/dictionary',
-        logistics: '/api/logistics/dict',
-      }
-      const url = urls[storeName]
-      const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-      return res.json()
-    },
-    async fetchVersion(storeName) {
-      const res = await fetch(`/api/version?store=${storeName}`)
-      return (await res.json()).version
-    },
-  },
-}
+// مسیر قراردادی ~/dict/dict-adapter.ts به صورت خودکار شناسایی می‌شود
 stores: {
   payment: {},     // اعلام شده تا ماژول بداند وجود دارد — پیکربندی endpoint مهم نیست
   logistics: {},   // چون آداپتور مسیریابی را داخلی مدیریت می‌کند
 }
 ```
 
+::
+
 مناسب برای: همه مخازن از پروتکل یکسان (HTTP) استفاده می‌کنند، فقط آدرس‌ها متفاوت هستند، منطق آداپتور یکسان است.
 
-**رویکرد B: آداپتورهای مستقل هر مخزن**
+**رویکرد B: فایل‌های آداپتور مستقل هر مخزن**
+
+::code-group
+
+```ts [~/dict/static-adapter.ts]
+// آداپتور سفارشی مخزن static — کاملاً سفارشی، بدون HTTP
+export default defineDictAdapter({
+  async fetchDict() { return { version: '1.0', data: { /* ... */ } } },
+  async fetchVersion() { return '1.0' },
+});
+```
 
 ```ts [nuxt.config.ts]
 api: { baseURL: '', dictEndpoint: '/api/dict/list' },
@@ -433,15 +457,12 @@ stores: {
     dictEndpoint: '/v1/dictionary',
     // آداپتور نوشته نشده ← به طور خودکار آداپتور REST ایجاد می‌کند
   },
-  static: {
-    adapter: {
-      // کاملاً سفارشی، بدون HTTP
-      async fetchDict() { return { version: '1.0', data: { ... } } },
-      async fetchVersion() { return '1.0' },
-    },
-  },
+  // مسیر قراردادی ~/dict/static-adapter.ts به صورت خودکار شناسایی می‌شود
+  static: {},
 }
 ```
+
+::
 
 مناسب برای: مخازن مختلف از رویکردهای کاملاً متفاوت دریافت داده استفاده می‌کنند (HTTP در مقابل فایل‌های محلی در مقابل GraphQL).
 
@@ -449,17 +470,17 @@ stores: {
 
 همه حالات ممکن فهرست شده است:
 
-| نوع مخزن                      | شرط                             | آداپتور استفاده شده                                                                                                                                                                           |
-| ----------------------------- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم شده         | از `api.adapter` استفاده می‌کند                                                                                                                                                               |
-| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم نشده        | از REST استفاده می‌کند: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                                                            |
-| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم شده  | از `stores.xxx.adapter` استفاده می‌کند (تحت تأثیر `api.adapter` قرار نمی‌گیرد)                                                                                                                |
-| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم نشده | از REST استفاده می‌کند: `stores.xxx.baseURL ?? api.baseURL` + `stores.xxx.dictEndpoint ?? api.dictEndpoint` + `stores.xxx.versionEndpoint ?? api.versionEndpoint`. کش و تشخیص نسخه مستقل دارد |
-| `yyy` (اعلام نشده)            | —                               | از آداپتور `dicts` استفاده مجدد می‌کند، کش یکسان را به اشتراک می‌گذارد                                                                                                                        |
+| نوع مخزن                      | شرط                             | آداپتور استفاده شده                                                                                                                                                                                          |
+| ----------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم شده         | فایل آداپتور مشخص شده توسط `api.adapter` را بارگذاری می‌کند                                                                                                                                                  |
+| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم نشده        | مسیر قراردادی `~/dict/dict-adapter.ts` را بررسی می‌کند → اگر وجود داشته باشد بارگذاری؛ در غیر این صورت REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                       |
+| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم شده  | فایل آداپتور مشخص شده توسط `stores.xxx.adapter` را بارگذاری می‌کند (تحت تأثیر `api.adapter` قرار نمی‌گیرد)                                                                                                   |
+| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم نشده | مسیر قراردادی `~/dict/xxx-adapter.ts` را بررسی می‌کند → اگر وجود داشته باشد بارگذاری؛ در غیر این صورت REST با فیلدهای آدرس به ارث برده شده. کش و تشخیص نسخه مستقل دارد                                        |
+| `yyy` (اعلام نشده)            | —                               | از آداپتور `dicts` استفاده مجدد می‌کند، کش یکسان را به اشتراک می‌گذارد                                                                                                                                        |
 
 ### خلاصه در یک جمله
 
-> سه فیلد آدرس (baseURL / dictEndpoint / versionEndpoint) همیشه پر می‌شوند — اگر تنظیم نکنید، از پیکربندی سراسری کپی می‌شوند. آداپتوری که تنظیم می‌کنید همان استفاده می‌شود؛ اگر تنظیم نکنید، یک ابزار HTTP برایتان نصب می‌شود — هرگز از آداپتور سراسری کپی نمی‌شود.
+> سه فیلد آدرس (baseURL / dictEndpoint / versionEndpoint) همیشه پر می‌شوند — اگر تنظیم نکنید، از پیکربندی سراسری کپی می‌شوند. اگر مسیر فایل آداپتور را تنظیم کنید، آن آداپتور استفاده می‌شود؛ اگر تنظیم نکنید، مسیر قراردادی (`~/dict/dict-adapter.ts` یا `~/dict/{storeName}-adapter.ts`) بررسی می‌شود؛ اگر آن هم وجود نداشته باشد، یک ابزار HTTP برایتان نصب می‌شود — هرگز از آداپتور سراسری کپی نمی‌شود.
 
 ## آنچه در این فصل آموختید
 

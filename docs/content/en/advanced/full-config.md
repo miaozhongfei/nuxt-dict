@@ -37,9 +37,9 @@ This chapter lists all fields in the `dict` configuration of `nuxt.config.ts`.
 
 ## api.adapter
 
-| Type                       | Default     | Description                                                                                                                                    |
-| -------------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DictAdapter \| undefined` | `undefined` | Custom dictionary adapter for the default `dicts` store. Named stores use `stores.xxx.adapter`. See [Custom Adapter](/advanced/custom-adapter) |
+| Type                     | Default     | Description                                                                                                                                                                                                                       |
+| ------------------------ | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `string \| undefined` | `undefined` | File path to a custom adapter (e.g. `'~/dict/dict-adapter.ts'`). If a file exists at the convention path `~/dict/dict-adapter.ts`, the module auto-discovers and registers it without manual config. Named stores use `stores.xxx.adapter`. See [Custom Adapter](/advanced/custom-adapter) |
 
 ## cache.memoryMax
 
@@ -118,7 +118,7 @@ Per-store fields:
 - **`baseURL`**: API base URL, inherits global `api.baseURL` if not set
 - **`dictEndpoint`**: Dictionary list endpoint, inherits global `api.dictEndpoint` if not set
 - **`versionEndpoint`**: Version endpoint, inherits global `api.versionEndpoint` if not set
-- **`adapter`**: Custom adapter for this store (**not inherited**; a REST adapter is auto-created if not set)
+- **`adapter`**: File path to a custom adapter for this store (`string`, **not inherited**; a REST adapter is auto-created if not set)
 
 See [Multi-Store](/advanced/multi-store).
 

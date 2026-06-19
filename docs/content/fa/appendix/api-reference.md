@@ -94,6 +94,27 @@ interface StoreApiOptions {
   baseURL?: string;
   dictEndpoint?: string;
   versionEndpoint?: string;
-  adapter?: DictAdapter;
+  adapter?: string; // مسیر فایل آداپتور سفارشی، مثلاً '~/dict/dict-adapter.ts'
 }
+```
+
+## defineDictAdapter
+
+```ts
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+```
+
+تابع کمکی نوع برای تعریف آداپتورهای سفارشی در فایل‌های جداگانه. آداپتور را بدون تغییر برمی‌گرداند؛ فقط محدودیت‌های نوع را فراهم می‌کند.
+
+```ts [~/dict/dict-adapter.ts]
+import { defineDictAdapter } from '#imports'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, options) {
+    // منطق واکشی سفارشی
+  },
+  async fetchVersion(storeName) {
+    // منطق واکشی نسخه سفارشی
+  },
+})
 ```

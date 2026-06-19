@@ -94,6 +94,27 @@ interface StoreApiOptions {
   baseURL?: string;
   dictEndpoint?: string;
   versionEndpoint?: string;
-  adapter?: DictAdapter;
+  adapter?: string; // File path to a custom adapter, e.g. '~/dict/dict-adapter.ts'
 }
+```
+
+## defineDictAdapter
+
+```ts
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+```
+
+Type helper for defining custom adapters in separate files. Returns the adapter as-is; only provides type constraints.
+
+```ts [~/dict/dict-adapter.ts]
+import { defineDictAdapter } from '#imports'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, options) {
+    // Custom fetch logic
+  },
+  async fetchVersion(storeName) {
+    // Custom version fetch logic
+  },
+})
 ```
