@@ -1,6 +1,6 @@
 {
   "name": "@lacqjs/nuxt-dict",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Nuxt 数据字典模块，提供扁平/树形字典翻译、多语言国际化、三级缓存与 SSR 预取。",
   "keywords": [
     "@lacqjs/nuxt-dict",
@@ -21,17 +21,17 @@
   ],
   "type": "module",
   "main": "./dist/module.mjs",
-  "types": "./dist/types.d.mts",
+  "types": "./dist/module.d.mts",
   "typesVersions": {
     "*": {
       ".": [
-        "./dist/types.d.mts"
+        "./dist/module.d.mts"
       ]
     }
   },
   "exports": {
     ".": {
-      "types": "./dist/types.d.mts",
+      "types": "./dist/module.d.mts",
       "import": "./dist/module.mjs"
     }
   },
@@ -40,7 +40,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "cleanup": "pnpx nuxt cleanup || npx nuxt cleanup",
+    "cleanup": "(pnpx nuxt cleanup || npx nuxt cleanup) && pnpx rimraf .nuxt .output dist node_modules .data",
     "clean:install": "pnpm run cleanup && pnpm run docs:cleanup && pnpm run playground:cleanup && pnpm install",
     "prepack": "nuxt-module-build build",
     "dev": "pnpm run dev:prepare && nuxi dev playground",
