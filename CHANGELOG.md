@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.0.6
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.5...v0.0.6)
+
+### 🚀 Enhancements
+
+- 支持文件路径式自定义适配器，解决 runtimeConfig 函数序列化问题 ([2368550](https://github.com/miaozhongfei/nuxt-dict/commit/2368550))
+
+### 🩹 Fixes
+
+- 示例页面用 useState 替代 ref，修复多语言切换时下拉框选中值丢失 ([81cc7ae](https://github.com/miaozhongfei/nuxt-dict/commit/81cc7ae))
+
+### 💅 Refactors
+
+- 同步更新 playground 中的 adapter 注释与展示页，适配文件路径方式 ([8c4f540](https://github.com/miaozhongfei/nuxt-dict/commit/8c4f540))
+
+### 📖 Documentation
+
+- 补充 useDict/$dict 作用域与响应式行为说明，新建 scope-compare 演示页 ([5d71d02](https://github.com/miaozhongfei/nuxt-dict/commit/5d71d02))
+- 更新全部适配器文档，适配文件路径方式和 defineDictAdapter 辅助函数 ([e00a67f](https://github.com/miaozhongfei/nuxt-dict/commit/e00a67f))
+
+### 🏡 Chore
+
+- Nuxt dev 自动更新 .nuxtrc 版本号 ([9a97886](https://github.com/miaozhongfei/nuxt-dict/commit/9a97886))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.5
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.4...v0.0.5)
