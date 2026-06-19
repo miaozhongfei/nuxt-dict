@@ -1,6 +1,8 @@
+/* eslint-disable max-lines */
 import {
   addImportsDir,
   addPlugin,
+  addTemplate,
   addTypeTemplate,
   createResolver,
   defineNuxtModule,
@@ -8,6 +10,8 @@ import {
 } from '@nuxt/kit';
 import type { Resolver } from '@nuxt/kit';
 import type { Nuxt } from '@nuxt/schema';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import pkg from '../package.json';
 import { defaultOptions } from './runtime/options';
@@ -17,6 +21,7 @@ import { createLogger } from './runtime/utils/logger';
 export type { ModuleOptions };
 export type { DictManager } from './runtime/core/dict-manager';
 export type {
+  DictAdapter,
   DictTranslator,
   DictItem,
   TreeNode,
@@ -25,6 +30,7 @@ export type {
   GetDictItemOptions,
 } from './runtime/types';
 export { createDictTranslator } from './runtime/utils/dict-translator';
+export { defineDictAdapter } from './runtime/utils/define-adapter';
 
 /**
  * 注册类型模板：NuxtApp 扩展声明 + 仓库名字面量联合类型。
@@ -184,6 +190,30 @@ declare module '#app' {
 }
 
 /**
+ * 解析自定义适配器文件路径：显式配置 > 约定路径自动发现。
+ * 约定路径为 ~/dict/{conventionName}.ts（或 .js / .mjs）。
+ * @param nuxt Nuxt 实例，用于读取 srcDir
+ * @param explicitPath 用户在配置中显式指定的文件路径（如 '~/dict/dict-adapter'）
+ * @param conventionName 约定文件名（不含扩展名），如 'dict-adapter' 或 '{storeName}-adapter'
+ * @returns 解析后的文件路径字符串，未找到时返回 undefined
+ */
+function resolveAdapterPath(
+  nuxt: Nuxt,
+  explicitPath: unknown,
+  conventionName: string,
+): string | undefined {
+  // 显式配置优先（类型检查确保为有效字符串）
+  if (typeof explicitPath === 'string') return explicitPath;
+  // 约定路径发现：检查 ~/dict/{conventionName}.{ts,js,mjs}
+  const base = resolve(nuxt.options.srcDir, 'dict', conventionName);
+  for (const ext of ['.ts', '.js', '.mjs']) {
+    // 规范化为正斜杠，兼容 Windows 路径在 import 语句中的使用
+    if (existsSync(base + ext)) return (base + ext).replaceAll('\\', '/');
+  }
+  return undefined;
+}
+
+/**
  * Nuxt Dict 模块入口。
  * 提供字典数据的统一管理、缓存、翻译和 SSR 预取能力。
  * 用户通过 nuxt.config.ts 的 `dict` 配置项进行定制。
@@ -209,8 +239,78 @@ export default defineNuxtModule<ModuleOptions>().with({
     }
     const resolver = createResolver(import.meta.url);
 
-    // 将解析后的选项写入 runtimeConfig，供运行时插件读取
-    _nuxt.options.runtimeConfig.public.dict = _options;
+    // ── 自定义适配器：约定路径发现 + 显式配置 ──
+    const globalAdapterPath = resolveAdapterPath(
+      _nuxt, _options.api?.adapter, 'dict-adapter',
+    );
+
+    const storeAdapterPaths: Record<string, string> = {};
+    for (const [name, config] of Object.entries(_options.stores ?? {})) {
+      const adapterPath = resolveAdapterPath(
+        _nuxt, config.adapter, `${name}-adapter`,
+      );
+      if (adapterPath) storeAdapterPaths[name] = adapterPath;
+    }
+
+    // 生成 virtual module: 全局 adapter + per-store adapters（插件通过 import 获取，不经序列化）
+    addTemplate({
+      filename: 'nuxt-dict/adapters.ts',
+      getContents: () => {
+        let code = '';
+        // 全局 adapter
+        if (globalAdapterPath) {
+          code += `export { default as globalAdapter } from '${globalAdapterPath}'\n`;
+        } else {
+          code += 'export const globalAdapter = undefined\n';
+        }
+        // per-store adapters
+        const entries = Object.entries(storeAdapterPaths);
+        if (entries.length > 0) {
+          code += entries.map(([name, p]) =>
+            `import adapter_${name.replaceAll(/\W/gu, '_')} from '${p}'`,
+          ).join('\n') + '\n';
+          code += `export const storeAdapters = { ${entries.map(([name]) =>
+            `'${name}': adapter_${name.replaceAll(/\W/gu, '_')}`,
+          ).join(', ')} }\n`;
+        } else {
+          code += 'export const storeAdapters = {} as Record<string, never>\n';
+        }
+        return code;
+      },
+    });
+
+    // 生成 virtual module 的类型声明
+    addTypeTemplate({
+      filename: 'types/nuxt-dict-adapters.d.ts',
+      getContents: () => `
+declare module '#build/nuxt-dict/adapters' {
+  import type { DictAdapter } from '@lacqjs/nuxt-dict'
+  export const globalAdapter: DictAdapter | undefined
+  export const storeAdapters: Record<string, DictAdapter>
+}
+`,
+    });
+
+    // 内联函数适配器的兼容性警告
+    if (_options.api?.adapter && typeof _options.api.adapter !== 'string') {
+      logger.warn(
+        'dict.api.adapter 不支持内联函数（无法序列化到客户端）。'
+        + '请改用文件路径或将文件放在约定位置 ~/dict/dict-adapter.ts',
+      );
+    }
+
+    // 剥离 adapter 后写入 runtimeConfig（adapter 通过 virtual module 传递，不走序列化）
+    const { adapter: _globalAdapter, ...apiWithoutAdapter } = _options.api;
+    const sanitizedStores: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(_options.stores ?? {})) {
+      const { adapter: _storeAdapter, ...rest } = v;
+      sanitizedStores[k] = rest;
+    }
+    _nuxt.options.runtimeConfig.public.dict = {
+      ..._options,
+      api: apiWithoutAdapter,
+      stores: sanitizedStores,
+    };
 
     // 确保运行时目录被转译（支持现代 ES 语法）
     _nuxt.options.build.transpile.push(resolver.resolve('./runtime'));

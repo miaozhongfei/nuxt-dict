@@ -52,6 +52,7 @@
     "docs:cleanup": "pnpx rimraf docs/.nuxt docs/.output docs/dist docs/node_modules docs/.data",
     "playground:cleanup": "pnpx rimraf playground/.nuxt playground/.output playground/dist playground/node_modules",
     "demo:base-api:dev": "nuxi dev examples/demo-base-api",
+    "demo:base-adapter:dev": "nuxi dev examples/demo-base-adapter",
     "release": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push origin dev --follow-tags",
     "release:major": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release --major && pnpm publish && git push origin dev --follow-tags",
     "release:e2e": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release && pnpm publish && git push origin dev --follow-tags",

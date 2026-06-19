@@ -1,0 +1,17 @@
+{
+  "nav": {
+    "home": "首页",
+    "useDict": "useDict",
+    "useDictTree": "useDictTree",
+    "dollarDict": "$dict 同步翻译",
+    "scopeCompare": "作用域",
+    "elementPlus": "Element Plus",
+    "vant": "Vant",
+    "nuxtUi": "Nuxt UI"
+  },
+  "home": {
+    "title": "nuxt-dict 示例",
+    "subtitle": "仅配置 api.baseURL，其余全部默认。示例涵盖全部核心 API 和主流 UI 库集成。",
+    "apiNote": "server 端模拟字典接口，生产环境只需修改 nuxt.config.ts 中的 dict.api.baseURL 即可替换为 Java 后端或第三方接口。"
+  }
+}

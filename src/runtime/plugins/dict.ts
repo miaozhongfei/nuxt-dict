@@ -2,6 +2,7 @@ import { watch } from 'vue';
 
 import { defineNuxtPlugin, useRequestEvent, useCookie, useRoute } from '#imports';
 
+import { globalAdapter, storeAdapters } from '#build/nuxt-dict/adapters';
 import { createDefaultAdapter } from '../core/adapter';
 import { IndexedDBCache, DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache';
 import { DictManager } from '../core/dict-manager';
@@ -135,9 +136,9 @@ function createAdapters(
 ): Map<string, DictAdapter> {
   const adapters = new Map<string, DictAdapter>();
 
-  // 默认仓库 'dicts'：使用全局 api 配置（用户可通过 api.adapter 自定义）
+  // 默认仓库 'dicts'：优先使用 virtual module 导入的自定义适配器
   const defaultAdapter =
-    options.api.adapter ??
+    globalAdapter ??
     createDefaultAdapter({
       baseURL: resolveBaseURL(options.api.baseURL),
       dictEndpoint: options.api.dictEndpoint,
@@ -150,10 +151,10 @@ function createAdapters(
     `Dict adapter created for default store '${DEFAULT_STORE_NAME}': ${options.api.baseURL}${options.api.dictEndpoint}`,
   );
 
-  // 为 stores 中配置的每个仓库创建 adapter（优先用自定义 adapter，否则用默认 REST adapter，未配项继承全局 api 默认值）
+  // 为 stores 中配置的每个仓库创建 adapter（优先用 virtual module 导入的自定义 adapter，否则用默认 REST adapter）
   for (const [storeName, storeApi] of Object.entries(options.stores)) {
     const adapter =
-      storeApi.adapter ??
+      storeAdapters[storeName] ??
       createDefaultAdapter({
         baseURL: resolveBaseURL(storeApi.baseURL ?? options.api.baseURL),
         dictEndpoint: storeApi.dictEndpoint ?? options.api.dictEndpoint,
@@ -162,7 +163,7 @@ function createAdapters(
         apiHeaderKey: options.locale.apiHeaderKey,
       });
     adapters.set(storeName, adapter);
-    const desc = storeApi.adapter
+    const desc = storeAdapters[storeName]
       ? 'custom adapter'
       : `${storeApi.baseURL ?? options.api.baseURL}${storeApi.dictEndpoint ?? options.api.dictEndpoint}`;
     logger.debug(`Dict adapter created for store '${storeName}': ${desc}`);
