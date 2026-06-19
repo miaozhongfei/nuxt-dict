@@ -137,6 +137,18 @@ const { data: payData } = useDict('payment', 'status');
 
 See [Multi-Store](/advanced/multi-store) for details.
 
+## Scope & Reactivity
+
+`useDict` is a **component-level** composable. Each calling component holds its own `shallowRef`. Data is auto-fetched on mount (`onMounted`), and the template re-renders automatically when data changes. Locale switches trigger auto-reload via `manager.locale` watcher.
+
+- **Reactive**: Yes. `data` is a `ShallowRef` — Vue tracks reference changes, template updates automatically
+- **Call site**: Must be called at the top level of `<script setup>`, not inside callbacks / conditionals / regular functions
+- **Best for**: Template binding (select options, list rendering, tree display)
+
+`$dict` is a **global** synchronous translator with no Vue reactivity. See [$dict Translate](/guide/dollar-dict).
+
+:read-more{to="/guide/dollar-dict"}
+
 ## Notes
 
 > `translate()` still works when `data` is `null`, but returns the code as a string. Ensure you use `v-if="data"` or loading state guards.

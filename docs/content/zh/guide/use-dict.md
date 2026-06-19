@@ -150,6 +150,18 @@ const { data: payData } = useDict('payment', 'status');
 
 > 多仓库的详细配置见 [多仓库](/advanced/multi-store) 章节。
 
+## 作用域与响应式行为
+
+`useDict` 是**组件级** composable，每个调用组件持有独立的 `shallowRef`。组件挂载（`onMounted`）时自动请求字典数据，数据到达后模板自动重渲染。语言切换时监听 `manager.locale` 变化自动重新加载。
+
+- **响应式**：是。`data` 为 `ShallowRef`，Vue 追踪其引用变化，模板自动更新
+- **调用位置**：必须在 `<script setup>` 顶层调用，不能在回调 / 条件分支 / 普通函数中调用
+- **适合场景**：模板绑定（select 选项、列表渲染、树形展示）
+
+`$dict` 是**全局级**同步翻译器，不产生 Vue 响应式依赖。详见 [$dict 同步翻译](/guide/dollar-dict)。
+
+:read-more{to="/guide/dollar-dict"}
+
 ## 注意事项
 
 > `translate()` 在 `data` 为 `null` 时仍可调用，但会返回 code 原文。确保在 `v-if="data"` 或用 loading 状态包裹。

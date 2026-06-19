@@ -19,6 +19,8 @@ useDict(storeName: string, type: string): UseDictReturn
 | `error`       | `Ref<string \| null>`                                | 错误信息                                     |
 | `refresh`     | `() => Promise<void>`                                | 手动刷新                                     |
 
+**作用域**：组件级响应式。在 `<script setup>` 顶层调用，组件挂载时自动加载，数据变化后模板自动重渲染。
+
 ## useDictTree
 
 ```
@@ -33,6 +35,8 @@ useDictTree(storeName: string, type: string): UseDictTreeReturn
 | `findPath`  | `(value: string \| number) => string[]` | 路径回溯     |
 | `loading`   | `Ref<boolean>`                          | 加载状态     |
 | `refresh`   | `() => Promise<void>`                   | 手动刷新     |
+
+**作用域**：组件级响应式，与 `useDict` 一致。挂载时自动加载树形数据。
 
 ## useLocale
 
@@ -54,6 +58,8 @@ useLocale(): { locale, setLocale, locales }
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })`  |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → 返回追加了翻译字段的新对象                                   |
 | `getDictItem`   | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → 返回完整 DictItem 对象 |
+
+**作用域**：全局同步非响应式。直接读取管理器内存缓存，不触发 Vue 重渲染。适合 computed、表格 formatter 等场景。使用前需通过 `useDict` / `useDictTree` 加载数据。
 
 ## 类型定义
 
@@ -88,6 +94,27 @@ interface StoreApiOptions {
   baseURL?: string;
   dictEndpoint?: string;
   versionEndpoint?: string;
-  adapter?: DictAdapter;
+  adapter?: string; // 自定义适配器文件路径，如 '~/dict/dict-adapter.ts'
 }
+```
+
+## defineDictAdapter
+
+```ts
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+```
+
+类型辅助函数，用于在独立文件中定义自定义适配器。原样返回传入的适配器对象，仅提供类型约束。
+
+```ts [~/dict/dict-adapter.ts]
+import { defineDictAdapter } from '#imports'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, options) {
+    // 自定义获取逻辑
+  },
+  async fetchVersion(storeName) {
+    // 自定义版本获取逻辑
+  },
+})
 ```

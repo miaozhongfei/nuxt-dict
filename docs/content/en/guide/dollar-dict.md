@@ -157,15 +157,17 @@ $dict.translateData(
 
 > When mapping value is a `string`, the default store is used. To specify a store, use `{ type: 'status', storeName: 'dicts2' }`. The suffix defaults to `'_label'` and can be customized via the third parameter.
 
-## vs useDict.translate
+## Scope: useDict vs $dict
 
-|                | `$dict.translate()`                         | `useDict().translate()`            |
-| -------------- | ------------------------------------------- | ---------------------------------- |
-| Mount required | No                                          | `useDict` loads in `onMounted`     |
-| Data source    | Global memory cache                         | Component's `data` ref             |
-| Use case       | Quick translation, shared across components | When loading/error state is needed |
+| Feature       | useDict                              | $dict                               |
+| ------------- | ------------------------------------ | ----------------------------------- |
+| **Scope**     | Component-local                      | Global                              |
+| **Reactive**  | ✅ Triggers re-render on data change | ❌ No re-render                     |
+| **Call site** | `<script setup>` top level           | Anywhere (template / computed / JS) |
+| **Loading**   | Auto-fetch on mount                  | Reads existing cache                |
+| **Best for**  | Template binding                     | computed / formatter / JS logic     |
 
-> **Best practice:** Load a dictionary type once with `useDict` in a root component, then use `$dict.translate()` everywhere else.
+`useDict` manages dictionary data within a component, ideal for template binding. `$dict` reads directly from global cache without reactive side effects, perfect for computed properties and table formatters.
 
 ## What You Learned
 

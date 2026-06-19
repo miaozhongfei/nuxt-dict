@@ -27,36 +27,6 @@ export default defineNuxtConfig({
 });
 ```
 
-```ts [GraphQL 适配器]
-export default defineNuxtConfig({
-  modules: ['@lacqjs/nuxt-dict'],
-  dict: {
-    api: {
-      adapter: {
-        async fetchDict(storeName, { types, locale }) {
-          const res = await fetch('https://gql.example.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              query: `{ dict(types: [${types.map((t) => `"${t}"`)}], locale: "${locale}") { version data { type items { code label } } } }`,
-            }),
-          });
-          return (await res.json()).data.dict;
-        },
-        async fetchVersion(storeName) {
-          const res = await fetch('https://gql.example.com', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: '{ dictVersion }' }),
-          });
-          return (await res.json()).data.dictVersion;
-        },
-      },
-    },
-  },
-});
-```
-
 ```ts [多仓库]
 export default defineNuxtConfig({
   modules: ['@lacqjs/nuxt-dict'],
@@ -65,39 +35,6 @@ export default defineNuxtConfig({
     stores: {
       payment: { baseURL: 'https://pay-api.example.com', dictEndpoint: '/v1/dictionary' },
       logistics: { dictEndpoint: '/api/logistics/dict' },
-    },
-  },
-});
-```
-
-```ts [仓库自定义适配器]
-export default defineNuxtConfig({
-  modules: ['@lacqjs/nuxt-dict'],
-  dict: {
-    api: { baseURL: '', dictEndpoint: '/api/dict/list' },
-    stores: {
-      // 命名仓库使用自定义适配器，不发起 HTTP 请求
-      static: {
-        adapter: {
-          async fetchDict(_storeName, { types, locale }) {
-            return {
-              version: 'static-1.0',
-              data: {
-                priority: {
-                  type: 'priority',
-                  items: [
-                    { value: 'high', label: `高 (${locale})` },
-                    { value: 'low', label: `低 (${locale})` },
-                  ],
-                },
-              },
-            };
-          },
-          async fetchVersion(_storeName) {
-            return 'static-1.0';
-          },
-        },
-      },
     },
   },
 });
@@ -128,6 +65,97 @@ export default defineNuxtConfig({
       apiHeaderKey: 'X-Locale',
     },
     ssr: { prefetch: ['gender', 'status', 'industry'] },
+  },
+});
+```
+
+::
+
+## GraphQL 适配器
+
+适配器定义在独立文件中，使用 `defineDictAdapter()` 创建。文件放在 `~/dict/dict-adapter.ts`（全局适配器约定路径），模块自动发现。
+
+::code-group
+
+```ts [~/dict/dict-adapter.ts]
+// 全局 GraphQL 适配器——替代默认 REST 请求
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    // 通过 GraphQL 查询字典数据
+    const res = await fetch('https://gql.example.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `{ dict(types: [${types.map((t) => `"${t}"`)}], locale: "${locale}") { version data { type items { code label } } } }`,
+      }),
+    });
+    return (await res.json()).data.dict;
+  },
+  async fetchVersion(storeName) {
+    // 通过 GraphQL 查询版本号
+    const res = await fetch('https://gql.example.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: '{ dictVersion }' }),
+    });
+    return (await res.json()).data.dictVersion;
+  },
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      // 约定路径 ~/dict/dict-adapter.ts 自动发现，也可以显式指定：
+      // adapter: '~/dict/dict-adapter',
+    },
+  },
+});
+```
+
+::
+
+## 仓库自定义适配器
+
+每个仓库可以使用独立的适配器文件。约定路径 `~/dict/{storeName}-adapter.ts`，模块自动发现。
+
+::code-group
+
+```ts [~/dict/static-adapter.ts]
+// static 仓库的自定义适配器——直接返回硬编码数据，不发起 HTTP 请求
+export default defineDictAdapter({
+  async fetchDict(_storeName, { types, locale }) {
+    return {
+      version: 'static-1.0',
+      data: {
+        priority: {
+          type: 'priority',
+          items: [
+            { value: 'high', label: `高 (${locale})` },
+            { value: 'low', label: `低 (${locale})` },
+          ],
+        },
+      },
+    };
+  },
+  async fetchVersion(_storeName) {
+    return 'static-1.0';
+  },
+});
+```
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: { baseURL: '', dictEndpoint: '/api/dict/list' },
+    stores: {
+      // 约定路径 ~/dict/static-adapter.ts 自动发现，也可以显式指定：
+      // static: { adapter: '~/dict/static-adapter' },
+      static: {},
+    },
   },
 });
 ```

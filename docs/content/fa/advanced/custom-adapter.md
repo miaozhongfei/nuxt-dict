@@ -14,7 +14,19 @@ description: اتصال به هر فرمت منبع داده دیکشنری — 
 
 ## رابط آداپتور
 
-آداپتور سفارشی باید رابط زیر را پیاده‌سازی کند:
+آداپتور سفارشی باید رابط `DictAdapter` را پیاده‌سازی کند. ماژول تابع کمکی `defineDictAdapter()` را برای استنتاج کامل نوع TypeScript فراهم می‌کند:
+
+```ts
+import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+
+// defineDictAdapter() در زمان اجرا شیء را بدون تغییر برمی‌گرداند، فقط بررسی نوع ارائه می‌دهد
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) { /* ... */ },
+  async fetchVersion(storeName) { /* ... */ },
+})
+```
+
+تعریف کامل رابط:
 
 ```ts
 interface DictAdapter {
@@ -60,6 +72,48 @@ interface TreeNode extends DictItem {
 
 دریافت آخرین شماره نسخه دیکشنری فعلی. ماژول از آن برای تشخیص نیاز به پاک کردن کش استفاده می‌کند.
 
+## روش‌های ثبت
+
+آداپتورها در فایل‌های مستقل تعریف می‌شوند. دو روش برای ثبت آنها وجود دارد:
+
+### کشف خودکار مسیر قراردادی (توصیه شده)
+
+فایل آداپتور را در `~/dict/dict-adapter.ts` قرار دهید و ماژول آن را به طور خودکار کشف می‌کند — نیازی به پیکربندی نیست:
+
+```ts [~/dict/dict-adapter.ts]
+import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+
+// ماژول به طور خودکار ~/dict/dict-adapter.ts را کشف می‌کند، نیازی به تنظیم nuxt.config.ts نیست
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    const res = await fetch(`/api/dict?types=${types.join(',')}&lang=${locale}`)
+    return res.json()
+  },
+  async fetchVersion(storeName) {
+    const res = await fetch('/api/dict/version')
+    return (await res.json()).version
+  },
+})
+```
+
+### مسیر پیکربندی صریح
+
+اگر فایل آداپتور در مسیر قراردادی نیست، مسیر را در `nuxt.config.ts` مشخص کنید:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+  modules: ['@lacqjs/nuxt-dict'],
+  dict: {
+    api: {
+      // مسیر صریح فایل آداپتور (مسیر قراردادی را لغو می‌کند)
+      adapter: '~/custom/my-adapter',
+    },
+  },
+})
+```
+
+هر مخزن نیز می‌تواند فایل آداپتور مستقل خود را داشته باشد، مسیر قراردادی: `~/dict/{storeName}-adapter.ts`.
+
 ## مثال‌ها
 
 چهار آداپتور برای سناریوهای رایج — GraphQL، JSON محلی، تبدیل فرمت، و مسیریابی چند API:
@@ -67,125 +121,118 @@ interface TreeNode extends DictItem {
 ::code-group
 
 ```ts [GraphQL]
-export default defineNuxtConfig({
-  modules: ['@lacqjs/nuxt-dict'],
-  dict: {
-    api: {
-      adapter: {
-        async fetchDict(storeName, { types, locale }) {
-          const query = `
-            query GetDict($types: [String!]!, $locale: String!) {
-              dict(types: $types, locale: $locale) {
-                version
-                data { type items { code label } }
-              }
-            }
-          `;
-          const res = await fetch('https://graphql.example.com/graphql', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, variables: { types, locale } }),
-          });
-          return (await res.json()).data.dict;
-        },
-        async fetchVersion(storeName) {
-          const res = await fetch('https://graphql.example.com/graphql', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: '{ dictVersion }' }),
-          });
-          return (await res.json()).data.dictVersion;
-        },
-      },
-    },
+// ~/dict/dict-adapter.ts
+import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    // ساخت رشته پرس‌وجوی GraphQL
+    const query = `
+      query GetDict($types: [String!]!, $locale: String!) {
+        dict(types: $types, locale: $locale) {
+          version
+          data { type items { code label } }
+        }
+      }
+    `
+    const res = await fetch('https://graphql.example.com/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, variables: { types, locale } }),
+    })
+    return (await res.json()).data.dict
   },
-});
+  async fetchVersion(storeName) {
+    // پرس‌وجوی شماره نسخه فعلی دیکشنری
+    const res = await fetch('https://graphql.example.com/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: '{ dictVersion }' }),
+    })
+    return (await res.json()).data.dictVersion
+  },
+})
 ```
 
 ```ts [JSON محلی]
-import dictData from './data/dictionary.json';
+// ~/dict/dict-adapter.ts
+import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+// وارد کردن فایل داده‌های دیکشنری محلی
+import dictData from '../data/dictionary.json'
 
-export default defineNuxtConfig({
-  modules: ['@lacqjs/nuxt-dict'],
-  dict: {
-    api: {
-      adapter: {
-        async fetchDict(storeName, { types }) {
-          const data: Record<string, any> = {};
-          for (const type of types) {
-            if (dictData[type]) data[type] = dictData[type];
-          }
-          return { version: '1.0.0', data };
-        },
-        async fetchVersion(storeName) {
-          return '1.0.0';
-        },
-      },
-    },
+export default defineDictAdapter({
+  async fetchDict(storeName, { types }) {
+    // فیلتر داده‌های محلی بر اساس نوع‌های درخواستی
+    const data: Record<string, any> = {}
+    for (const type of types) {
+      if (dictData[type]) data[type] = dictData[type]
+    }
+    // داده‌های محلی تغییر نمی‌کنند، شماره نسخه ثابت
+    return { version: '1.0.0', data }
   },
-});
+  async fetchVersion(storeName) {
+    // نیازی به تشخیص نسخه برای داده‌های محلی نیست
+    return '1.0.0'
+  },
+})
 ```
 
 ```ts [تبدیل فرمت]
-dict: {
-  api: {
-    adapter: {
-      async fetchDict(storeName, { types, locale }) {
-        const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`)
-        const json = await res.json()
-        const data: Record<string, any> = {}
-        for (const item of json.payload) {
-          data[item.dictType] = {
-            type: item.dictType,
-            items: item.options.map((opt: any) => ({
-              value: opt.dictCode,
-              label: opt.dictName,
-            })),
-          }
-        }
-        return { version: json.dataVersion || '1.0.0', data }
-      },
-      async fetchVersion(storeName) {
-        const res = await fetch('/api/custom-dict/version')
-        return (await res.json()).version
-      },
-    },
+// ~/dict/dict-adapter.ts
+import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`)
+    const json = await res.json()
+    // تبدیل فرمت backend به فرمت DictResponse مورد انتظار ماژول
+    const data: Record<string, any> = {}
+    for (const item of json.payload) {
+      data[item.dictType] = {
+        type: item.dictType,
+        items: item.options.map((opt: any) => ({
+          value: opt.dictCode,
+          label: opt.dictName,
+        })),
+      }
+    }
+    return { version: json.dataVersion || '1.0.0', data }
   },
-},
+  async fetchVersion(storeName) {
+    const res = await fetch('/api/custom-dict/version')
+    return (await res.json()).version
+  },
+})
 ```
 
 ```ts [مسیریابی StoreName]
-dict: {
-  stores: {
-    payment: { dictEndpoint: '/v1/payment/dict' },
-    logistics: { dictEndpoint: '/v1/logistics/dict' },
+// ~/dict/dict-adapter.ts
+import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+
+export default defineDictAdapter({
+  async fetchDict(storeName, { types, locale }) {
+    // انتخاب نقطه پایانی API بر اساس storeName
+    const endpoints: Record<string, string> = {
+      dicts: 'https://default-api.example.com/dict/list',
+      payment: 'https://pay-api.example.com/v1/payment/dict',
+      logistics: 'https://logistics-api.example.com/v1/logistics/dict',
+    }
+    const url = endpoints[storeName] || endpoints.dicts
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
+    return res.json()
   },
-  api: {
-    adapter: {
-      async fetchDict(storeName, { types, locale }) {
-        const endpoints: Record<string, string> = {
-          dicts: 'https://default-api.example.com/dict/list',
-          payment: 'https://pay-api.example.com/v1/payment/dict',
-          logistics: 'https://logistics-api.example.com/v1/logistics/dict',
-        }
-        const url = endpoints[storeName] || endpoints.dicts
-        const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-        return res.json()
-      },
-      async fetchVersion(storeName) {
-        const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
-        return (await res.json()).version
-      },
-    },
+  async fetchVersion(storeName) {
+    const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
+    return (await res.json()).version
   },
-},
+})
 ```
 
 ::
 
 هر مخزن هنگام فراخوانی `fetchDict` / `fetchVersion`، ماژول به طور خودکار `storeName` متناظر را ارسال می‌کند — نیازی به تکرار `baseURL` در پیکربندی `stores` نیست.
 
-> اگر مخازن مختلف نیاز به منطق آداپتور بسیار متفاوتی دارند (مثلاً یکی از GraphQL استفاده می‌کند و دیگری از فایل‌های محلی)، می‌توانید از مسیریابی if/else در `api.adapter` سراسری صرف‌نظر کنید و هر مخزن را با `adapter` مخصوص خود مستقیماً پیکربندی کنید. به [چند مخزنی](/advanced/multi-store#آداپتور-سفارشی-برای-هر-مخزن) مراجعه کنید.
+> اگر مخازن مختلف نیاز به منطق آداپتور بسیار متفاوتی دارند (مثلاً یکی از GraphQL استفاده می‌کند و دیگری از فایل‌های محلی)، می‌توانید از مسیریابی if/else در آداپتور سراسری صرف‌نظر کنید و برای هر مخزن فایل آداپتور مستقل ایجاد کنید (مسیر قراردادی `~/dict/{storeName}-adapter.ts`). به [چند مخزنی](/advanced/multi-store#آداپتور-سفارشی-برای-هر-مخزن) مراجعه کنید.
 
 ## نکات
 
@@ -196,6 +243,8 @@ dict: {
 ## آنچه در این فصل آموختید
 
 - [ ] درک دو متد رابط `DictAdapter`
+- [ ] استفاده از تابع کمکی `defineDictAdapter()` برای تعریف آداپتور
+- [ ] ثبت آداپتور از طریق مسیر قراردادی `~/dict/dict-adapter.ts`
 - [ ] نوشتن آداپتور GraphQL
 - [ ] نوشتن آداپتور فایل JSON محلی
 - [ ] تبدیل فرمت داده‌ها در آداپتور

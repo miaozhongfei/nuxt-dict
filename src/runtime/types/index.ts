@@ -93,8 +93,8 @@ export interface StoreApiOptions {
   dictEndpoint?: string;
   /** 版本号接口路径，默认继承全局 `api.versionEndpoint` */
   versionEndpoint?: string;
-  /** 自定义字典适配器，不传则使用默认 REST 适配器（继承全局 api 配置） */
-  adapter?: DictAdapter;
+  /** 自定义字典适配器文件路径（如 '~/dict/dict-adapter'），不传则按约定路径自动发现或使用默认 REST 适配器 */
+  adapter?: string;
 }
 
 /** 模块配置项（用户可传，字段均可选） */
@@ -110,8 +110,8 @@ export interface ModuleOptions {
     dictEndpoint?: string;
     /** 版本号接口路径，默认 `'/dict/version'` */
     versionEndpoint?: string;
-    /** 自定义字典适配器，不传则使用默认 REST 适配器 */
-    adapter?: DictAdapter;
+    /** 自定义字典适配器文件路径（如 '~/dict/dict-adapter'），不传则按约定路径自动发现或使用默认 REST 适配器 */
+    adapter?: string;
   };
   cache?: {
     /** 内存缓存最大条目数，默认 `200` */
@@ -164,7 +164,7 @@ export interface ResolvedModuleOptions {
     baseURL: string;
     dictEndpoint: string;
     versionEndpoint: string;
-    adapter?: DictAdapter;
+    adapter?: string;
   };
   cache: {
     memoryMax: number;
