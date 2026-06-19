@@ -83,10 +83,11 @@
 
       <hr style="margin: 24px 0" />
 
-      <h3>自定义存储库 <code>'payment'</code> — 自定义 Adapter（不走 HTTP）</h3>
+      <h3>自定义存储库 <code>'payment'</code> — 自定义 Adapter（文件路径方式）</h3>
       <p style="color: #666">
-        该仓库在 nuxt.config.ts 中通过
-        <code>stores.payment.adapter</code> 配置了自定义适配器，数据直接由函数返回，不发起网络请求。
+        该仓库通过约定路径 <code>~/dict/payment-adapter.ts</code> 或 nuxt.config.ts 中
+        <code>stores.payment.adapter</code> 指定适配器文件路径，模块构建时通过 virtual module
+        注入。
       </p>
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
         <thead>
@@ -132,7 +133,7 @@ const { data: store3Data, loading: store3OptionsLoading } = useDict('dicts3', 's
 
 const { tree: store3Tree, loading: store3TreeLoading } = useDictTree('dicts3', 'region');
 
-// 自定义存储库 'payment' —— 通过 stores.payment.adapter 使用自定义适配器
+// 自定义存储库 'payment' —— 通过 ~/dict/payment-adapter.ts 约定路径或显式配置 adapter 文件路径
 const {
   data: paymentData,
   translate: paymentTranslate,

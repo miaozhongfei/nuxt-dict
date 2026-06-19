@@ -14,29 +14,34 @@
         margin-bottom: 20px;
       "
     >
-      <div style="color: #f92672">// DictAdapter 新签名 ↓</div>
-      <div style="color: #66d9ef">export</div>
-      <div style="color: #66d9ef">interface</div>
-      <div style="color: #a6e22e">DictAdapter</div>
-      {
+      <div style="color: #f92672">// 自定义适配器：定义在独立文件中，模块自动发现或显式配置</div>
+      <div style="color: #75715e">// 约定路径: ~/dict/dict-adapter.ts（全局）</div>
+      <div style="color: #75715e">// 约定路径: ~/dict/{storeName}-adapter.ts（per-store）</div>
+      <br />
       <div>
-        &nbsp;&nbsp;<span style="color: #e6db74">fetchDict</span>(<span style="color: #fd971f"
-          >storeName</span
-        >: <span style="color: #66d9ef">string</span>, options: { types:
-        <span style="color: #66d9ef">string</span>[]; locale:
-        <span style="color: #66d9ef">string</span> }):
-        <span style="color: #66d9ef">Promise</span>&lt;<span style="color: #a6e22e"
-          >DictResponse</span
-        >&gt;
+        <span style="color: #66d9ef">import</span> { <span style="color: #a6e22e"
+          >defineDictAdapter</span
+        > } <span style="color: #66d9ef">from</span>
+        <span style="color: #e6db74">'@lacqjs/nuxt-dict'</span>
+      </div>
+      <br />
+      <div>
+        <span style="color: #66d9ef">export default</span>
+        <span style="color: #a6e22e">defineDictAdapter</span>({
       </div>
       <div>
-        &nbsp;&nbsp;<span style="color: #e6db74">fetchVersion</span>(<span style="color: #fd971f"
+        &nbsp;&nbsp;<span style="color: #66d9ef">async</span>
+        <span style="color: #e6db74">fetchDict</span>(<span style="color: #fd971f"
           >storeName</span
-        >: <span style="color: #66d9ef">string</span>):
-        <span style="color: #66d9ef">Promise</span>&lt;<span style="color: #66d9ef">string</span
-        >&gt;
+        >, { types, locale }) { <span style="color: #75715e">/* ... */</span> },
       </div>
-      <div>}</div>
+      <div>
+        &nbsp;&nbsp;<span style="color: #66d9ef">async</span>
+        <span style="color: #e6db74">fetchVersion</span>(<span style="color: #fd971f"
+          >storeName</span
+        >) { <span style="color: #75715e">/* ... */</span> },
+      </div>
+      <div>})</div>
     </div>
 
     <p style="color: #666">

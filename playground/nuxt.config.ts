@@ -30,22 +30,11 @@ export default defineNuxtConfig({
     //   versionEndpoint: '/v1/dictionary/version',
     // },
 
-    // ========== 场景 3：自定义适配器（接收 storeName 做路由） ==========
-    // 注意：api.adapter 中的函数经过 Nuxt runtimeConfig 序列化后在客户端不可用。
-    // 推荐方案：在服务端模块或自定义插件中通过工厂函数创建 adapter，直接注入 DictManager。
+    // ========== 场景 3：自定义适配器（文件路径方式） ==========
+    // 方式一：约定路径自动发现 — 放置 ~/dict/dict-adapter.ts 即可，无需配置
+    // 方式二：显式指定文件路径
     // api: {
-    //   adapter: {
-    //     async fetchDict(storeName, { types, locale }) {
-    //       console.log(`[CustomAdapter] fetchDict storeName="${storeName}" types=${types}`)
-    //       // 根据 storeName 路由到不同后端或返回不同数据
-    //       const prefix = storeName === 'payment' ? '支付' : '默认'
-    //       return { version: 'custom-1.0.0', data: { ... } }
-    //     },
-    //     async fetchVersion(storeName) {
-    //       console.log(`[CustomAdapter] fetchVersion storeName="${storeName}"`)
-    //       return `custom-${storeName}-1.0.0`
-    //     },
-    //   },
+    //   adapter: '~/dict/dict-adapter',
     // },
     locale: {
       default: 'zh-CN',
@@ -56,8 +45,8 @@ export default defineNuxtConfig({
     stores: {
       // dicts2 仓库使用独立的 API 端点（/api/dict/list2），返回不同数据
       dicts2: { dictEndpoint: '/api/dict/list2' },
-      // 示例：payment 仓库使用自定义适配器（不走 HTTP，直接返回硬编码数据）
-      // payment: { adapter: { ... } },
+      // 示例：payment 仓库使用自定义适配器（约定路径 ~/dict/payment-adapter.ts 或显式指定）
+      // payment: { adapter: '~/dict/payment-adapter' },
     },
     ssr: {
       // prefetch: ['gender', 'status', 'region', 'industry'],
