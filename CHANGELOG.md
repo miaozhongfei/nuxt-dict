@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.0.7
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.6...v0.0.7)
+
+### 🩹 Fixes
+
+- 修复 defineDictAdapter 类型导出，types 入口改为 module.d.mts ([01b7842](https://github.com/miaozhongfei/nuxt-dict/commit/01b7842))
+
+### 🏡 Chore
+
+- 同步 dev:prepare 自动生成的版本号和 lockfile ([bca09e7](https://github.com/miaozhongfei/nuxt-dict/commit/bca09e7))
+- 同步 dev:prepare 自动生成文件 ([c796d19](https://github.com/miaozhongfei/nuxt-dict/commit/c796d19))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.6
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.5...v0.0.6)
