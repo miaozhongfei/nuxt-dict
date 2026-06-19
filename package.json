@@ -33,7 +33,8 @@
     ".": {
       "types": "./dist/module.d.mts",
       "import": "./dist/module.mjs"
-    }
+    },
+    "./runtime/*": "./dist/runtime/*"
   },
   "publishConfig": {
     "access": "public",

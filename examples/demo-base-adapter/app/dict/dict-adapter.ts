@@ -1,4 +1,4 @@
-import { defineDictAdapter } from '@lacqjs/nuxt-dict';
+import { defineDictAdapter } from '@lacqjs/nuxt-dict/runtime/utils/define-adapter';
 
 /** 应用基础路径，需与 nuxt.config.ts 中的 app.baseURL 保持一致 */
 const APP_BASEURL = '/demo-base-adapter/';
