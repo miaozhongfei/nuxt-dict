@@ -81,7 +81,6 @@ interface DictEntry {
 }
 
 interface DictResponse {
-  version: string;
   data: Record<string, DictEntry>;
 }
 
@@ -95,6 +94,7 @@ interface StoreApiOptions {
   dictEndpoint?: string;
   versionEndpoint?: string;
   adapter?: string; // 自定义适配器文件路径，如 '~/dict/dict-adapter.ts'
+  lazy?: boolean; // 是否惰性检查版本号，默认继承 api.lazy
 }
 ```
 

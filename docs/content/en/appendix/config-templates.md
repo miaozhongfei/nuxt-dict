@@ -128,7 +128,6 @@ Each store can use its own adapter file. The convention path `~/dict/{storeName}
 export default defineDictAdapter({
   async fetchDict(_storeName, { types, locale }) {
     return {
-      version: 'static-1.0',
       data: {
         priority: {
           type: 'priority',

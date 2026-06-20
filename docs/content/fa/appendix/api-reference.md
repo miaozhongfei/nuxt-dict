@@ -81,7 +81,6 @@ interface DictEntry {
 }
 
 interface DictResponse {
-  version: string;
   data: Record<string, DictEntry>;
 }
 
@@ -95,6 +94,7 @@ interface StoreApiOptions {
   dictEndpoint?: string;
   versionEndpoint?: string;
   adapter?: string; // مسیر فایل آداپتور سفارشی، مثلاً '~/dict/dict-adapter.ts'
+  lazy?: boolean; // آیا بررسی نسخه به صورت تنبل انجام شود، پیش‌فرض از api.lazy به ارث می‌رسد
 }
 ```
 

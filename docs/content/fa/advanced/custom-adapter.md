@@ -45,7 +45,6 @@ interface DictAdapter {
 
 ```ts
 interface DictResponse {
-  version: string;
   data: Record<string, DictEntry>;
 }
 
@@ -162,7 +161,7 @@ export default defineDictAdapter({
       if (dictData[type]) data[type] = dictData[type]
     }
     // داده‌های محلی تغییر نمی‌کنند، شماره نسخه ثابت
-    return { version: '1.0.0', data }
+    return { data }
   },
   async fetchVersion(storeName) {
     // نیازی به تشخیص نسخه برای داده‌های محلی نیست
@@ -188,7 +187,7 @@ export default defineDictAdapter({
         })),
       }
     }
-    return { version: json.dataVersion || '1.0.0', data }
+    return { data }
   },
   async fetchVersion(storeName) {
     const res = await fetch('/api/custom-dict/version')

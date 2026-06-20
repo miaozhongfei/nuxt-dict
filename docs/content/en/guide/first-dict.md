@@ -16,7 +16,6 @@ Create a file at `server/api/dict/list.get.ts`:
 ```ts [server/api/dict/list.get.ts]
 export default defineEventHandler(() => {
   return {
-    version: '1.0.0',
     data: {
       gender: {
         type: 'gender',

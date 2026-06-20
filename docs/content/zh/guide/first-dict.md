@@ -16,7 +16,6 @@ description: 从零开始，用 useDict 写出你的第一个字典下拉框。
 ```ts [server/api/dict/list.get.ts]
 export default defineEventHandler(() => {
   return {
-    version: '1.0.0',
     data: {
       gender: {
         type: 'gender',
@@ -47,7 +46,6 @@ export default defineNuxtConfig({
 
 这个接口返回的数据结构是：
 
-- `version`：版本号，用于判断数据是否更新过
 - `data`：一个对象，key 是字典类型名（如 `gender`），value 是字典项列表
 
 > **`baseURL: ''` 是什么意思？** 表示接口地址相对于当前网站本身。如果你有独立的字典服务，就把 `baseURL` 改成 `https://dict-api.example.com`。

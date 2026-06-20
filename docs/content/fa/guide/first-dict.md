@@ -23,7 +23,6 @@ description: از صفر، اولین dropdown دیکشنری خود را با u
 ```ts [server/api/dict/list.get.ts]
 export default defineEventHandler(() => {
   return {
-    version: '1.0.0',
     data: {
       gender: {
         type: 'gender',
@@ -54,7 +53,6 @@ export default defineNuxtConfig({
 
 ساختار داده بازگشتی:
 
-- `version`: شماره نسخه، برای تشخیص به‌روزرسانی داده‌ها
 - `data`: یک شیء که کلید آن نام نوع دیکشنری (مثلاً `gender`) و مقدار آن لیست آیتم‌های آن نوع است
 
 > **`baseURL: ''` یعنی چه؟** یعنی آدرس API نسبت به خود وب‌سایت است. اگر سرویس دیکشنری جداگانه‌ای دارید، `baseURL` را به `https://dict-api.example.com` تغییر دهید.

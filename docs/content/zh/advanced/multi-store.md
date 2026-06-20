@@ -43,7 +43,6 @@ export default defineNuxtConfig({
 export default defineDictAdapter({
   async fetchDict(_storeName, { types, locale }) {
     return {
-      version: 'static-1.0',
       data: {
         priority: {
           type: 'priority',
@@ -146,7 +145,29 @@ $dict.translate('pay_status', 1, { storeName: 'payment' });
 
 ## 各仓库独立的版本检测
 
-每个仓库有自己独立的版本号检测，采用**惰性机制**——只在首次访问该仓库的字典数据时触发 `fetchVersion()`，而非模块启动时全量检查。某个仓库的版本更新只会失效该仓库的缓存，不影响其他仓库。
+每个仓库有自己独立的版本号检测，某个仓库的版本更新只会失效该仓库的缓存，不影响其他仓库。
+
+### lazy 版本检查
+
+通过 `lazy` 参数可以控制每个仓库的版本检查时机：
+
+| lazy 值 | 行为 |
+|---------|------|
+| `false`（默认） | 页面加载时立即检查版本（`initialize()` 阶段） |
+| `true` | 延迟到该仓库首次 `getDict()` 调用时才检查 |
+
+配置示例：
+
+```ts [nuxt.config.ts]
+dict: {
+  api: { lazy: false },  // 默认仓库立即检查
+  stores: {
+    dicts2: { lazy: true },  // dicts2 惰性检查
+  }
+}
+```
+
+仓库少时用 `false`（立即检查），仓库多且不一定全用到时设为 `true` 避免启动时的批量版本请求。
 
 ## 彻底搞懂仓库配置规则
 
@@ -210,9 +231,9 @@ stores: {
 
 > 什么时候需要用状态 2（声明空对象）？当你希望同一个端点返回的不同字典类型有独立的缓存时。
 
-### 四个字段的详细说明
+### 五个字段的详细说明
 
-每个仓库可配四个字段：
+每个仓库可配五个字段：
 
 | 字段              | 类型   | 作用                           | 例子                            |
 | ----------------- | ------ | ------------------------------ | ------------------------------- |
@@ -220,6 +241,7 @@ stores: {
 | `dictEndpoint`    | 字符串 | 获取字典数据的接口路径         | `/v1/dictionary`                |
 | `versionEndpoint` | 字符串 | 获取版本号的接口路径           | `/v1/dictionary/version`        |
 | `adapter`         | 字符串 | 自定义适配器的文件路径         | `'~/dict/static-adapter'`       |
+| `lazy`            | 布尔值 | 是否惰性检查版本号             | `true`                          |
 
 **最终请求的完整 URL = `baseURL` + 对应端点。**
 
@@ -396,7 +418,7 @@ stores: {
 ```ts [~/dict/static-adapter.ts]
 // static 仓库的自定义适配器——完全自定义，不走 HTTP
 export default defineDictAdapter({
-  async fetchDict() { return { version: '1.0', data: { /* ... */ } } },
+  async fetchDict() { return { data: { /* ... */ } } },
   async fetchVersion() { return '1.0' },
 });
 ```
