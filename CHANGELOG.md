@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.0.9
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.8...v0.0.9)
+
+### 🚀 Enhancements
+
+- 新增 lazy 参数控制版本检查时机，修复 ensureVersionChecked 竞态 ([b8545cb](https://github.com/miaozhongfei/nuxt-dict/commit/b8545cb))
+
+### 🩹 Fixes
+
+- 使用 Dexie.js 重写 IndexedDB 缓存，修复多 store 版本升级竞态 ([cc6d840](https://github.com/miaozhongfei/nuxt-dict/commit/cc6d840))
+
+### 📖 Documentation
+
+- 移除 defineDictAdapter 的 import 语句，已注册为 auto-import 无需手动导入 ([6fe0fdb](https://github.com/miaozhongfei/nuxt-dict/commit/6fe0fdb))
+
+### ✅ Tests
+
+- Playground 添加 5 仓库全组合测试（REST/adapter × lazy on/off） ([03965ba](https://github.com/miaozhongfei/nuxt-dict/commit/03965ba))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.8
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.7...v0.0.8)
