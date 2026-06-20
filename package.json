@@ -69,7 +69,8 @@
     "@nuxt/kit": "^4.4.8",
     "compare-versions": "^6.1.1",
     "consola": "^3.4.2",
-    "defu": "^6.1.7"
+    "defu": "^6.1.7",
+    "dexie": "^4.4.4"
   },
   "devDependencies": {
     "@nuxt/devtools": "^3.2.4",

@@ -105,7 +105,9 @@ async function initClient(
 ): Promise<void> {
   if (options.cache.indexedDB.enabled) {
     try {
-      await indexedDB.init();
+      // 一次性声明所有仓库对应的 object store（默认仓库 + 配置中的命名仓库）
+      const storeNames = [DEFAULT_STORE_NAME, ...Object.keys(options.stores)];
+      await indexedDB.init(storeNames);
     } catch (e) {
       logger.warn('IndexedDB init failed:', e);
     }

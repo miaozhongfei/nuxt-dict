@@ -6,6 +6,25 @@
       面板观察版本检查和字典请求的时机。
     </p>
 
+    <div style="margin: 8px 0 16px; display: flex; align-items: center; gap: 8px">
+      <span style="color: #666">语言切换：</span>
+      <button
+        style="padding: 4px 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px"
+        :style="{ background: currentLocale === 'zh-CN' ? '#409EFF' : '#fff', color: currentLocale === 'zh-CN' ? '#fff' : '#333' }"
+        @click="switchLocale('zh-CN')"
+      >
+        中文
+      </button>
+      <button
+        style="padding: 4px 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px"
+        :style="{ background: currentLocale === 'en-US' ? '#409EFF' : '#fff', color: currentLocale === 'en-US' ? '#fff' : '#333' }"
+        @click="switchLocale('en-US')"
+      >
+        English
+      </button>
+      <span style="color: #999; font-size: 13px">当前: {{ currentLocale }}</span>
+    </div>
+
     <div v-if="loading" style="padding: 40px; text-align: center; color: #999">加载中...</div>
 
     <template v-else>
@@ -166,6 +185,13 @@
 </template>
 
 <script setup lang="ts">
+// 语言切换
+const localeCookie = useCookie('i18n_redirected');
+const currentLocale = computed(() => localeCookie.value || 'zh-CN');
+function switchLocale(locale: string) {
+  localeCookie.value = locale;
+}
+
 // dicts（默认）— REST + lazy: false（页面加载立即版本检查）
 const { data: d1Data, translate: d1Translate, loading: d1Loading } = useDict('gender');
 

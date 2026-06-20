@@ -5,6 +5,10 @@ import { useNuxtApp } from '#imports';
 
 import { DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache';
 import type { DictManager } from '../core/dict-manager';
+import { createLogger } from '../utils/logger';
+
+/** 日志实例（单例） */
+const logger = createLogger('nuxt-dict');
 import type {
   DictItem,
   UseDictReturn,
@@ -61,6 +65,7 @@ async function fetchDictData(
       }
     }
   } catch (e) {
+    logger.debug(`fetchDictData ERROR store=${storeName} type=${dictType} mode=${mode}`, e);
     error.value = e instanceof Error ? e.message : String(e);
   } finally {
     loading.value = false;

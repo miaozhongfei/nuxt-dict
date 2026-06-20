@@ -14,6 +14,10 @@ import type {
 import { IndexedDBCache, DEFAULT_STORE_NAME } from './cache/indexeddb-cache';
 import { MemoryCache } from './cache/memory-cache';
 import { VersionCheck } from './cache/version-check';
+import { createLogger } from '../utils/logger';
+
+/** 日志实例（单例，由 plugin 设置 level 后全局共享） */
+const logger = createLogger('nuxt-dict');
 
 /**
  * DictManager 构造参数。
@@ -166,6 +170,7 @@ export class DictManager {
    * @returns {Promise<DictEntry>} 包含 items 和可选 tree 的字典条目
    */
   async getDict(type: string, storeName = DEFAULT_STORE_NAME): Promise<DictEntry> {
+    logger.debug(`getDict START store=${storeName} type=${type} lazy=${this.lazyStores.has(storeName)}`);
     // 惰性版本检查：仅 lazy 仓库在首次访问时检查版本
     if (this.lazyStores.has(storeName)) {
       await this.ensureVersionChecked(storeName);
@@ -197,8 +202,10 @@ export class DictManager {
 
   /** 执行实际的数据获取与缓存写入 */
   private async fetchAndCache(type: string, storeName: string, key: string): Promise<DictEntry> {
+    logger.debug(`fetchAndCache START store=${storeName} type=${type}`);
     // 优先读 IndexedDB 持久缓存
     const idbEntry = await this.indexedDB.get(storeName, type, this.locale.value);
+    logger.debug(`fetchAndCache IndexedDB result store=${storeName} type=${type} hit=${!!idbEntry}`);
     if (idbEntry) {
       this.memoryCache.set(key, {
         data: idbEntry.data,
@@ -208,6 +215,7 @@ export class DictManager {
       return idbEntry.data;
     }
 
+    logger.debug(`fetchAndCache NETWORK requesting store=${storeName} type=${type}`);
     // 回退到网络请求
     const adapter = this.getAdapter(storeName);
     const response = await adapter.fetchDict(storeName, {
@@ -216,6 +224,7 @@ export class DictManager {
     });
 
     const entry = response.data[type];
+    logger.debug(`fetchAndCache NETWORK done store=${storeName} type=${type} found=${!!entry} items=${entry?.items?.length}`);
     if (!entry) {
       throw new Error(`Dictionary type "${type}" not found in response`);
     }
