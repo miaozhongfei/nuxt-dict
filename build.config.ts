@@ -23,5 +23,6 @@ export default defineBuildConfig({
     'nuxt-auth-utils',
     'defu',
     'consola',
+    'dexie',
   ],
 });

@@ -111,7 +111,7 @@ export default defineDictAdapter({
       if (dictData[type]) data[type] = dictData[type]
     }
     // 本地数据不变，版本号固定
-    return { version: '1.0.0', data }
+    return { data }
   },
   async fetchVersion(storeName) {
     // 本地数据无需版本检测，返回固定值
@@ -134,7 +134,7 @@ export default defineDictAdapter({
         items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
       }
     }
-    return { version: json.dataVersion || '1.0.0', data }
+    return { data }
   },
   async fetchVersion(storeName) {
     const res = await fetch('/api/custom-dict/version')

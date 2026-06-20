@@ -35,10 +35,6 @@ export default defineDictAdapter({
     // 解包 GraphQL 响应：data.dict.data → DictEntry[]
     const entries = result.data.dict.data;
 
-    // 从 version 接口获取版本号
-    const versionRes = await fetch(`${APP_BASEURL}api/dict/version`);
-    const { version } = await versionRes.json();
-
     // 数组 → Record<string, DictEntry>，以 type 为 key
     const data: Record<string, any> = {};
     for (const entry of entries) {
@@ -49,7 +45,7 @@ export default defineDictAdapter({
       };
     }
 
-    return { version, data };
+    return { data };
   },
 
   /**

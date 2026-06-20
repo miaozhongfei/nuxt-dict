@@ -1,192 +1,158 @@
+import { Dexie } from 'dexie';
+
 import type { DictEntry, CacheEntry } from '../../types';
+import { createLogger } from '../../utils/logger';
 
 /** 默认 IndexedDB 对象存储库名称 */
 export const DEFAULT_STORE_NAME = 'dicts';
 
+/** 日志实例（单例，由 plugin 设置 level 后全局共享） */
+const logger = createLogger('nuxt-dict');
+
 /**
- * IndexedDB 缓存实现，用于持久化字典数据。
- * 支持客户端离线访问，减少重复网络请求。
- * 版本号改用 localStorage 存储，不再使用 IndexedDB。
+ * 基于 Dexie.js 的 IndexedDB 缓存实现（多表方案）。
  *
- * 多对象存储库支持：
- * - 默认存储库 `'dicts'` 在 init() 时创建
- * - 额外存储库通过 ensureStore() 惰性创建
- * - 使用串行升级队列处理并发多 store 创建，批量累积后一次升级完成
+ * @description 每个字典仓库对应一个独立的 Dexie table（IndexedDB object store），
+ * 通过 init(storeNames) 在初始化时一次性声明所有表的 schema，
+ * 避免原生 IndexedDB 多次版本升级导致的竞态问题。
+ *
+ * 数据隔离：各仓库数据物理隔离，在 DevTools Application 面板中独立可见。
+ * Schema 管理：使用仓库数量作为版本号，增删仓库时自动升级。
+ *
+ * @example
+ * const cache = new IndexedDBCache('nuxt-dict')
+ * await cache.init(['dicts', 'dicts2', 'dicts3'])
+ * await cache.set('dicts', 'gender', 'zh-CN', entry)
+ * const result = await cache.get('dicts', 'gender', 'zh-CN')
  */
 export class IndexedDBCache {
+  private db: Dexie;
   private dbName: string;
-  private db: IDBDatabase | null = null;
-  private version = 1;
-  /** 串行化升级队列，防止并发 ensureStore 导致多次版本升级 */
-  private upgradeQueue: Promise<void> = Promise.resolve();
-  /** 累积待创建的 store 名，批量创建以减少升级次数 */
-  private pendingStores: Set<string> = new Set();
 
+  /**
+   * @param {string} dbName - IndexedDB 数据库名称
+   */
   constructor(dbName: string) {
     this.dbName = dbName;
-  }
-
-  /** 初始化 IndexedDB，创建默认对象存储库 */
-  init(): Promise<void> {
-    if (this.db) return Promise.resolve();
-
-    return new Promise((resolve, reject) => {
-      // 不指定版本号以打开数据库当前版本，避免跨版本（version 增量升级后）的 VersionError
-      const request = indexedDB.open(this.dbName);
-      request.addEventListener('upgradeneeded', () => {
-        const db = request.result;
-        if (!db.objectStoreNames.contains(DEFAULT_STORE_NAME)) {
-          db.createObjectStore(DEFAULT_STORE_NAME);
-        }
-      });
-      request.addEventListener('success', () => {
-        this.db = request.result;
-        // 同步当前数据库实际版本号，供后续 ensureStore 升级使用
-        this.version = this.db.version;
-        resolve();
-      });
-      request.addEventListener('error', () => {
-        reject(
-          new Error('Failed to open IndexedDB: ' + (request.error?.message || 'unknown error')),
-        );
-      });
-      request.addEventListener('blocked', () => {
-        reject(new Error('IndexedDB is blocked by another tab'));
-      });
-    });
+    this.db = new Dexie(dbName);
   }
 
   /**
-   * 惰性确保指定名称的对象存储库存在。
-   * 若当前 DB 中已有该 store 则立即返回；
-   * 否则将 store 名加入待建集合，通过串行队列触发一次版本升级批量创建。
+   * 初始化数据库，一次性声明所有仓库对应的 object store。
+   *
+   * @description 根据传入的仓库名列表声明 Dexie schema，每个仓库一个独立表。
+   * 使用仓库数量作为版本号，增减仓库时自动触发 Dexie 的版本升级。
+   * 若版本降级（删了仓库）导致 VersionError，自动删除旧库重建。
+   *
+   * @param {string[]} storeNames - 所有仓库名列表，如 ['dicts', 'dicts2', 'dicts3']
+   * @returns {Promise<void>}
    */
-  private async ensureStore(storeName: string): Promise<void> {
-    // 尚未初始化则先初始化
-    await this.init();
+  async init(storeNames: string[]): Promise<void> {
+    // 构建 schema：每个仓库一个表，无索引（纯 key-value）
+    const schema: Record<string, string> = {};
+    for (const name of storeNames) {
+      schema[name] = '';
+    }
+    // 版本号 = 仓库数量（增加仓库时自动升级，至少为 1）
+    const version = Math.max(storeNames.length, 1);
+    this.db.version(version).stores(schema);
 
-    if (this.db!.objectStoreNames.contains(storeName)) return;
+    logger.debug(`IndexedDB init: opening "${this.dbName}", version=${version}, stores=[${storeNames.join(', ')}]`);
 
-    this.pendingStores.add(storeName);
+    try {
+      await this.db.open();
+    } catch (e: unknown) {
+      // 版本降级（用户删了仓库导致 storeNames 变少）→ 删除旧库重建
+      if (e instanceof Error && e.name === 'VersionError') {
+        logger.debug(`IndexedDB init: VersionError, deleting old database and recreating`);
+        this.db.close();
+        await Dexie.delete(this.dbName);
+        this.db = new Dexie(this.dbName);
+        this.db.version(version).stores(schema);
+        await this.db.open();
+      } else {
+        throw e;
+      }
+    }
 
-    this.upgradeQueue = this.upgradeQueue.then(() => this.doUpgrade());
-
-    return this.upgradeQueue;
+    logger.debug(`IndexedDB init: complete, tables=[${this.db.tables.map(t => t.name).join(', ')}]`);
   }
 
   /**
-   * 执行一次版本升级，批量创建所有累积的待建 object store。
-   * 内部注册 onversionchange 确保旧连接能被浏览器主动关闭，
-   * blocked 事件不视为错误——旧连接释放后 success 事件会自动触发。
+   * 生成缓存键。
+   * @param {string} dictType - 字典类型，如 'gender'
+   * @param {string} locale - 语言标识，如 'zh-CN'
+   * @returns {string} 格式 `${dictType}_${locale}`
    */
-  private async doUpgrade(): Promise<void> {
-    if (this.pendingStores.size === 0) return;
-
-    const stores = new Set(this.pendingStores);
-    this.pendingStores.clear();
-
-    const toCreate = [...stores].filter((s) => !this.db!.objectStoreNames.contains(s));
-    if (toCreate.length === 0) return;
-
-    this.db!.onversionchange = () => {
-      this.db!.close();
-    };
-    this.db!.close();
-    this.version++;
-
-    await new Promise<void>((resolve, reject) => {
-      const req = indexedDB.open(this.dbName, this.version);
-      req.addEventListener('upgradeneeded', () => {
-        const db = req.result;
-        for (const name of toCreate) {
-          if (!db.objectStoreNames.contains(name)) {
-            db.createObjectStore(name);
-          }
-        }
-      });
-      req.addEventListener('success', () => {
-        this.db = req.result;
-        resolve();
-      });
-      req.addEventListener('error', () => reject(req.error));
-      // blocked 表示旧连接尚未完全释放（可能有未提交的事务），
-      // 不视为错误——旧连接 onversionchange 关闭后升级会自动继续
-      req.addEventListener('blocked', () => {});
-    });
-  }
-
-  /** 生成存储键名：`{dictType}_{locale}` */
   private getStoreKey(dictType: string, locale: string): string {
     return `${dictType}_${locale}`;
   }
 
-  /** 从指定存储库读取字典缓存 */
+  /**
+   * 从指定仓库读取字典缓存。
+   *
+   * @param {string} storeName - 仓库名，如 'dicts'
+   * @param {string} dictType - 字典类型，如 'gender'
+   * @param {string} locale - 语言标识，如 'zh-CN'
+   * @returns {Promise<CacheEntry<DictEntry> | null>} 缓存条目，未命中返回 null
+   */
   async get(
     storeName: string,
     dictType: string,
     locale: string,
   ): Promise<CacheEntry<DictEntry> | null> {
-    if (!this.db) return null;
-    await this.ensureStore(storeName);
-    if (!this.db) return null;
+    if (!this.db.isOpen()) return null;
 
-    return new Promise((resolve, reject) => {
-      const tx = this.db!.transaction(storeName, 'readonly');
-      const store = tx.objectStore(storeName);
-      const request = store.get(this.getStoreKey(dictType, locale));
-      request.addEventListener('success', () => resolve(request.result ?? null));
-      request.addEventListener('error', () => reject(request.error));
-    });
+    // 仓库表不存在时返回 null（用户可能手动删除了 store）
+    if (!this.db.tables.some(t => t.name === storeName)) return null;
+
+    const key = this.getStoreKey(dictType, locale);
+    const record = await this.db.table(storeName).get(key);
+    logger.debug(`IndexedDB get: store=${storeName} key=${key} hit=${!!record}`);
+    return record ?? null;
   }
 
-  /** 写入字典缓存条目到指定存储库 */
+  /**
+   * 写入缓存条目到指定仓库。
+   *
+   * @param {string} storeName - 仓库名
+   * @param {string} dictType - 字典类型
+   * @param {string} locale - 语言标识
+   * @param {CacheEntry<DictEntry>} entry - 缓存条目
+   * @returns {Promise<void>}
+   */
   async set(
     storeName: string,
     dictType: string,
     locale: string,
     entry: CacheEntry<DictEntry>,
   ): Promise<void> {
-    if (!this.db) return;
-    await this.ensureStore(storeName);
-    if (!this.db) return;
+    if (!this.db.isOpen()) return;
+    if (!this.db.tables.some(t => t.name === storeName)) return;
 
-    return new Promise((resolve, reject) => {
-      const tx = this.db!.transaction(storeName, 'readwrite');
-      const store = tx.objectStore(storeName);
-      const request = store.put(entry, this.getStoreKey(dictType, locale));
-      request.addEventListener('success', () => resolve());
-      request.addEventListener('error', () => reject(request.error));
-    });
+    const key = this.getStoreKey(dictType, locale);
+    logger.debug(`IndexedDB set: store=${storeName} key=${key}`);
+    await this.db.table(storeName).put(entry, key);
   }
 
   /**
-   * 清空字典缓存数据。
-   * @param storeName 指定要清空的存储库名，不传则清空全部存储库
+   * 清空缓存数据。
+   *
+   * @param {string} [storeName] - 指定仓库名则只清该仓库，不传则清空全部
+   * @returns {Promise<void>}
    */
   async clear(storeName?: string): Promise<void> {
-    if (!this.db) return;
+    if (!this.db.isOpen()) return;
 
     if (storeName) {
-      if (!this.db!.objectStoreNames.contains(storeName)) return;
-      await new Promise<void>((resolve, reject) => {
-        const tx = this.db!.transaction(storeName, 'readwrite');
-        const store = tx.objectStore(storeName);
-        const request = store.clear();
-        request.addEventListener('success', () => resolve());
-        request.addEventListener('error', () => reject(request.error));
-      });
-      return;
-    }
-
-    const storeNames = Array.from(this.db!.objectStoreNames);
-    for (const name of storeNames) {
-      await new Promise<void>((resolve, reject) => {
-        const tx = this.db!.transaction(name, 'readwrite');
-        const store = tx.objectStore(name);
-        const request = store.clear();
-        request.addEventListener('success', () => resolve());
-        request.addEventListener('error', () => reject(request.error));
-      });
+      if (!this.db.tables.some(t => t.name === storeName)) return;
+      logger.debug(`IndexedDB clear: store=${storeName}`);
+      await this.db.table(storeName).clear();
+    } else {
+      logger.debug('IndexedDB clear: ALL');
+      for (const table of this.db.tables) {
+        await table.clear();
+      }
     }
   }
 }

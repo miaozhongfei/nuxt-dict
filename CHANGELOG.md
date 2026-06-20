@@ -1,5 +1,76 @@
 # Changelog
 
+## v0.0.12
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.11...v0.0.12)
+
+### 🩹 Fixes
+
+- 移除 DictResponse/CacheEntry 冗余 version 字段，修复 adapter 重复 version 请求 ([7353773](https://github.com/miaozhongfei/nuxt-dict/commit/7353773))
+- Demo 页面 \ 全量刷新时翻译失败，添加 loading 守卫触发重渲染 ([cca3de4](https://github.com/miaozhongfei/nuxt-dict/commit/cca3de4))
+- USelectMenu 切换语言后已选中 label 不更新，添加 value-key 强制按值匹配 ([c88289f](https://github.com/miaozhongfei/nuxt-dict/commit/c88289f))
+
+### 📖 Documentation
+
+- 剔除 DictResponse.version 相关引用，新增 lazy 版本检查参数文档 ([8b54fe4](https://github.com/miaozhongfei/nuxt-dict/commit/8b54fe4))
+
+### 🏡 Chore
+
+- 同步 dev:prepare 自动生成文件 ([5bf971c](https://github.com/miaozhongfei/nuxt-dict/commit/5bf971c))
+- 同步 demo-base-api 页面文件（复制自 demo-base-adapter） ([86417d9](https://github.com/miaozhongfei/nuxt-dict/commit/86417d9))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
+## v0.0.11
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.10...v0.0.11)
+
+### 🏡 Chore
+
+- 同步 dev:prepare 自动生成文件和 lockfile ([c756de1](https://github.com/miaozhongfei/nuxt-dict/commit/c756de1))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
+## v0.0.10
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.9...v0.0.10)
+
+### 🩹 Fixes
+
+- 将 dexie 加入 build.transpile，修复 Vite CJS/ESM 解析错误 ([54e14b2](https://github.com/miaozhongfei/nuxt-dict/commit/54e14b2))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
+## v0.0.9
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.8...v0.0.9)
+
+### 🚀 Enhancements
+
+- 新增 lazy 参数控制版本检查时机，修复 ensureVersionChecked 竞态 ([b8545cb](https://github.com/miaozhongfei/nuxt-dict/commit/b8545cb))
+
+### 🩹 Fixes
+
+- 使用 Dexie.js 重写 IndexedDB 缓存，修复多 store 版本升级竞态 ([cc6d840](https://github.com/miaozhongfei/nuxt-dict/commit/cc6d840))
+
+### 📖 Documentation
+
+- 移除 defineDictAdapter 的 import 语句，已注册为 auto-import 无需手动导入 ([6fe0fdb](https://github.com/miaozhongfei/nuxt-dict/commit/6fe0fdb))
+
+### ✅ Tests
+
+- Playground 添加 5 仓库全组合测试（REST/adapter × lazy on/off） ([03965ba](https://github.com/miaozhongfei/nuxt-dict/commit/03965ba))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.8
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.7...v0.0.8)

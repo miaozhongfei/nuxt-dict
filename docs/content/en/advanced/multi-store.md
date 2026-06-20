@@ -38,7 +38,6 @@ The `static` store adapter is defined in a separate file:
 export default defineDictAdapter({
   async fetchDict(_storeName, { types, locale }) {
     return {
-      version: 'static-1.0',
       data: {
         priority: {
           type: 'priority',
@@ -113,7 +112,29 @@ $dict.translate('pay_status', 1, { storeName: 'payment' });
 
 ## Independent Version Detection
 
-Each store has its own version detection using a **lazy mechanism** — `fetchVersion()` is only called on first access to that store's dictionary data, not eagerly at module startup. A version update in one store only invalidates that store's cache, leaving others unaffected.
+Each store has its own version detection. A version update in one store only invalidates that store's cache, leaving others unaffected.
+
+### Lazy Version Checking
+
+The `lazy` parameter controls when version checking happens for each store:
+
+| lazy value | Behavior |
+|------------|----------|
+| `false` (default) | Version check runs immediately on page load (`initialize()` phase) |
+| `true` | Deferred until the first `getDict()` call for that store |
+
+Configuration example:
+
+```ts [nuxt.config.ts]
+dict: {
+  api: { lazy: false },  // default store checks immediately
+  stores: {
+    dicts2: { lazy: true },  // dicts2 checks lazily
+  }
+}
+```
+
+Use `false` (default) when you have few stores. Use `true` when you have many stores that may not all be accessed on every page, to avoid a batch of version requests at startup.
 
 ## Mastering Store Config Rules
 
@@ -177,16 +198,17 @@ Even though the endpoints are the same:
 
 > When would you use State 2 (declaring an empty object)? When you want different dictionary types from the same endpoint to have independent caching.
 
-### Detailed Explanation of the Four Fields
+### Detailed Explanation of the Five Fields
 
-Each store can configure four fields:
+Each store can configure five fields:
 
-| Field             | Type   | Purpose                                        | Example                         |
-| ----------------- | ------ | ---------------------------------------------- | ------------------------------- |
-| `baseURL`         | string | The server address                             | `https://pay-api.example.com`   |
-| `dictEndpoint`    | string | The endpoint path for fetching dictionary data | `/v1/dictionary`                |
-| `versionEndpoint` | string | The endpoint path for fetching the version     | `/v1/dictionary/version`        |
-| `adapter`         | string | File path to a custom adapter                  | `'~/dict/static-adapter'`       |
+| Field             | Type    | Purpose                                        | Example                         |
+| ----------------- | ------- | ---------------------------------------------- | ------------------------------- |
+| `baseURL`         | string  | The server address                             | `https://pay-api.example.com`   |
+| `dictEndpoint`    | string  | The endpoint path for fetching dictionary data | `/v1/dictionary`                |
+| `versionEndpoint` | string  | The endpoint path for fetching the version     | `/v1/dictionary/version`        |
+| `adapter`         | string  | File path to a custom adapter                  | `'~/dict/static-adapter'`       |
+| `lazy`            | boolean | Whether to lazily check the version            | `true`                          |
 
 **The final request URL = `baseURL` + the corresponding endpoint.**
 
@@ -363,7 +385,7 @@ Best for: All stores use the same protocol (HTTP), only addresses differ, adapte
 ```ts [~/dict/static-adapter.ts]
 // Custom adapter for the static store — fully custom, no HTTP
 export default defineDictAdapter({
-  async fetchDict() { return { version: '1.0', data: { /* ... */ } } },
+  async fetchDict() { return { data: { /* ... */ } } },
   async fetchVersion() { return '1.0' },
 });
 ```

@@ -128,7 +128,6 @@ export default defineNuxtConfig({
 export default defineDictAdapter({
   async fetchDict(_storeName, { types, locale }) {
     return {
-      version: 'static-1.0',
       data: {
         priority: {
           type: 'priority',

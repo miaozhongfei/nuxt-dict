@@ -43,10 +43,14 @@ export default defineNuxtConfig({
       apiHeaderKey: '',
     },
     stores: {
-      // dicts2 仓库使用独立的 API 端点（/api/dict/list2），返回不同数据
+      // REST + lazy: false（默认）— 使用独立 API 端点，立即版本检查
       dicts2: { dictEndpoint: '/api/dict/list2' },
-      // 示例：payment 仓库使用自定义适配器（约定路径 ~/dict/payment-adapter.ts 或显式指定）
-      // payment: { adapter: '~/dict/payment-adapter' },
+      // REST + lazy: true — 使用独立 API 端点，惰性版本检查
+      dicts3: { dictEndpoint: '/api/dict/list2', lazy: true },
+      // 自定义 adapter（~/dict/dicts4-adapter.ts 约定路径自动发现）+ lazy: false
+      dicts4: { lazy: false },
+      // 自定义 adapter（~/dict/dicts5-adapter.ts 约定路径自动发现）+ lazy: true
+      dicts5: { lazy: true },
     },
     ssr: {
       // prefetch: ['gender', 'status', 'region', 'industry'],

@@ -6,6 +6,10 @@
       <code>items: [&#123; label, value }]</code> 格式，与 dict 数据天然对齐。
     </p>
 
+    <div v-if="dictLoading" style="padding: 40px; text-align: center; color: #999">
+      字典数据加载中...
+    </div>
+    <template v-else>
     <!-- 1. USelectMenu -->
     <div class="demo-card">
       <div class="demo-card__header">
@@ -20,6 +24,7 @@
       <USelectMenu
         v-model="gender"
         :items="genderItems"
+        value-key="value"
         placeholder="请选择性别"
         style="width: 200px"
       />
@@ -65,13 +70,15 @@
 
       <UTable :data="tableRows" :columns="tableColumns" />
     </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-const { data: genderData } = useDict('gender');
-const { data: statusData } = useDict('status');
-useDict('industry');
+const { data: genderData, loading: l1 } = useDict('gender');
+const { data: statusData, loading: l2 } = useDict('status');
+const { loading: l3 } = useDict('industry');
+const dictLoading = computed(() => l1.value || l2.value || l3.value);
 
 const { $dict } = useNuxtApp();
 
@@ -100,6 +107,8 @@ const tableColumns = [
 ];
 
 const tableRows = computed(() => {
+  // dictLoading 作为响应式依赖，确保数据加载完成后 computed 重新求值
+  if (dictLoading.value) return [];
   const raw = [
     { name: '张三', gender: 'male', status: 1, industry: 'it' },
     { name: '李四', gender: 'female', status: 0, industry: 'finance' },

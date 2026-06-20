@@ -8,6 +8,7 @@ export const defaultOptions: ResolvedModuleOptions = {
     baseURL: '/api',
     dictEndpoint: '/dict/list',
     versionEndpoint: '/dict/version',
+    lazy: false,
   },
   cache: {
     memoryMax: 200,

@@ -49,7 +49,6 @@ export interface DictEntry {
 
 /** API 返回的字典响应格式 */
 export interface DictResponse {
-  version: string;
   data: Record<string, DictEntry>;
 }
 
@@ -57,7 +56,6 @@ export interface DictResponse {
 export interface CacheEntry<T = DictEntry> {
   data: T;
   timestamp: number;
-  version: string;
 }
 
 /**
@@ -95,6 +93,8 @@ export interface StoreApiOptions {
   versionEndpoint?: string;
   /** 自定义字典适配器文件路径（如 '~/dict/dict-adapter'），不传则按约定路径自动发现或使用默认 REST 适配器 */
   adapter?: string;
+  /** 是否惰性检查版本号，默认继承全局 `api.lazy`。`true` 时首次 getDict 调用才检查，`false` 时页面加载立即检查 */
+  lazy?: boolean;
 }
 
 /** 模块配置项（用户可传，字段均可选） */
@@ -112,6 +112,8 @@ export interface ModuleOptions {
     versionEndpoint?: string;
     /** 自定义字典适配器文件路径（如 '~/dict/dict-adapter'），不传则按约定路径自动发现或使用默认 REST 适配器 */
     adapter?: string;
+    /** 是否惰性检查版本号，默认 `false`（页面加载时立即检查）。`true` 时首次 getDict 调用才检查 */
+    lazy?: boolean;
   };
   cache?: {
     /** 内存缓存最大条目数，默认 `200` */
@@ -165,6 +167,7 @@ export interface ResolvedModuleOptions {
     dictEndpoint: string;
     versionEndpoint: string;
     adapter?: string;
+    lazy: boolean;
   };
   cache: {
     memoryMax: number;

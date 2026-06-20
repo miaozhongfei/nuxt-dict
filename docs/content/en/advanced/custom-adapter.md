@@ -111,7 +111,7 @@ export default defineDictAdapter({
       if (dictData[type]) data[type] = dictData[type]
     }
     // Local data doesn't change, use a fixed version
-    return { version: '1.0.0', data }
+    return { data }
   },
   async fetchVersion(storeName) {
     // No version detection needed for local data
@@ -134,7 +134,7 @@ export default defineDictAdapter({
         items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
       }
     }
-    return { version: json.dataVersion || '1.0.0', data }
+    return { data }
   },
   async fetchVersion(storeName) {
     const res = await fetch('/api/custom-dict/version')

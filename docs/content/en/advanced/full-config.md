@@ -41,6 +41,15 @@ This chapter lists all fields in the `dict` configuration of `nuxt.config.ts`.
 | ------------------------ | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `string \| undefined` | `undefined` | File path to a custom adapter (e.g. `'~/dict/dict-adapter.ts'`). If a file exists at the convention path `~/dict/dict-adapter.ts`, the module auto-discovers and registers it without manual config. Named stores use `stores.xxx.adapter`. See [Custom Adapter](/advanced/custom-adapter) |
 
+## api.lazy
+
+| Type      | Default | Description                                                                                                            |
+| --------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `boolean` | `false` | Whether to lazily check the version. `false`: check immediately on page load. `true`: defer until the first `getDict()` call |
+
+Use `false` (default) when you have few stores. Use `true` for stores that may not be accessed on every page.
+Each store can override this via `stores[name].lazy`.
+
 ## cache.memoryMax
 
 | Type     | Default | Description                  |
@@ -111,7 +120,7 @@ This chapter lists all fields in the `dict` configuration of `nuxt.config.ts`.
 
 | Type                                                                      | Default | Description                                                                           |
 | ------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------- |
-| `Record<string, { baseURL?, dictEndpoint?, versionEndpoint?, adapter? }>` | `{}`    | Multi-store API config. Each store can have independent endpoints or a custom adapter |
+| `Record<string, { baseURL?, dictEndpoint?, versionEndpoint?, adapter?, lazy? }>` | `{}`    | Multi-store API config. Each store can have independent endpoints or a custom adapter |
 
 Per-store fields:
 
@@ -119,6 +128,7 @@ Per-store fields:
 - **`dictEndpoint`**: Dictionary list endpoint, inherits global `api.dictEndpoint` if not set
 - **`versionEndpoint`**: Version endpoint, inherits global `api.versionEndpoint` if not set
 - **`adapter`**: File path to a custom adapter for this store (`string`, **not inherited**; a REST adapter is auto-created if not set)
+- **`lazy`**: Whether to lazily check the version (`boolean`, inherits global `api.lazy` if not set, defaults to `false`)
 
 See [Multi-Store](/advanced/multi-store).
 
