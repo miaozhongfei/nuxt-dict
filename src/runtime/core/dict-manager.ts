@@ -35,6 +35,8 @@ export interface DictManagerOptions {
   ttl: number;
   /** localStorage 中存储版本号的 key */
   versionStorageKey: string;
+  /** 配置为惰性版本检查的仓库集合，不在此集合中的仓库由 initialize() 立即检查 */
+  lazyStores: Set<string>;
 }
 
 /**
@@ -62,6 +64,8 @@ export class DictManager {
   private checkedStores = new Set<string>();
   /** 正在进行的版本检查请求，用于去重 */
   private pendingVersionChecks = new Map<string, Promise<void>>();
+  /** 配置为惰性版本检查的仓库集合 */
+  private lazyStores: Set<string>;
   locale = shallowRef<string>('zh-CN');
 
   constructor(options: DictManagerOptions) {
@@ -69,6 +73,7 @@ export class DictManager {
     this.indexedDB = options.indexedDB;
     this.adapters = options.adapters;
     this.pendingRequests = new Map();
+    this.lazyStores = options.lazyStores;
     // 为每个 adapter 创建独立的版本检查器，默认仓库复用原始 key 保证兼容
     this.versionChecks = new Map();
     for (const [storeName, adapter] of options.adapters) {
@@ -114,7 +119,7 @@ export class DictManager {
   }
 
   /**
-   * 惰性版本检查：首次访问该仓库时检查版本变更，按需清理缓存。
+   * 惰性版本检查（仅 lazy 仓库使用）：首次访问该仓库时检查版本变更，按需清理缓存。
    * 并发调用去重 —— 同一仓库的多个 getDict 共享单次版本检查。
    */
   private async ensureVersionChecked(storeName: string): Promise<void> {
@@ -143,10 +148,10 @@ export class DictManager {
       : Promise.resolve();
 
     this.pendingVersionChecks.set(storeName, promise);
-    this.checkedStores.add(storeName);
 
     try {
       await promise;
+      this.checkedStores.add(storeName);
     } finally {
       this.pendingVersionChecks.delete(storeName);
     }
@@ -161,8 +166,10 @@ export class DictManager {
    * @returns {Promise<DictEntry>} 包含 items 和可选 tree 的字典条目
    */
   async getDict(type: string, storeName = DEFAULT_STORE_NAME): Promise<DictEntry> {
-    // 惰性版本检查：首次访问该仓库时检查版本并失效过期缓存
-    await this.ensureVersionChecked(storeName);
+    // 惰性版本检查：仅 lazy 仓库在首次访问时检查版本
+    if (this.lazyStores.has(storeName)) {
+      await this.ensureVersionChecked(storeName);
+    }
 
     const key = this.buildKey(type, storeName);
 
@@ -357,13 +364,30 @@ export class DictManager {
   }
 
   /**
-   * 初始化管理器。
-   * 版本检查已改为惰性执行，在首次 getDict() 调用时触发，避免全量串行请求。
+   * 初始化管理器：对非 lazy 仓库立即并行检查版本号。
+   * lazy 仓库的版本检查延迟到首次 getDict() 调用时惰性触发。
    *
    * @returns {Promise<void>}
    */
   async initialize(): Promise<void> {
-    // no-op: 版本检查移至首次 getDict() 调用时惰性执行，避免全量串行请求
+    // 仅客户端执行版本检查（需要 localStorage）
+    if (typeof localStorage === 'undefined') return;
+
+    // 非 lazy 仓库：立即并行检查版本
+    const immediateStores = [...this.versionChecks]
+      .filter(([name]) => !this.lazyStores.has(name));
+
+    await Promise.all(immediateStores.map(async ([name, vc]) => {
+      try {
+        const { changed } = await vc.check(name);
+        if (changed) {
+          await this.invalidateAll(name);
+        }
+      } catch {
+        // 单个仓库版本检查失败不影响其他仓库
+      }
+      this.checkedStores.add(name);
+    }));
   }
 
   /**

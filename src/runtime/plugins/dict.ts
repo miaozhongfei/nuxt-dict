@@ -94,20 +94,38 @@ function resolveClientLocale(options: ResolvedModuleOptions): string {
 }
 
 /**
- * 客户端侧初始化 IndexedDB 并检查版本更新。
- * 失败仅警告，不影响主流程。
+ * 客户端侧初始化 IndexedDB 持久缓存 + 版本检查。
+ * 先初始化 IndexedDB（invalidateAll 需要 IndexedDB 已就绪），再执行非 lazy 仓库的立即版本检查。
  */
-async function initClientCache(
+async function initClient(
   manager: DictManager,
   indexedDB: IndexedDBCache,
+  options: ResolvedModuleOptions,
   logger: ReturnType<typeof createLogger>,
 ): Promise<void> {
-  try {
-    await indexedDB.init();
-    await manager.initialize();
-  } catch (e) {
-    logger.warn('IndexedDB init failed:', e);
+  if (options.cache.indexedDB.enabled) {
+    try {
+      await indexedDB.init();
+    } catch (e) {
+      logger.warn('IndexedDB init failed:', e);
+    }
   }
+  await manager.initialize();
+}
+
+/**
+ * 根据配置确定哪些仓库使用惰性版本检查。
+ * lazy 仓库在首次 getDict 时才检查版本，非 lazy 仓库在页面加载时立即检查。
+ */
+function resolveLazyStores(options: ResolvedModuleOptions): Set<string> {
+  const lazyStores = new Set<string>();
+  if (options.api.lazy) lazyStores.add(DEFAULT_STORE_NAME);
+  for (const [name, config] of Object.entries(options.stores)) {
+    if (config.lazy ?? options.api.lazy ?? false) {
+      lazyStores.add(name);
+    }
+  }
+  return lazyStores;
 }
 
 /**
@@ -185,8 +203,8 @@ const dictPlugin = defineNuxtPlugin(async (nuxtApp) => {
   const logger = createLogger('nuxt-dict', { level: options.logLevel });
 
   const adapters = createAdapters(options, logger);
-
   const indexedDB = new IndexedDBCache(options.cache.indexedDB.dbName);
+  const lazyStores = resolveLazyStores(options);
 
   const manager = new DictManager({
     adapters,
@@ -194,6 +212,7 @@ const dictPlugin = defineNuxtPlugin(async (nuxtApp) => {
     memoryMax: options.cache.memoryMax,
     ttl: options.cache.ttl,
     versionStorageKey: options.version.storageKey,
+    lazyStores,
   });
 
   const locale = import.meta.server ? resolveServerLocale(options) : resolveClientLocale(options);
@@ -212,8 +231,9 @@ const dictPlugin = defineNuxtPlugin(async (nuxtApp) => {
     });
   }
 
-  if (import.meta.client && options.cache.indexedDB.enabled) {
-    await initClientCache(manager, indexedDB, logger);
+  // 客户端初始化：IndexedDB 持久缓存 + 非 lazy 仓库立即版本检查
+  if (import.meta.client) {
+    await initClient(manager, indexedDB, options, logger);
   }
 
   if (import.meta.server && options.ssr.prefetch.length > 0) {
