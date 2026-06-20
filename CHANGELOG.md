@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.10
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.9...v0.0.10)
+
+### 🩹 Fixes
+
+- 将 dexie 加入 build.transpile，修复 Vite CJS/ESM 解析错误 ([54e14b2](https://github.com/miaozhongfei/nuxt-dict/commit/54e14b2))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.9
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.8...v0.0.9)
