@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.11
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.10...v0.0.11)
+
+### 🏡 Chore
+
+- 同步 dev:prepare 自动生成文件和 lockfile ([c756de1](https://github.com/miaozhongfei/nuxt-dict/commit/c756de1))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.10
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.9...v0.0.10)
