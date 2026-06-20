@@ -24,6 +24,7 @@
       <USelectMenu
         v-model="gender"
         :items="genderItems"
+        value-key="value"
         placeholder="请选择性别"
         style="width: 200px"
       />
