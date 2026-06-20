@@ -11,6 +11,10 @@
       计算属性、表格 formatter 等不需要响应式更新的场景。在模板中使用时仅显示静态快照。
     </div>
 
+    <div v-if="dictLoading" style="padding: 40px; text-align: center; color: #999">
+      字典数据加载中...
+    </div>
+    <template v-else>
     <!-- 1. translate -->
     <div class="demo-card">
       <div class="demo-card__header">
@@ -185,23 +189,32 @@
         </tbody>
       </table>
     </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-useDict('gender');
-useDict('status');
-useDict('industry');
-useDictTree('region');
+const { loading: l1 } = useDict('gender');
+const { loading: l2 } = useDict('status');
+const { loading: l3 } = useDict('industry');
+const { loading: l4 } = useDictTree('region');
+const dictLoading = computed(() => l1.value || l2.value || l3.value || l4.value);
 
 const { $dict } = useNuxtApp();
 
 const tableRow = { name: '张三', gender: 'male', status: 1 };
 
-const translatedRow = computed(() =>
-  $dict.translateData({ ...tableRow }, { gender: 'gender', status: 'status' }),
-);
+const translatedRow = computed(() => {
+  if (dictLoading.value) return {};
+  return $dict.translateData({ ...tableRow }, { gender: 'gender', status: 'status' });
+});
 
-const statusItem = computed(() => JSON.stringify($dict.getDictItem('status', 1)));
-const industryItem = computed(() => JSON.stringify($dict.getDictItem('industry', 'it')));
+const statusItem = computed(() => {
+  if (dictLoading.value) return 'null';
+  return JSON.stringify($dict.getDictItem('status', 1));
+});
+const industryItem = computed(() => {
+  if (dictLoading.value) return 'null';
+  return JSON.stringify($dict.getDictItem('industry', 'it'));
+});
 </script>

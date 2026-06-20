@@ -6,6 +6,10 @@
       <code>&#123; value, label, ... }</code> 与 Element Plus 的 options 格式天然兼容。
     </p>
 
+    <div v-if="dictLoading" style="padding: 40px; text-align: center; color: #999">
+      字典数据加载中...
+    </div>
+    <template v-else>
     <!-- 1. el-select -->
     <div class="demo-card">
       <div class="demo-card__header">
@@ -105,15 +109,17 @@
         选中：<b>{{ regionValue.join(' / ') }}</b>
       </div>
     </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { TreeNode } from '@lacqjs/nuxt-dict';
 
-const { data: genderData } = useDict('gender');
-const { data: statusData } = useDict('status');
-const { tree } = useDictTree('region');
+const { data: genderData, loading: l1 } = useDict('gender');
+const { data: statusData, loading: l2 } = useDict('status');
+const { tree, loading: l3 } = useDictTree('region');
+const dictLoading = computed(() => l1.value || l2.value || l3.value);
 
 const { $dict } = useNuxtApp();
 
