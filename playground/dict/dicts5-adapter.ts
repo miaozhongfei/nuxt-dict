@@ -12,7 +12,6 @@ export default defineDictAdapter({
    */
   async fetchDict(_storeName, { types: _types, locale }) {
     return {
-      version: '5.0.0',
       data: {
         status: {
           type: 'status',

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.1.5",
-    "@lacqjs/nuxt-dict": "^0.0.11",
+    "@lacqjs/nuxt-dict": "workspace:*",
     "@nuxt/ui": "^4.8.2",
     "@nuxtjs/i18n": "^10.4.0",
     "@pinia/nuxt": "^0.11.3",

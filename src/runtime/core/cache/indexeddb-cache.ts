@@ -1,4 +1,4 @@
-import Dexie from 'dexie';
+import { Dexie } from 'dexie';
 
 import type { DictEntry, CacheEntry } from '../../types';
 import { createLogger } from '../../utils/logger';

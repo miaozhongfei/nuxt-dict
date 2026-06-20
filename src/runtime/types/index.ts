@@ -49,7 +49,6 @@ export interface DictEntry {
 
 /** API 返回的字典响应格式 */
 export interface DictResponse {
-  version: string;
   data: Record<string, DictEntry>;
 }
 
@@ -57,7 +56,6 @@ export interface DictResponse {
 export interface CacheEntry<T = DictEntry> {
   data: T;
   timestamp: number;
-  version: string;
 }
 
 /**

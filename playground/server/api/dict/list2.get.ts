@@ -5,7 +5,6 @@
 
   // 二号数据源返回完全不同的数据——可一眼区分来源
   return {
-    version: '2.0.0',
     data: {
       gender: {
         type: 'gender',

@@ -210,7 +210,6 @@ export class DictManager {
       this.memoryCache.set(key, {
         data: idbEntry.data,
         timestamp: Date.now(),
-        version: idbEntry.version,
       });
       return idbEntry.data;
     }
@@ -232,7 +231,6 @@ export class DictManager {
     const cacheEntry: CacheEntry<DictEntry> = {
       data: entry,
       timestamp: Date.now(),
-      version: response.version,
     };
 
     // 同时写入两级缓存（IndexedDB 写入失败不影响数据返回）
@@ -273,7 +271,6 @@ export class DictManager {
     const cacheEntry: CacheEntry<DictEntry> = {
       data: entry,
       timestamp: Date.now(),
-      version: response.version,
     };
 
     this.memoryCache.set(key, cacheEntry);

@@ -315,8 +315,6 @@ declare module '#build/nuxt-dict/adapters' {
 
     // 确保运行时目录被转译（支持现代 ES 语法）
     _nuxt.options.build.transpile.push(resolver.resolve('./runtime'));
-    // 确保 dexie 被 Vite 正确处理（避免 CJS/ESM 解析问题）
-    _nuxt.options.build.transpile.push('dexie');
 
     // 注册插件（无扩展名，Nuxt 构建时自动解析对应文件）
     addPlugin(resolver.resolve('./runtime/plugins/dict'));
