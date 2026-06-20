@@ -1,155 +1,187 @@
 ﻿<template>
   <div>
-    <h2>多存储库 Multi-Store</h2>
-    <p style="color: #666">同一字典类型可从不同的 IndexedDB 对象存储库加载，实现数据隔离。</p>
+    <h2>多存储库 Multi-Store — lazy 版本检查测试</h2>
+    <p style="color: #666">
+      5 个仓库覆盖 REST/自定义适配器 × lazy on/off 全部组合。打开 DevTools → Network
+      面板观察版本检查和字典请求的时机。
+    </p>
 
     <div v-if="loading" style="padding: 40px; text-align: center; color: #999">加载中...</div>
 
     <template v-else>
-      <h3>默认存储库 <code>'dicts'</code> — gender</h3>
-      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
-        <thead>
-          <tr>
-            <th>value</th>
-            <th>label（useDict 翻译）</th>
-            <th>$dict.translate</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in defaultData" :key="item.value">
-            <td>{{ item.value }}</td>
-            <td>{{ defaultTranslate(item.value) }}</td>
-            <td>{{ $dict.translate('gender', item.value) }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div style="margin-top: 12px">
-        <button @click="doDefaultRefresh" style="cursor: pointer">刷新</button>
-        <span style="margin-left: 8px; color: #666">data 长度: {{ defaultData?.length }}</span>
-      </div>
-
-      <hr style="margin: 24px 0" />
-
-      <h3>自定义存储库 <code>'dicts2'</code> — gender（useDict 双参形式）</h3>
-      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
-        <thead>
-          <tr>
-            <th>code</th>
-            <th>label（useDict 翻译）</th>
-            <th>$dict.translate（opts.storeName）</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in store2Data" :key="item.value">
-            <td>{{ item.value }}</td>
-            <td>{{ store2Translate(item.value) }}</td>
-            <td>{{ $dict.translate('gender', item.value, { storeName: 'dicts2' }) }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div style="margin-top: 12px">
-        <button @click="doStore2Refresh" style="cursor: pointer">刷新</button>
-        <span style="margin-left: 8px; color: #666">data 长度: {{ store2Data?.length }}</span>
-      </div>
-
-      <hr style="margin: 24px 0" />
-
-      <h3>自定义存储库 <code>'dicts3'</code> — useDict + useDictTree</h3>
-
-      <div style="display: flex; gap: 40px">
-        <div>
-          <h4>useDict('dicts3', 'status')</h4>
-          <div v-if="store3OptionsLoading">加载中...</div>
-          <ul v-else>
-            <li v-for="opt in store3Data" :key="opt.value">{{ opt.label }} ({{ opt.value }})</li>
-          </ul>
-        </div>
-
-        <div>
-          <h4>useDictTree('dicts3', 'region')</h4>
-          <div v-if="store3TreeLoading">加载中...</div>
-          <ul v-else>
-            <li v-for="node in store3Tree" :key="node.value">
-              {{ node.label }} ({{ node.value }})
-              <span v-if="node.children" style="color: #999">
-                — {{ node.children.length }} 个子节点
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <hr style="margin: 24px 0" />
-
-      <h3>自定义存储库 <code>'payment'</code> — 自定义 Adapter（文件路径方式）</h3>
-      <p style="color: #666">
-        该仓库通过约定路径 <code>~/dict/payment-adapter.ts</code> 或 nuxt.config.ts 中
-        <code>stores.payment.adapter</code> 指定适配器文件路径，模块构建时通过 virtual module
-        注入。
+      <!-- ========== dicts（默认）— REST + lazy: false ========== -->
+      <h3>
+        <code>'dicts'</code> — REST + lazy: false（默认）
+        <span style="color: #67C23A; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
+      </h3>
+      <p style="color: #999; font-size: 13px">
+        端点: <code>/api/dict/list</code> + <code>/api/dict/version</code>
       </p>
       <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
         <thead>
           <tr>
             <th>value</th>
             <th>label（useDict 翻译）</th>
-            <th>$dict.translate</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in paymentData" :key="item.value">
+          <tr v-for="item in d1Data" :key="item.value">
             <td>{{ item.value }}</td>
-            <td>{{ paymentTranslate(item.value) }}</td>
-            <td>{{ $dict.translate('status', item.value, { storeName: 'payment' }) }}</td>
+            <td>{{ d1Translate(item.value) }}</td>
           </tr>
         </tbody>
       </table>
-      <div style="margin-top: 12px">
-        <button @click="doPaymentRefresh" style="cursor: pointer">刷新</button>
-        <span style="margin-left: 8px; color: #666">data 长度: {{ paymentData?.length }}</span>
+      <div style="margin-top: 8px; color: #999; font-size: 13px">
+        data 长度: {{ d1Data?.length }}
+      </div>
+
+      <hr style="margin: 24px 0" />
+
+      <!-- ========== dicts2 — REST + lazy: false ========== -->
+      <h3>
+        <code>'dicts2'</code> — REST + lazy: false
+        <span style="color: #67C23A; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
+      </h3>
+      <p style="color: #999; font-size: 13px">
+        端点: <code>/api/dict/list2</code>（数据带【源2】前缀）
+      </p>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
+        <thead>
+          <tr>
+            <th>value</th>
+            <th>label（useDict 翻译）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in d2Data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ d2Translate(item.value) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 8px; color: #999; font-size: 13px">
+        data 长度: {{ d2Data?.length }}
+      </div>
+
+      <hr style="margin: 24px 0" />
+
+      <!-- ========== dicts3 — REST + lazy: true ========== -->
+      <h3>
+        <code>'dicts3'</code> — REST + lazy: true
+        <span style="color: #E6A23C; font-size: 12px; margin-left: 8px">⬤ 惰性检查</span>
+      </h3>
+      <p style="color: #999; font-size: 13px">
+        端点: <code>/api/dict/list2</code>（同 dicts2，但 lazy: true，首次访问时才检查版本）
+      </p>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
+        <thead>
+          <tr>
+            <th>value</th>
+            <th>label（useDict 翻译）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in d3Data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ d3Translate(item.value) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 8px; color: #999; font-size: 13px">
+        data 长度: {{ d3Data?.length }}
+      </div>
+
+      <hr style="margin: 24px 0" />
+
+      <!-- ========== dicts4 — 自定义 adapter + lazy: false ========== -->
+      <h3>
+        <code>'dicts4'</code> — 自定义 adapter + lazy: false
+        <span style="color: #67C23A; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
+      </h3>
+      <p style="color: #999; font-size: 13px">
+        适配器: <code>~/dict/dicts4-adapter.ts</code>（约定路径自动发现，硬编码数据带【源4】前缀）
+      </p>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
+        <thead>
+          <tr>
+            <th>value</th>
+            <th>label（useDict 翻译）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in d4Data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ d4Translate(item.value) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 8px; color: #999; font-size: 13px">
+        data 长度: {{ d4Data?.length }}
+      </div>
+
+      <hr style="margin: 24px 0" />
+
+      <!-- ========== dicts5 — 自定义 adapter + lazy: true ========== -->
+      <h3>
+        <code>'dicts5'</code> — 自定义 adapter + lazy: true
+        <span style="color: #E6A23C; font-size: 12px; margin-left: 8px">⬤ 惰性检查</span>
+      </h3>
+      <p style="color: #999; font-size: 13px">
+        适配器: <code>~/dict/dicts5-adapter.ts</code>（约定路径自动发现，硬编码数据带【源5】前缀）
+      </p>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse">
+        <thead>
+          <tr>
+            <th>value</th>
+            <th>label（useDict 翻译）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in d5Data" :key="item.value">
+            <td>{{ item.value }}</td>
+            <td>{{ d5Translate(item.value) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 8px; color: #999; font-size: 13px">
+        data 长度: {{ d5Data?.length }}
+      </div>
+
+      <hr style="margin: 24px 0" />
+
+      <!-- ========== 验证要点 ========== -->
+      <div
+        style="background: #fff3cd; border: 1px solid #ffc107; padding: 12px; border-radius: 4px"
+      >
+        <strong style="color: #856404">验证要点（F12 → Network）：</strong>
+        <ol style="margin: 8px 0 0 16px; color: #666; font-size: 13px">
+          <li>刷新页面 → 立即看到 dicts/dicts2/dicts4 的版本检查请求（lazy: false）</li>
+          <li>dicts3/dicts5 的版本检查在页面加载时不会发出（lazy: true）</li>
+          <li>首次导航到本页面时 dicts3/dicts5 才发起版本检查 → 字典请求</li>
+          <li>各仓库数据前缀不同：dicts=原始 / dicts2=【源2】/ dicts3=【源2】/ dicts4=【源4】/ dicts5=【源5】</li>
+        </ol>
       </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-// 默认存储库 'dicts' —— 单参形式
-const {
-  data: defaultData,
-  translate: defaultTranslate,
-  loading: defaultLoading,
-} = useDict('gender');
+// dicts（默认）— REST + lazy: false（页面加载立即版本检查）
+const { data: d1Data, translate: d1Translate, loading: d1Loading } = useDict('gender');
 
-// 自定义存储库 'dicts2' —— 双参形式
-const {
-  data: store2Data,
-  translate: store2Translate,
-  loading: store2Loading,
-} = useDict('dicts2', 'gender');
+// dicts2 — REST + lazy: false（独立端点 /api/dict/list2）
+const { data: d2Data, translate: d2Translate, loading: d2Loading } = useDict('dicts2', 'gender');
 
-// 自定义存储库 'dicts3' —— useDict + useDictTree
-const { data: store3Data, loading: store3OptionsLoading } = useDict('dicts3', 'status');
+// dicts3 — REST + lazy: true（同 dicts2 端点，惰性版本检查）
+const { data: d3Data, translate: d3Translate, loading: d3Loading } = useDict('dicts3', 'gender');
 
-const { tree: store3Tree, loading: store3TreeLoading } = useDictTree('dicts3', 'region');
+// dicts4 — 自定义 adapter（~/dict/dicts4-adapter.ts）+ lazy: false
+const { data: d4Data, translate: d4Translate, loading: d4Loading } = useDict('dicts4', 'gender');
 
-// 自定义存储库 'payment' —— 通过 ~/dict/payment-adapter.ts 约定路径或显式配置 adapter 文件路径
-const {
-  data: paymentData,
-  translate: paymentTranslate,
-  loading: paymentLoading,
-  refresh: paymentRefresh,
-} = useDict('payment', 'status');
+// dicts5 — 自定义 adapter（~/dict/dicts5-adapter.ts）+ lazy: true
+const { data: d5Data, translate: d5Translate, loading: d5Loading } = useDict('dicts5', 'status');
 
-const loading = computed(() => defaultLoading.value || store2Loading.value);
-
-function doDefaultRefresh() {
-  useDict('gender').refresh();
-}
-function doStore2Refresh() {
-  useDict('dicts2', 'gender').refresh();
-}
-function doPaymentRefresh() {
-  paymentRefresh();
-}
+const loading = computed(
+  () => d1Loading.value || d2Loading.value || d3Loading.value || d4Loading.value || d5Loading.value,
+);
 </script>
