@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "home": "Home",
+    "useDict": "useDict",
+    "useDictTree": "useDictTree",
+    "dollarDict": "$dict Translate",
+    "scopeCompare": "Scope",
+    "elementPlus": "Element Plus",
+    "vant": "Vant",
+    "nuxtUi": "Nuxt UI",
+    "multiStore": "Multi-Store"
+  },
+  "home": {
+    "title": "nuxt-dict Demo",
+    "subtitle": "Only api.baseURL configured, everything else at defaults. Covers all core APIs and popular UI library integrations.",
+    "apiNote": "Dictionary APIs are mocked on the server side. In production, simply change dict.api.baseURL in nuxt.config.ts to point to your Java backend or third-party API."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "demo-multi-store",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@element-plus/nuxt": "^1.1.5",
+    "@lacqjs/nuxt-dict": "workspace:*",
+    "@nuxt/ui": "^4.8.2",
+    "@nuxtjs/i18n": "^10.4.0",
+    "@pinia/nuxt": "^0.11.3",
+    "@vueuse/nuxt": "^14.3.0",
+    "nuxt": "^4.4.8",
+    "pinia": "^3.0.4",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "vant": "^4.9.24",
+    "vue": "^3.5.35",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^7.0.0-beta.1",
+    "oxfmt": "^0.54.0",
+    "oxlint": "^1.69.0",
+    "typescript": "~5.9.3",
+    "vue-tsc": "^3.3.4"
+  }
+}
