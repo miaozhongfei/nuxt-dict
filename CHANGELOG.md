@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.0.13
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.12...v0.0.13)
+
+### 🚀 Enhancements
+
+- 新建 demo-multi-store 多仓库示例（5仓库×3+类型×lazy on/off） ([31fd19b](https://github.com/miaozhongfei/nuxt-dict/commit/31fd19b))
+
+### 📦 Build
+
+- 修复发版 GitHub Release 指向 main，补全 release 脚本 patch/minor/major 变体 ([c43c23f](https://github.com/miaozhongfei/nuxt-dict/commit/c43c23f))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.12
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.11...v0.0.12)

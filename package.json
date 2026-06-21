@@ -1,6 +1,6 @@
 {
   "name": "@lacqjs/nuxt-dict",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Nuxt 数据字典模块，提供扁平/树形字典翻译、多语言国际化、三级缓存与 SSR 预取。",
   "keywords": [
     "@lacqjs/nuxt-dict",
