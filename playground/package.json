@@ -9,7 +9,7 @@
   "devDependencies": {
     "@element-plus/nuxt": "^1.1.5",
     "@lacqjs/nuxt-dict": "workspace:*",
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.61.0",
     "nuxt": "^4.4.8",
     "nuxt-skill-hub": "^0.1.0",
     "vant": "^4.9.24"

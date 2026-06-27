@@ -1,6 +1,6 @@
 {
   "name": "@lacqjs/nuxt-dict",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Nuxt 数据字典模块，提供扁平/树形字典翻译、多语言国际化、三级缓存与 SSR 预取。",
   "keywords": [
     "@lacqjs/nuxt-dict",
@@ -81,13 +81,13 @@
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.4.8",
-    "@types/node": "^25.9.2",
+    "@types/node": "^26.0.0",
     "changelogen": "^0.6.2",
     "element-plus": "^2.14.1",
     "nuxt": "^4.4.8",
-    "oxfmt": "^0.54.0",
-    "oxlint": "^1.69.0",
-    "typescript": "~5.9.3",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
+    "typescript": "~6.0.3",
     "vant": "^4.9.24",
     "vue-tsc": "^3.3.4",
     "ws": "^8.21.0"

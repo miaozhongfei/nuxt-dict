@@ -12,9 +12,13 @@ An adapter implements two methods from the `DictAdapter` interface. The module p
 ```ts
 // defineDictAdapter() returns the object as-is at runtime, only provides type checking
 export default defineDictAdapter({
-  async fetchDict(storeName, { types, locale }) { /* ... */ },
-  async fetchVersion(storeName) { /* ... */ },
-})
+  async fetchDict(storeName, { types, locale }) {
+    /* ... */
+  },
+  async fetchVersion(storeName) {
+    /* ... */
+  },
+});
 ```
 
 Full interface definition:
@@ -38,14 +42,14 @@ Place the adapter file at `~/dict/dict-adapter.ts` and the module discovers it a
 // Module auto-discovers ~/dict/dict-adapter.ts, no nuxt.config.ts setup required
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
-    const res = await fetch(`/api/dict?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    const res = await fetch(`/api/dict?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch('/api/dict/version')
-    return (await res.json()).version
+    const res = await fetch('/api/dict/version');
+    return (await res.json()).version;
   },
-})
+});
 ```
 
 ### Explicit Config Path
@@ -61,7 +65,7 @@ export default defineNuxtConfig({
       adapter: '~/custom/my-adapter',
     },
   },
-})
+});
 ```
 
 Each store can also have its own adapter file at the convention path `~/dict/{storeName}-adapter.ts`.
@@ -77,13 +81,13 @@ Four adapter examples covering common scenarios — GraphQL, local JSON, format 
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
     // Build the GraphQL query string
-    const query = `{ dict(types: [${types.map(t => `"${t}"`)}], locale: "${locale}") { version data { type items { code label } } } }`
+    const query = `{ dict(types: [${types.map((t) => `"${t}"`)}], locale: "${locale}") { version data { type items { code label } } } }`;
     const res = await fetch('https://graphql.example.com', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
-    })
-    return (await res.json()).data.dict
+    });
+    return (await res.json()).data.dict;
   },
   async fetchVersion(storeName) {
     // Query the current dictionary version
@@ -91,56 +95,56 @@ export default defineDictAdapter({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: '{ dictVersion }' }),
-    })
-    return (await res.json()).data.dictVersion
+    });
+    return (await res.json()).data.dictVersion;
   },
-})
+});
 ```
 
 ```ts [Local JSON Adapter]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+import { defineDictAdapter } from '@lacqjs/nuxt-dict';
 // Import local dictionary data file
-import dictData from '../data/dictionary.json'
+import dictData from '../data/dictionary.json';
 
 export default defineDictAdapter({
   async fetchDict(storeName, { types }) {
     // Filter local data by requested types
-    const data: Record<string, any> = {}
+    const data: Record<string, any> = {};
     for (const type of types) {
-      if (dictData[type]) data[type] = dictData[type]
+      if (dictData[type]) data[type] = dictData[type];
     }
     // Local data doesn't change, use a fixed version
-    return { data }
+    return { data };
   },
   async fetchVersion(storeName) {
     // No version detection needed for local data
-    return '1.0.0'
+    return '1.0.0';
   },
-})
+});
 ```
 
 ```ts [Format Conversion]
 // ~/dict/dict-adapter.ts
 export default defineDictAdapter({
   async fetchDict(storeName, { types }) {
-    const res = await fetch(`/api/custom-dict?codes=${types.join(',')}`)
-    const json = await res.json()
+    const res = await fetch(`/api/custom-dict?codes=${types.join(',')}`);
+    const json = await res.json();
     // Transform backend format to DictResponse format expected by the module
-    const data: Record<string, any> = {}
+    const data: Record<string, any> = {};
     for (const item of json.payload) {
       data[item.dictType] = {
         type: item.dictType,
         items: item.options.map((opt: any) => ({ value: opt.dictCode, label: opt.dictName })),
-      }
+      };
     }
-    return { data }
+    return { data };
   },
   async fetchVersion(storeName) {
-    const res = await fetch('/api/custom-dict/version')
-    return (await res.json()).version
+    const res = await fetch('/api/custom-dict/version');
+    return (await res.json()).version;
   },
-})
+});
 ```
 
 ```ts [Route by StoreName]
@@ -152,16 +156,18 @@ export default defineDictAdapter({
       dicts: 'https://default-api.example.com/dict/list',
       payment: 'https://pay-api.example.com/v1/payment/dict',
       logistics: 'https://logistics-api.example.com/v1/logistics/dict',
-    }
-    const url = endpoints[storeName] || endpoints.dicts
-    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    };
+    const url = endpoints[storeName] || endpoints.dicts;
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
-    return (await res.json()).version
+    const res = await fetch(
+      `https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`,
+    );
+    return (await res.json()).version;
   },
-})
+});
 ```
 
 ::

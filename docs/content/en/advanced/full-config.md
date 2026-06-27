@@ -37,14 +37,14 @@ This chapter lists all fields in the `dict` configuration of `nuxt.config.ts`.
 
 ## api.adapter
 
-| Type                     | Default     | Description                                                                                                                                                                                                                       |
-| ------------------------ | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Type                  | Default     | Description                                                                                                                                                                                                                                                                                |
+| --------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `string \| undefined` | `undefined` | File path to a custom adapter (e.g. `'~/dict/dict-adapter.ts'`). If a file exists at the convention path `~/dict/dict-adapter.ts`, the module auto-discovers and registers it without manual config. Named stores use `stores.xxx.adapter`. See [Custom Adapter](/advanced/custom-adapter) |
 
 ## api.lazy
 
-| Type      | Default | Description                                                                                                            |
-| --------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Type      | Default | Description                                                                                                                  |
+| --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | `boolean` | `false` | Whether to lazily check the version. `false`: check immediately on page load. `true`: defer until the first `getDict()` call |
 
 Use `false` (default) when you have few stores. Use `true` for stores that may not be accessed on every page.
@@ -118,8 +118,8 @@ Each store can override this via `stores[name].lazy`.
 
 ## stores
 
-| Type                                                                      | Default | Description                                                                           |
-| ------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------- |
+| Type                                                                             | Default | Description                                                                           |
+| -------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------- |
 | `Record<string, { baseURL?, dictEndpoint?, versionEndpoint?, adapter?, lazy? }>` | `{}`    | Multi-store API config. Each store can have independent endpoints or a custom adapter |
 
 Per-store fields:

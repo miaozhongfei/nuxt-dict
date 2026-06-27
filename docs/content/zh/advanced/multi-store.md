@@ -151,10 +151,10 @@ $dict.translate('pay_status', 1, { storeName: 'payment' });
 
 通过 `lazy` 参数可以控制每个仓库的版本检查时机：
 
-| lazy 值 | 行为 |
-|---------|------|
+| lazy 值         | 行为                                          |
+| --------------- | --------------------------------------------- |
 | `false`（默认） | 页面加载时立即检查版本（`initialize()` 阶段） |
-| `true` | 延迟到该仓库首次 `getDict()` 调用时才检查 |
+| `true`          | 延迟到该仓库首次 `getDict()` 调用时才检查     |
 
 配置示例：
 
@@ -235,13 +235,13 @@ stores: {
 
 每个仓库可配五个字段：
 
-| 字段              | 类型   | 作用                           | 例子                            |
-| ----------------- | ------ | ------------------------------ | ------------------------------- |
-| `baseURL`         | 字符串 | 服务器的地址                   | `https://pay-api.example.com`   |
-| `dictEndpoint`    | 字符串 | 获取字典数据的接口路径         | `/v1/dictionary`                |
-| `versionEndpoint` | 字符串 | 获取版本号的接口路径           | `/v1/dictionary/version`        |
-| `adapter`         | 字符串 | 自定义适配器的文件路径         | `'~/dict/static-adapter'`       |
-| `lazy`            | 布尔值 | 是否惰性检查版本号             | `true`                          |
+| 字段              | 类型   | 作用                   | 例子                          |
+| ----------------- | ------ | ---------------------- | ----------------------------- |
+| `baseURL`         | 字符串 | 服务器的地址           | `https://pay-api.example.com` |
+| `dictEndpoint`    | 字符串 | 获取字典数据的接口路径 | `/v1/dictionary`              |
+| `versionEndpoint` | 字符串 | 获取版本号的接口路径   | `/v1/dictionary/version`      |
+| `adapter`         | 字符串 | 自定义适配器的文件路径 | `'~/dict/static-adapter'`     |
+| `lazy`            | 布尔值 | 是否惰性检查版本号     | `true`                        |
 
 **最终请求的完整 URL = `baseURL` + 对应端点。**
 
@@ -387,14 +387,14 @@ export default defineDictAdapter({
       dicts: '/api/dict/list',
       payment: 'https://pay-api.example.com/v1/dictionary',
       logistics: '/api/logistics/dict',
-    }
-    const url = urls[storeName]
-    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    };
+    const url = urls[storeName];
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch(`/api/version?store=${storeName}`)
-    return (await res.json()).version
+    const res = await fetch(`/api/version?store=${storeName}`);
+    return (await res.json()).version;
   },
 });
 ```
@@ -418,8 +418,16 @@ stores: {
 ```ts [~/dict/static-adapter.ts]
 // static 仓库的自定义适配器——完全自定义，不走 HTTP
 export default defineDictAdapter({
-  async fetchDict() { return { data: { /* ... */ } } },
-  async fetchVersion() { return '1.0' },
+  async fetchDict() {
+    return {
+      data: {
+        /* ... */
+      },
+    };
+  },
+  async fetchVersion() {
+    return '1.0';
+  },
 });
 ```
 
@@ -444,13 +452,13 @@ stores: {
 
 把所有可能的情况列出来：
 
-| 仓库类型                  | 条件                      | 使用的适配器                                                                                                                                                                                   |
-| ------------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dicts`（默认仓库）       | 有 `api.adapter`          | 加载 `api.adapter` 指定的适配器文件                                                                                                                                                            |
-| `dicts`（默认仓库）       | 没有 `api.adapter`        | 检查约定路径 `~/dict/dict-adapter.ts` → 存在则加载；否则用 REST：`api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                                                    |
-| `xxx`（在 `stores` 声明） | 有 `stores.xxx.adapter`   | 加载 `stores.xxx.adapter` 指定的适配器文件（不受 `api.adapter` 影响）                                                                                                                          |
-| `xxx`（在 `stores` 声明） | 没有 `stores.xxx.adapter` | 检查约定路径 `~/dict/xxx-adapter.ts` → 存在则加载；否则用 REST：继承后的地址字段。有独立缓存、独立版本检测                                                                                      |
-| `yyy`（未声明）           | —                         | 复用 `dicts` 的适配器，共享同一套缓存                                                                                                                                                          |
+| 仓库类型                  | 条件                      | 使用的适配器                                                                                                                |
+| ------------------------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `dicts`（默认仓库）       | 有 `api.adapter`          | 加载 `api.adapter` 指定的适配器文件                                                                                         |
+| `dicts`（默认仓库）       | 没有 `api.adapter`        | 检查约定路径 `~/dict/dict-adapter.ts` → 存在则加载；否则用 REST：`api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint` |
+| `xxx`（在 `stores` 声明） | 有 `stores.xxx.adapter`   | 加载 `stores.xxx.adapter` 指定的适配器文件（不受 `api.adapter` 影响）                                                       |
+| `xxx`（在 `stores` 声明） | 没有 `stores.xxx.adapter` | 检查约定路径 `~/dict/xxx-adapter.ts` → 存在则加载；否则用 REST：继承后的地址字段。有独立缓存、独立版本检测                  |
+| `yyy`（未声明）           | —                         | 复用 `dicts` 的适配器，共享同一套缓存                                                                                       |
 
 ### 总结一句话
 

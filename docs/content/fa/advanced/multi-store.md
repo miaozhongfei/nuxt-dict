@@ -193,10 +193,10 @@ const { tree: locTree } = useDictTree('logistics', 'delivery_region');
 
 پارامتر `lazy` زمان بررسی نسخه هر مخزن را کنترل می‌کند:
 
-| مقدار lazy | رفتار |
-|------------|-------|
+| مقدار lazy        | رفتار                                                                   |
+| ----------------- | ----------------------------------------------------------------------- |
 | `false` (پیش‌فرض) | بررسی نسخه فوراً هنگام بارگذاری صفحه اجرا می‌شود (مرحله `initialize()`) |
-| `true` | تا اولین فراخوانی `getDict()` برای آن مخزن به تأخیر می‌افتد |
+| `true`            | تا اولین فراخوانی `getDict()` برای آن مخزن به تأخیر می‌افتد             |
 
 مثال پیکربندی:
 
@@ -283,13 +283,13 @@ stores: {
 
 هر مخزن می‌تواند پنج فیلد را پیکربندی کند:
 
-| فیلد              | نوع   | هدف                                        | مثال                            |
-| ----------------- | ----- | ------------------------------------------ | ------------------------------- |
-| `baseURL`         | رشته  | آدرس سرور                                  | `https://pay-api.example.com`   |
-| `dictEndpoint`    | رشته  | مسیر endpoint برای دریافت داده‌های دیکشنری | `/v1/dictionary`                |
-| `versionEndpoint` | رشته  | مسیر endpoint برای دریافت شماره نسخه       | `/v1/dictionary/version`        |
-| `adapter`         | رشته  | مسیر فایل آداپتور سفارشی                   | `'~/dict/static-adapter'`       |
-| `lazy`            | بولین | آیا بررسی نسخه به صورت تنبل انجام شود     | `true`                          |
+| فیلد              | نوع   | هدف                                        | مثال                          |
+| ----------------- | ----- | ------------------------------------------ | ----------------------------- |
+| `baseURL`         | رشته  | آدرس سرور                                  | `https://pay-api.example.com` |
+| `dictEndpoint`    | رشته  | مسیر endpoint برای دریافت داده‌های دیکشنری | `/v1/dictionary`              |
+| `versionEndpoint` | رشته  | مسیر endpoint برای دریافت شماره نسخه       | `/v1/dictionary/version`      |
+| `adapter`         | رشته  | مسیر فایل آداپتور سفارشی                   | `'~/dict/static-adapter'`     |
+| `lazy`            | بولین | آیا بررسی نسخه به صورت تنبل انجام شود      | `true`                        |
 
 **URL نهایی درخواست = `baseURL` + endpoint متناظر.**
 
@@ -433,14 +433,14 @@ export default defineDictAdapter({
       dicts: '/api/dict/list',
       payment: 'https://pay-api.example.com/v1/dictionary',
       logistics: '/api/logistics/dict',
-    }
-    const url = urls[storeName]
-    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    };
+    const url = urls[storeName];
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch(`/api/version?store=${storeName}`)
-    return (await res.json()).version
+    const res = await fetch(`/api/version?store=${storeName}`);
+    return (await res.json()).version;
   },
 });
 ```
@@ -464,8 +464,16 @@ stores: {
 ```ts [~/dict/static-adapter.ts]
 // آداپتور سفارشی مخزن static — کاملاً سفارشی، بدون HTTP
 export default defineDictAdapter({
-  async fetchDict() { return { data: { /* ... */ } } },
-  async fetchVersion() { return '1.0' },
+  async fetchDict() {
+    return {
+      data: {
+        /* ... */
+      },
+    };
+  },
+  async fetchVersion() {
+    return '1.0';
+  },
 });
 ```
 
@@ -490,13 +498,13 @@ stores: {
 
 همه حالات ممکن فهرست شده است:
 
-| نوع مخزن                      | شرط                             | آداپتور استفاده شده                                                                                                                                                                                          |
-| ----------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم شده         | فایل آداپتور مشخص شده توسط `api.adapter` را بارگذاری می‌کند                                                                                                                                                  |
-| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم نشده        | مسیر قراردادی `~/dict/dict-adapter.ts` را بررسی می‌کند → اگر وجود داشته باشد بارگذاری؛ در غیر این صورت REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                                       |
-| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم شده  | فایل آداپتور مشخص شده توسط `stores.xxx.adapter` را بارگذاری می‌کند (تحت تأثیر `api.adapter` قرار نمی‌گیرد)                                                                                                   |
-| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم نشده | مسیر قراردادی `~/dict/xxx-adapter.ts` را بررسی می‌کند → اگر وجود داشته باشد بارگذاری؛ در غیر این صورت REST با فیلدهای آدرس به ارث برده شده. کش و تشخیص نسخه مستقل دارد                                        |
-| `yyy` (اعلام نشده)            | —                               | از آداپتور `dicts` استفاده مجدد می‌کند، کش یکسان را به اشتراک می‌گذارد                                                                                                                                        |
+| نوع مخزن                      | شرط                             | آداپتور استفاده شده                                                                                                                                                     |
+| ----------------------------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم شده         | فایل آداپتور مشخص شده توسط `api.adapter` را بارگذاری می‌کند                                                                                                             |
+| `dicts` (پیش‌فرض)             | `api.adapter` تنظیم نشده        | مسیر قراردادی `~/dict/dict-adapter.ts` را بررسی می‌کند → اگر وجود داشته باشد بارگذاری؛ در غیر این صورت REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint` |
+| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم شده  | فایل آداپتور مشخص شده توسط `stores.xxx.adapter` را بارگذاری می‌کند (تحت تأثیر `api.adapter` قرار نمی‌گیرد)                                                              |
+| `xxx` (اعلام شده در `stores`) | `stores.xxx.adapter` تنظیم نشده | مسیر قراردادی `~/dict/xxx-adapter.ts` را بررسی می‌کند → اگر وجود داشته باشد بارگذاری؛ در غیر این صورت REST با فیلدهای آدرس به ارث برده شده. کش و تشخیص نسخه مستقل دارد  |
+| `yyy` (اعلام نشده)            | —                               | از آداپتور `dicts` استفاده مجدد می‌کند، کش یکسان را به اشتراک می‌گذارد                                                                                                  |
 
 ### خلاصه در یک جمله
 

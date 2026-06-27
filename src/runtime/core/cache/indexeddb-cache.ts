@@ -57,7 +57,9 @@ export class IndexedDBCache {
     const version = Math.max(storeNames.length, 1);
     this.db.version(version).stores(schema);
 
-    logger.debug(`IndexedDB init: opening "${this.dbName}", version=${version}, stores=[${storeNames.join(', ')}]`);
+    logger.debug(
+      `IndexedDB init: opening "${this.dbName}", version=${version}, stores=[${storeNames.join(', ')}]`,
+    );
 
     try {
       await this.db.open();
@@ -75,7 +77,9 @@ export class IndexedDBCache {
       }
     }
 
-    logger.debug(`IndexedDB init: complete, tables=[${this.db.tables.map(t => t.name).join(', ')}]`);
+    logger.debug(
+      `IndexedDB init: complete, tables=[${this.db.tables.map((t) => t.name).join(', ')}]`,
+    );
   }
 
   /**
@@ -104,7 +108,7 @@ export class IndexedDBCache {
     if (!this.db.isOpen()) return null;
 
     // 仓库表不存在时返回 null（用户可能手动删除了 store）
-    if (!this.db.tables.some(t => t.name === storeName)) return null;
+    if (!this.db.tables.some((t) => t.name === storeName)) return null;
 
     const key = this.getStoreKey(dictType, locale);
     const record = await this.db.table(storeName).get(key);
@@ -128,7 +132,7 @@ export class IndexedDBCache {
     entry: CacheEntry<DictEntry>,
   ): Promise<void> {
     if (!this.db.isOpen()) return;
-    if (!this.db.tables.some(t => t.name === storeName)) return;
+    if (!this.db.tables.some((t) => t.name === storeName)) return;
 
     const key = this.getStoreKey(dictType, locale);
     logger.debug(`IndexedDB set: store=${storeName} key=${key}`);
@@ -145,7 +149,7 @@ export class IndexedDBCache {
     if (!this.db.isOpen()) return;
 
     if (storeName) {
-      if (!this.db.tables.some(t => t.name === storeName)) return;
+      if (!this.db.tables.some((t) => t.name === storeName)) return;
       logger.debug(`IndexedDB clear: store=${storeName}`);
       await this.db.table(storeName).clear();
     } else {

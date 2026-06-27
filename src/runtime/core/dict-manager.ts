@@ -11,10 +11,10 @@ import type {
   TranslatePathOptions,
   GetDictItemOptions,
 } from '../types';
+import { createLogger } from '../utils/logger';
 import { IndexedDBCache, DEFAULT_STORE_NAME } from './cache/indexeddb-cache';
 import { MemoryCache } from './cache/memory-cache';
 import { VersionCheck } from './cache/version-check';
-import { createLogger } from '../utils/logger';
 
 /** 日志实例（单例，由 plugin 设置 level 后全局共享） */
 const logger = createLogger('nuxt-dict');
@@ -170,7 +170,9 @@ export class DictManager {
    * @returns {Promise<DictEntry>} 包含 items 和可选 tree 的字典条目
    */
   async getDict(type: string, storeName = DEFAULT_STORE_NAME): Promise<DictEntry> {
-    logger.debug(`getDict START store=${storeName} type=${type} lazy=${this.lazyStores.has(storeName)}`);
+    logger.debug(
+      `getDict START store=${storeName} type=${type} lazy=${this.lazyStores.has(storeName)}`,
+    );
     // 惰性版本检查：仅 lazy 仓库在首次访问时检查版本
     if (this.lazyStores.has(storeName)) {
       await this.ensureVersionChecked(storeName);
@@ -205,7 +207,9 @@ export class DictManager {
     logger.debug(`fetchAndCache START store=${storeName} type=${type}`);
     // 优先读 IndexedDB 持久缓存
     const idbEntry = await this.indexedDB.get(storeName, type, this.locale.value);
-    logger.debug(`fetchAndCache IndexedDB result store=${storeName} type=${type} hit=${!!idbEntry}`);
+    logger.debug(
+      `fetchAndCache IndexedDB result store=${storeName} type=${type} hit=${!!idbEntry}`,
+    );
     if (idbEntry) {
       this.memoryCache.set(key, {
         data: idbEntry.data,
@@ -223,7 +227,9 @@ export class DictManager {
     });
 
     const entry = response.data[type];
-    logger.debug(`fetchAndCache NETWORK done store=${storeName} type=${type} found=${!!entry} items=${entry?.items?.length}`);
+    logger.debug(
+      `fetchAndCache NETWORK done store=${storeName} type=${type} found=${!!entry} items=${entry?.items?.length}`,
+    );
     if (!entry) {
       throw new Error(`Dictionary type "${type}" not found in response`);
     }
@@ -380,20 +386,21 @@ export class DictManager {
     if (typeof localStorage === 'undefined') return;
 
     // 非 lazy 仓库：立即并行检查版本
-    const immediateStores = [...this.versionChecks]
-      .filter(([name]) => !this.lazyStores.has(name));
+    const immediateStores = [...this.versionChecks].filter(([name]) => !this.lazyStores.has(name));
 
-    await Promise.all(immediateStores.map(async ([name, vc]) => {
-      try {
-        const { changed } = await vc.check(name);
-        if (changed) {
-          await this.invalidateAll(name);
+    await Promise.all(
+      immediateStores.map(async ([name, vc]) => {
+        try {
+          const { changed } = await vc.check(name);
+          if (changed) {
+            await this.invalidateAll(name);
+          }
+        } catch {
+          // 单个仓库版本检查失败不影响其他仓库
         }
-      } catch {
-        // 单个仓库版本检查失败不影响其他仓库
-      }
-      this.checkedStores.add(name);
-    }));
+        this.checkedStores.add(name);
+      }),
+    );
   }
 
   /**

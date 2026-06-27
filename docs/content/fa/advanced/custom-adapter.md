@@ -19,9 +19,13 @@ description: اتصال به هر فرمت منبع داده دیکشنری — 
 ```ts
 // defineDictAdapter() در زمان اجرا شیء را بدون تغییر برمی‌گرداند، فقط بررسی نوع ارائه می‌دهد
 export default defineDictAdapter({
-  async fetchDict(storeName, { types, locale }) { /* ... */ },
-  async fetchVersion(storeName) { /* ... */ },
-})
+  async fetchDict(storeName, { types, locale }) {
+    /* ... */
+  },
+  async fetchVersion(storeName) {
+    /* ... */
+  },
+});
 ```
 
 تعریف کامل رابط:
@@ -81,14 +85,14 @@ interface TreeNode extends DictItem {
 // ماژول به طور خودکار ~/dict/dict-adapter.ts را کشف می‌کند، نیازی به تنظیم nuxt.config.ts نیست
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
-    const res = await fetch(`/api/dict?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    const res = await fetch(`/api/dict?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch('/api/dict/version')
-    return (await res.json()).version
+    const res = await fetch('/api/dict/version');
+    return (await res.json()).version;
   },
-})
+});
 ```
 
 ### مسیر پیکربندی صریح
@@ -104,7 +108,7 @@ export default defineNuxtConfig({
       adapter: '~/custom/my-adapter',
     },
   },
-})
+});
 ```
 
 هر مخزن نیز می‌تواند فایل آداپتور مستقل خود را داشته باشد، مسیر قراردادی: `~/dict/{storeName}-adapter.ts`.
@@ -127,13 +131,13 @@ export default defineDictAdapter({
           data { type items { code label } }
         }
       }
-    `
+    `;
     const res = await fetch('https://graphql.example.com/graphql', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, variables: { types, locale } }),
-    })
-    return (await res.json()).data.dict
+    });
+    return (await res.json()).data.dict;
   },
   async fetchVersion(storeName) {
     // پرس‌وجوی شماره نسخه فعلی دیکشنری
@@ -141,43 +145,43 @@ export default defineDictAdapter({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: '{ dictVersion }' }),
-    })
-    return (await res.json()).data.dictVersion
+    });
+    return (await res.json()).data.dictVersion;
   },
-})
+});
 ```
 
 ```ts [JSON محلی]
 // ~/dict/dict-adapter.ts
-import { defineDictAdapter } from '@lacqjs/nuxt-dict'
+import { defineDictAdapter } from '@lacqjs/nuxt-dict';
 // وارد کردن فایل داده‌های دیکشنری محلی
-import dictData from '../data/dictionary.json'
+import dictData from '../data/dictionary.json';
 
 export default defineDictAdapter({
   async fetchDict(storeName, { types }) {
     // فیلتر داده‌های محلی بر اساس نوع‌های درخواستی
-    const data: Record<string, any> = {}
+    const data: Record<string, any> = {};
     for (const type of types) {
-      if (dictData[type]) data[type] = dictData[type]
+      if (dictData[type]) data[type] = dictData[type];
     }
     // داده‌های محلی تغییر نمی‌کنند، شماره نسخه ثابت
-    return { data }
+    return { data };
   },
   async fetchVersion(storeName) {
     // نیازی به تشخیص نسخه برای داده‌های محلی نیست
-    return '1.0.0'
+    return '1.0.0';
   },
-})
+});
 ```
 
 ```ts [تبدیل فرمت]
 // ~/dict/dict-adapter.ts
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
-    const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`)
-    const json = await res.json()
+    const res = await fetch(`/api/custom-dict?codes=${types.join(',')}&lang=${locale}`);
+    const json = await res.json();
     // تبدیل فرمت backend به فرمت DictResponse مورد انتظار ماژول
-    const data: Record<string, any> = {}
+    const data: Record<string, any> = {};
     for (const item of json.payload) {
       data[item.dictType] = {
         type: item.dictType,
@@ -185,15 +189,15 @@ export default defineDictAdapter({
           value: opt.dictCode,
           label: opt.dictName,
         })),
-      }
+      };
     }
-    return { data }
+    return { data };
   },
   async fetchVersion(storeName) {
-    const res = await fetch('/api/custom-dict/version')
-    return (await res.json()).version
+    const res = await fetch('/api/custom-dict/version');
+    return (await res.json()).version;
   },
-})
+});
 ```
 
 ```ts [مسیریابی StoreName]
@@ -205,16 +209,18 @@ export default defineDictAdapter({
       dicts: 'https://default-api.example.com/dict/list',
       payment: 'https://pay-api.example.com/v1/payment/dict',
       logistics: 'https://logistics-api.example.com/v1/logistics/dict',
-    }
-    const url = endpoints[storeName] || endpoints.dicts
-    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    };
+    const url = endpoints[storeName] || endpoints.dicts;
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch(`https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`)
-    return (await res.json()).version
+    const res = await fetch(
+      `https://${storeName === 'dicts' ? 'default' : storeName}-api.example.com/version`,
+    );
+    return (await res.json()).version;
   },
-})
+});
 ```
 
 ::

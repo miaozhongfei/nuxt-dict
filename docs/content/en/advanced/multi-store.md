@@ -118,10 +118,10 @@ Each store has its own version detection. A version update in one store only inv
 
 The `lazy` parameter controls when version checking happens for each store:
 
-| lazy value | Behavior |
-|------------|----------|
+| lazy value        | Behavior                                                           |
+| ----------------- | ------------------------------------------------------------------ |
 | `false` (default) | Version check runs immediately on page load (`initialize()` phase) |
-| `true` | Deferred until the first `getDict()` call for that store |
+| `true`            | Deferred until the first `getDict()` call for that store           |
 
 Configuration example:
 
@@ -202,13 +202,13 @@ Even though the endpoints are the same:
 
 Each store can configure five fields:
 
-| Field             | Type    | Purpose                                        | Example                         |
-| ----------------- | ------- | ---------------------------------------------- | ------------------------------- |
-| `baseURL`         | string  | The server address                             | `https://pay-api.example.com`   |
-| `dictEndpoint`    | string  | The endpoint path for fetching dictionary data | `/v1/dictionary`                |
-| `versionEndpoint` | string  | The endpoint path for fetching the version     | `/v1/dictionary/version`        |
-| `adapter`         | string  | File path to a custom adapter                  | `'~/dict/static-adapter'`       |
-| `lazy`            | boolean | Whether to lazily check the version            | `true`                          |
+| Field             | Type    | Purpose                                        | Example                       |
+| ----------------- | ------- | ---------------------------------------------- | ----------------------------- |
+| `baseURL`         | string  | The server address                             | `https://pay-api.example.com` |
+| `dictEndpoint`    | string  | The endpoint path for fetching dictionary data | `/v1/dictionary`              |
+| `versionEndpoint` | string  | The endpoint path for fetching the version     | `/v1/dictionary/version`      |
+| `adapter`         | string  | File path to a custom adapter                  | `'~/dict/static-adapter'`     |
+| `lazy`            | boolean | Whether to lazily check the version            | `true`                        |
 
 **The final request URL = `baseURL` + the corresponding endpoint.**
 
@@ -354,14 +354,14 @@ export default defineDictAdapter({
       dicts: '/api/dict/list',
       payment: 'https://pay-api.example.com/v1/dictionary',
       logistics: '/api/logistics/dict',
-    }
-    const url = urls[storeName]
-    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`)
-    return res.json()
+    };
+    const url = urls[storeName];
+    const res = await fetch(`${url}?types=${types.join(',')}&lang=${locale}`);
+    return res.json();
   },
   async fetchVersion(storeName) {
-    const res = await fetch(`/api/version?store=${storeName}`)
-    return (await res.json()).version
+    const res = await fetch(`/api/version?store=${storeName}`);
+    return (await res.json()).version;
   },
 });
 ```
@@ -385,8 +385,16 @@ Best for: All stores use the same protocol (HTTP), only addresses differ, adapte
 ```ts [~/dict/static-adapter.ts]
 // Custom adapter for the static store — fully custom, no HTTP
 export default defineDictAdapter({
-  async fetchDict() { return { data: { /* ... */ } } },
-  async fetchVersion() { return '1.0' },
+  async fetchDict() {
+    return {
+      data: {
+        /* ... */
+      },
+    };
+  },
+  async fetchVersion() {
+    return '1.0';
+  },
 });
 ```
 
@@ -411,13 +419,13 @@ Best for: Different stores use completely different data-fetching approaches (HT
 
 All possible cases listed:
 
-| Store Type                   | Condition                    | Adapter Used                                                                                                                                                          |
-| ---------------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dicts` (default)            | `api.adapter` is set         | Loads the adapter file specified by `api.adapter`                                                                                                                      |
-| `dicts` (default)            | `api.adapter` not set        | Checks convention path `~/dict/dict-adapter.ts` → loads if exists; otherwise REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`                         |
-| `xxx` (declared in `stores`) | `stores.xxx.adapter` is set  | Loads the adapter file specified by `stores.xxx.adapter` (unaffected by `api.adapter`)                                                                                 |
-| `xxx` (declared in `stores`) | `stores.xxx.adapter` not set | Checks convention path `~/dict/xxx-adapter.ts` → loads if exists; otherwise REST with inherited address fields. Has independent cache and version detection           |
-| `yyy` (not declared)         | —                            | Reuses the `dicts` adapter, shares the same cache                                                                                                                     |
+| Store Type                   | Condition                    | Adapter Used                                                                                                                                                |
+| ---------------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dicts` (default)            | `api.adapter` is set         | Loads the adapter file specified by `api.adapter`                                                                                                           |
+| `dicts` (default)            | `api.adapter` not set        | Checks convention path `~/dict/dict-adapter.ts` → loads if exists; otherwise REST: `api.baseURL` + `api.dictEndpoint` + `api.versionEndpoint`               |
+| `xxx` (declared in `stores`) | `stores.xxx.adapter` is set  | Loads the adapter file specified by `stores.xxx.adapter` (unaffected by `api.adapter`)                                                                      |
+| `xxx` (declared in `stores`) | `stores.xxx.adapter` not set | Checks convention path `~/dict/xxx-adapter.ts` → loads if exists; otherwise REST with inherited address fields. Has independent cache and version detection |
+| `yyy` (not declared)         | —                            | Reuses the `dicts` adapter, shares the same cache                                                                                                           |
 
 ### One-Sentence Summary
 

@@ -10,14 +10,20 @@
       <span style="color: #666">语言切换：</span>
       <button
         style="padding: 4px 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px"
-        :style="{ background: currentLocale === 'zh-CN' ? '#409EFF' : '#fff', color: currentLocale === 'zh-CN' ? '#fff' : '#333' }"
+        :style="{
+          background: currentLocale === 'zh-CN' ? '#409EFF' : '#fff',
+          color: currentLocale === 'zh-CN' ? '#fff' : '#333',
+        }"
         @click="switchLocale('zh-CN')"
       >
         中文
       </button>
       <button
         style="padding: 4px 14px; cursor: pointer; border: 1px solid #ccc; border-radius: 4px"
-        :style="{ background: currentLocale === 'en-US' ? '#409EFF' : '#fff', color: currentLocale === 'en-US' ? '#fff' : '#333' }"
+        :style="{
+          background: currentLocale === 'en-US' ? '#409EFF' : '#fff',
+          color: currentLocale === 'en-US' ? '#fff' : '#333',
+        }"
         @click="switchLocale('en-US')"
       >
         English
@@ -31,7 +37,7 @@
       <!-- ========== dicts（默认）— REST + lazy: false ========== -->
       <h3>
         <code>'dicts'</code> — REST + lazy: false（默认）
-        <span style="color: #67C23A; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
+        <span style="color: #67c23a; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
       </h3>
       <p style="color: #999; font-size: 13px">
         端点: <code>/api/dict/list</code> + <code>/api/dict/version</code>
@@ -59,7 +65,7 @@
       <!-- ========== dicts2 — REST + lazy: false ========== -->
       <h3>
         <code>'dicts2'</code> — REST + lazy: false
-        <span style="color: #67C23A; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
+        <span style="color: #67c23a; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
       </h3>
       <p style="color: #999; font-size: 13px">
         端点: <code>/api/dict/list2</code>（数据带【源2】前缀）
@@ -87,7 +93,7 @@
       <!-- ========== dicts3 — REST + lazy: true ========== -->
       <h3>
         <code>'dicts3'</code> — REST + lazy: true
-        <span style="color: #E6A23C; font-size: 12px; margin-left: 8px">⬤ 惰性检查</span>
+        <span style="color: #e6a23c; font-size: 12px; margin-left: 8px">⬤ 惰性检查</span>
       </h3>
       <p style="color: #999; font-size: 13px">
         端点: <code>/api/dict/list2</code>（同 dicts2，但 lazy: true，首次访问时才检查版本）
@@ -115,7 +121,7 @@
       <!-- ========== dicts4 — 自定义 adapter + lazy: false ========== -->
       <h3>
         <code>'dicts4'</code> — 自定义 adapter + lazy: false
-        <span style="color: #67C23A; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
+        <span style="color: #67c23a; font-size: 12px; margin-left: 8px">⬤ 立即检查</span>
       </h3>
       <p style="color: #999; font-size: 13px">
         适配器: <code>~/dict/dicts4-adapter.ts</code>（约定路径自动发现，硬编码数据带【源4】前缀）
@@ -143,7 +149,7 @@
       <!-- ========== dicts5 — 自定义 adapter + lazy: true ========== -->
       <h3>
         <code>'dicts5'</code> — 自定义 adapter + lazy: true
-        <span style="color: #E6A23C; font-size: 12px; margin-left: 8px">⬤ 惰性检查</span>
+        <span style="color: #e6a23c; font-size: 12px; margin-left: 8px">⬤ 惰性检查</span>
       </h3>
       <p style="color: #999; font-size: 13px">
         适配器: <code>~/dict/dicts5-adapter.ts</code>（约定路径自动发现，硬编码数据带【源5】前缀）
@@ -177,7 +183,10 @@
           <li>刷新页面 → 立即看到 dicts/dicts2/dicts4 的版本检查请求（lazy: false）</li>
           <li>dicts3/dicts5 的版本检查在页面加载时不会发出（lazy: true）</li>
           <li>首次导航到本页面时 dicts3/dicts5 才发起版本检查 → 字典请求</li>
-          <li>各仓库数据前缀不同：dicts=原始 / dicts2=【源2】/ dicts3=【源2】/ dicts4=【源4】/ dicts5=【源5】</li>
+          <li>
+            各仓库数据前缀不同：dicts=原始 / dicts2=【源2】/ dicts3=【源2】/ dicts4=【源4】/
+            dicts5=【源5】
+          </li>
         </ol>
       </div>
     </template>

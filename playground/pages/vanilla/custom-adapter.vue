@@ -19,9 +19,9 @@
       <div style="color: #75715e">// 约定路径: ~/dict/{storeName}-adapter.ts（per-store）</div>
       <br />
       <div>
-        <span style="color: #66d9ef">import</span> { <span style="color: #a6e22e"
-          >defineDictAdapter</span
-        > } <span style="color: #66d9ef">from</span>
+        <span style="color: #66d9ef">import</span> {
+        <span style="color: #a6e22e">defineDictAdapter</span> }
+        <span style="color: #66d9ef">from</span>
         <span style="color: #e6db74">'@lacqjs/nuxt-dict'</span>
       </div>
       <br />
@@ -31,9 +31,8 @@
       </div>
       <div>
         &nbsp;&nbsp;<span style="color: #66d9ef">async</span>
-        <span style="color: #e6db74">fetchDict</span>(<span style="color: #fd971f"
-          >storeName</span
-        >, { types, locale }) { <span style="color: #75715e">/* ... */</span> },
+        <span style="color: #e6db74">fetchDict</span>(<span style="color: #fd971f">storeName</span>,
+        { types, locale }) { <span style="color: #75715e">/* ... */</span> },
       </div>
       <div>
         &nbsp;&nbsp;<span style="color: #66d9ef">async</span>
