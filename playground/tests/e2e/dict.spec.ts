@@ -33,7 +33,7 @@ test('tree dict shows path backtracking', async ({ page }) => {
   await page.locator('button:has-text("440104")').click();
 
   // Find the path result paragraph (avoids Unicode arrow matching issues)
-  await page.getByText(/广东.*广州.*越秀区/).waitFor({ state: 'visible', timeout: 10000 });
+  await page.getByText(/广东.*广州.*越秀区/u).waitFor({ state: 'visible', timeout: 10000 });
 });
 
 test('mock dict API returns correct data', async ({ request }) => {

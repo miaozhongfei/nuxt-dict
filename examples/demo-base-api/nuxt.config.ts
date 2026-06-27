@@ -16,6 +16,14 @@ export default defineNuxtConfig({
     '@lacqjs/nuxt-dict',
   ],
   css: ['~/assets/css/main.css'],
+  // 禁用 Google Fonts 自动下载（国内网络不可达）
+  fonts: {
+    providers: { google: false, googleicons: false },
+  },
+  // 预打包运行时发现的新依赖，避免 HMR 时页面全量刷新
+  vite: {
+    optimizeDeps: { include: ['@vue/devtools-core', '@vue/devtools-kit'] },
+  },
   // 开发工具 - 开发体验
   devtools: { enabled: isDev },
   devServer: {
