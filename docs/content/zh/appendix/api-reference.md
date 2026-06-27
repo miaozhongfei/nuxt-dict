@@ -101,7 +101,7 @@ interface StoreApiOptions {
 ## defineDictAdapter
 
 ```ts
-export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter;
 ```
 
 类型辅助函数，用于在独立文件中定义自定义适配器。原样返回传入的适配器对象，仅提供类型约束。
@@ -114,5 +114,5 @@ export default defineDictAdapter({
   async fetchVersion(storeName) {
     // 自定义版本获取逻辑
   },
-})
+});
 ```

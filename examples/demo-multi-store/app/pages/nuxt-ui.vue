@@ -10,66 +10,66 @@
       字典数据加载中...
     </div>
     <template v-else>
-    <!-- 1. USelectMenu -->
-    <div class="demo-card">
-      <div class="demo-card__header">
-        <span class="demo-card__badge">USelectMenu</span>
-        <span style="color: #6b7280; font-size: 0.85rem">— gender 下拉选择</span>
+      <!-- 1. USelectMenu -->
+      <div class="demo-card">
+        <div class="demo-card__header">
+          <span class="demo-card__badge">USelectMenu</span>
+          <span style="color: #6b7280; font-size: 0.85rem">— gender 下拉选择</span>
+        </div>
+        <p class="demo-card__desc">
+          将 <code>data</code> 映射为 <code>&#123; label, value }</code> 数组传给
+          <code>:items</code>。
+        </p>
+
+        <USelectMenu
+          v-model="gender"
+          :items="genderItems"
+          value-key="value"
+          placeholder="请选择性别"
+          style="width: 200px"
+        />
+
+        <div class="demo-result" v-if="gender">
+          选中：<b>{{ gender }}</b>
+        </div>
       </div>
-      <p class="demo-card__desc">
-        将 <code>data</code> 映射为 <code>&#123; label, value }</code> 数组传给
-        <code>:items</code>。
-      </p>
 
-      <USelectMenu
-        v-model="gender"
-        :items="genderItems"
-        value-key="value"
-        placeholder="请选择性别"
-        style="width: 200px"
-      />
+      <!-- 2. UBadge -->
+      <div class="demo-card">
+        <div class="demo-card__header">
+          <span class="demo-card__badge">UBadge</span>
+          <span style="color: #6b7280; font-size: 0.85rem">— status 彩色标签</span>
+        </div>
+        <p class="demo-card__desc">
+          利用 status 字典的 <code>color</code> 字段，映射为 <code>UBadge</code> 的
+          <code>color</code> prop。
+        </p>
 
-      <div class="demo-result" v-if="gender">
-        选中：<b>{{ gender }}</b>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
+          <UBadge
+            v-for="item in statusBadges"
+            :key="item.value"
+            :color="item.color"
+            variant="soft"
+            size="md"
+          >
+            {{ item.label }}
+          </UBadge>
+        </div>
       </div>
-    </div>
 
-    <!-- 2. UBadge -->
-    <div class="demo-card">
-      <div class="demo-card__header">
-        <span class="demo-card__badge">UBadge</span>
-        <span style="color: #6b7280; font-size: 0.85rem">— status 彩色标签</span>
+      <!-- 3. UTable -->
+      <div class="demo-card">
+        <div class="demo-card__header">
+          <span class="demo-card__badge">UTable</span>
+          <span style="color: #6b7280; font-size: 0.85rem">— 数据表格</span>
+        </div>
+        <p class="demo-card__desc">
+          通过 <code>computed</code> 将原始数据预翻译为可展示的行数据，再传给 <code>UTable</code>。
+        </p>
+
+        <UTable :data="tableRows" :columns="tableColumns" />
       </div>
-      <p class="demo-card__desc">
-        利用 status 字典的 <code>color</code> 字段，映射为 <code>UBadge</code> 的
-        <code>color</code> prop。
-      </p>
-
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap">
-        <UBadge
-          v-for="item in statusBadges"
-          :key="item.value"
-          :color="item.color"
-          variant="soft"
-          size="md"
-        >
-          {{ item.label }}
-        </UBadge>
-      </div>
-    </div>
-
-    <!-- 3. UTable -->
-    <div class="demo-card">
-      <div class="demo-card__header">
-        <span class="demo-card__badge">UTable</span>
-        <span style="color: #6b7280; font-size: 0.85rem">— 数据表格</span>
-      </div>
-      <p class="demo-card__desc">
-        通过 <code>computed</code> 将原始数据预翻译为可展示的行数据，再传给 <code>UTable</code>。
-      </p>
-
-      <UTable :data="tableRows" :columns="tableColumns" />
-    </div>
     </template>
   </div>
 </template>

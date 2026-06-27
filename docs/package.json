@@ -16,14 +16,14 @@
   },
   "dependencies": {
     "@nuxt/content": "^3.14.0",
-    "@nuxt/ui": "^4.8.2",
+    "@nuxt/ui": "^4.9.0",
     "@nuxtjs/i18n": "^10.4.0",
     "nuxt": "^4.4.8"
   },
   "devDependencies": {
-    "oxfmt": "^0.54.0",
-    "oxlint": "^1.69.0",
-    "typescript": "~5.9.3",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
+    "typescript": "~6.0.3",
     "vue-tsc": "^3.3.4"
   }
 }

@@ -101,7 +101,7 @@ interface StoreApiOptions {
 ## defineDictAdapter
 
 ```ts
-export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter;
 ```
 
 Type helper for defining custom adapters in separate files. Returns the adapter as-is; only provides type constraints.
@@ -114,5 +114,5 @@ export default defineDictAdapter({
   async fetchVersion(storeName) {
     // Custom version fetch logic
   },
-})
+});
 ```

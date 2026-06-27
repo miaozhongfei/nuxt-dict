@@ -1,3 +1,6 @@
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 /* eslint-disable max-lines */
 import {
   addImports,
@@ -11,8 +14,6 @@ import {
 } from '@nuxt/kit';
 import type { Resolver } from '@nuxt/kit';
 import type { Nuxt } from '@nuxt/schema';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
 
 import pkg from '../package.json';
 import { defaultOptions } from './runtime/options';
@@ -241,15 +242,11 @@ export default defineNuxtModule<ModuleOptions>().with({
     const resolver = createResolver(import.meta.url);
 
     // ── 自定义适配器：约定路径发现 + 显式配置 ──
-    const globalAdapterPath = resolveAdapterPath(
-      _nuxt, _options.api?.adapter, 'dict-adapter',
-    );
+    const globalAdapterPath = resolveAdapterPath(_nuxt, _options.api?.adapter, 'dict-adapter');
 
     const storeAdapterPaths: Record<string, string> = {};
     for (const [name, config] of Object.entries(_options.stores ?? {})) {
-      const adapterPath = resolveAdapterPath(
-        _nuxt, config.adapter, `${name}-adapter`,
-      );
+      const adapterPath = resolveAdapterPath(_nuxt, config.adapter, `${name}-adapter`);
       if (adapterPath) storeAdapterPaths[name] = adapterPath;
     }
 
@@ -267,12 +264,13 @@ export default defineNuxtModule<ModuleOptions>().with({
         // per-store adapters
         const entries = Object.entries(storeAdapterPaths);
         if (entries.length > 0) {
-          code += entries.map(([name, p]) =>
-            `import adapter_${name.replaceAll(/\W/gu, '_')} from '${p}'`,
-          ).join('\n') + '\n';
-          code += `export const storeAdapters = { ${entries.map(([name]) =>
-            `'${name}': adapter_${name.replaceAll(/\W/gu, '_')}`,
-          ).join(', ')} }\n`;
+          code +=
+            entries
+              .map(([name, p]) => `import adapter_${name.replaceAll(/\W/gu, '_')} from '${p}'`)
+              .join('\n') + '\n';
+          code += `export const storeAdapters = { ${entries
+            .map(([name]) => `'${name}': adapter_${name.replaceAll(/\W/gu, '_')}`)
+            .join(', ')} }\n`;
         } else {
           code += 'export const storeAdapters = {} as Record<string, never>\n';
         }
@@ -295,8 +293,8 @@ declare module '#build/nuxt-dict/adapters' {
     // 内联函数适配器的兼容性警告
     if (_options.api?.adapter && typeof _options.api.adapter !== 'string') {
       logger.warn(
-        'dict.api.adapter 不支持内联函数（无法序列化到客户端）。'
-        + '请改用文件路径或将文件放在约定位置 ~/dict/dict-adapter.ts',
+        'dict.api.adapter 不支持内联函数（无法序列化到客户端）。' +
+          '请改用文件路径或将文件放在约定位置 ~/dict/dict-adapter.ts',
       );
     }
 
@@ -323,7 +321,9 @@ declare module '#build/nuxt-dict/adapters' {
     addImportsDir(resolver.resolve('./runtime/composables'));
 
     // 注册 defineDictAdapter 自动导入，用户无需手动 import 即可在 adapter 文件中直接使用
-    addImports([{ name: 'defineDictAdapter', from: resolver.resolve('./runtime/core/define-adapter') }]);
+    addImports([
+      { name: 'defineDictAdapter', from: resolver.resolve('./runtime/core/define-adapter') },
+    ]);
 
     registerTypeTemplates(resolver, _options.stores);
 

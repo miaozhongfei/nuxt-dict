@@ -28,7 +28,11 @@ export default defineDictAdapter({
           items: [
             { value: 'pending', label: isEn ? '【S4】Pending' : '【源4】待支付', color: '#FF9900' },
             { value: 'paid', label: isEn ? '【S4】Paid' : '【源4】已支付', color: '#00CC66' },
-            { value: 'refunded', label: isEn ? '【S4】Refunded' : '【源4】已退款', color: '#CC3333' },
+            {
+              value: 'refunded',
+              label: isEn ? '【S4】Refunded' : '【源4】已退款',
+              color: '#CC3333',
+            },
           ],
         },
         orderType: {

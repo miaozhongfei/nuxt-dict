@@ -101,7 +101,7 @@ interface StoreApiOptions {
 ## defineDictAdapter
 
 ```ts
-export function defineDictAdapter(adapter: DictAdapter): DictAdapter
+export function defineDictAdapter(adapter: DictAdapter): DictAdapter;
 ```
 
 تابع کمکی نوع برای تعریف آداپتورهای سفارشی در فایل‌های جداگانه. آداپتور را بدون تغییر برمی‌گرداند؛ فقط محدودیت‌های نوع را فراهم می‌کند.
@@ -114,5 +114,5 @@ export default defineDictAdapter({
   async fetchVersion(storeName) {
     // منطق واکشی نسخه سفارشی
   },
-})
+});
 ```

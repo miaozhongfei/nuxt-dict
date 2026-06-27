@@ -1,8 +1,8 @@
 import { watch } from 'vue';
 
+import { globalAdapter, storeAdapters } from '#build/nuxt-dict/adapters';
 import { defineNuxtPlugin, useRequestEvent, useCookie, useRoute } from '#imports';
 
-import { globalAdapter, storeAdapters } from '#build/nuxt-dict/adapters';
 import { createDefaultAdapter } from '../core/adapter';
 import { IndexedDBCache, DEFAULT_STORE_NAME } from '../core/cache/indexeddb-cache';
 import { DictManager } from '../core/dict-manager';
