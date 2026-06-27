@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.0.14
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.13...v0.0.14)
+
+### 🩹 Fixes
+
+- 修复 docs 开发服务器 favicon 404 和 Vite optimizeDeps 警告 ([2ac9731](https://github.com/miaozhongfei/nuxt-dict/commit/2ac9731))
+- 禁用 docs Google Fonts 自动下载，消除开发服务器连接超时报错 ([29b4375](https://github.com/miaozhongfei/nuxt-dict/commit/29b4375))
+- Examples 禁用 Google Fonts、迁移 public 目录至 Nuxt 4 规范、添加 Vite optimizeDeps ([eceef96](https://github.com/miaozhongfei/nuxt-dict/commit/eceef96))
+
+### 🏡 Chore
+
+- 批量升级依赖（typescript@6.0, oxlint@1.71, oxfmt@0.56, @nuxt/ui@4.9, @playwright/test@1.61, @types/node@26） ([b58d708](https://github.com/miaozhongfei/nuxt-dict/commit/b58d708))
+- 移除旧 docs/app/public 目录（已迁移至 docs/public） ([36c2ce4](https://github.com/miaozhongfei/nuxt-dict/commit/36c2ce4))
+
+### ✅ Tests
+
+- 修复 e2e 测试用例，适配 playground 重构后的页面结构和 API 响应格式 ([d9fe2e7](https://github.com/miaozhongfei/nuxt-dict/commit/d9fe2e7))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.13
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.12...v0.0.13)
