@@ -4,6 +4,14 @@ const isDev = import.meta.env.DEV;
 
 export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxtjs/i18n', '@nuxt/content', '@nuxtjs/color-mode'],
+  // 禁用 Google Fonts 自动下载（国内网络不可达）
+  // Nuxt UI v4 字体管理已委托给 @nuxt/fonts 模块，需用 fonts 配置键
+  fonts: {
+    providers: {
+      google: false,
+      googleicons: false,
+    },
+  },
   // 开发工具 - 开发体验
   devtools: { enabled: isDev },
   devServer: {
