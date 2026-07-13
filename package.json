@@ -59,15 +59,13 @@
     "release:patch": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release --patch --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
     "release:minor": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release --minor --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
     "release:major": "pnpm lint && pnpm typecheck && pnpm prepack && changelogen --release --major --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
-    "release:e2e": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
-    "release:e2e:patch": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --patch --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
-    "release:e2e:minor": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --minor --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
-    "release:e2e:major": "pnpm lint && pnpm e2e && pnpm typecheck && pnpm prepack && changelogen --release --major --no-github && git push origin dev --follow-tags && pnpm publish && changelogen gh release",
     "lint": "oxlint . && oxlint docs --no-error-on-unmatched-pattern",
     "lint:fix": "oxlint --fix . && oxlint --fix docs --no-error-on-unmatched-pattern",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "e2e": "cd playground && pnpm e2e",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
@@ -81,7 +79,9 @@
     "@nuxt/devtools": "^3.2.4",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.4.8",
+    "@nuxt/test-utils": "^4.0.3",
     "@types/node": "^26.0.0",
+    "@vue/test-utils": "^2.4.11",
     "changelogen": "^0.6.2",
     "element-plus": "^2.14.1",
     "nuxt": "^4.4.8",
@@ -90,6 +90,7 @@
     "typescript": "~6.0.3",
     "vant": "^4.9.24",
     "vue-tsc": "^3.3.4",
+    "vitest": "^4.1.9",
     "ws": "^8.21.0"
   },
   "engines": {
