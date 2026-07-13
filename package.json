@@ -42,7 +42,7 @@
   },
   "scripts": {
     "cleanup": "(pnpx nuxt cleanup || npx nuxt cleanup) && pnpx rimraf .nuxt .output dist node_modules .data",
-    "clean:install": "pnpm run cleanup && pnpm run docs:cleanup && pnpm run playground:cleanup && pnpm install",
+    "clean:install": "pnpm run cleanup && pnpm run docs:cleanup && pnpm run playground:cleanup && pnpm run demo:cleanup && pnpm install",
     "prepack": "nuxt-module-build build",
     "dev": "pnpm run dev:prepare && nuxi dev playground",
     "dev:build": "nuxi build playground",
@@ -52,6 +52,7 @@
     "docs:generate": "nuxi generate docs",
     "docs:cleanup": "pnpx rimraf docs/.nuxt docs/.output docs/dist docs/node_modules docs/.data",
     "playground:cleanup": "pnpx rimraf playground/.nuxt playground/.output playground/dist playground/node_modules",
+    "demo:cleanup": "pnpx rimraf examples/demo-base-adapter/.nuxt examples/demo-base-api/.nuxt examples/demo-multi-store/.nuxt examples/demo-base-adapter/.output examples/demo-base-api/.output examples/demo-multi-store/.output examples/demo-base-adapter/dist examples/demo-base-api/dist examples/demo-multi-store/dist examples/demo-base-adapter/node_modules examples/demo-base-api/node_modules examples/demo-multi-store/node_modules",
     "demo:base-api:dev": "nuxi dev examples/demo-base-api",
     "demo:base-adapter:dev": "nuxi dev examples/demo-base-adapter",
     "demo:multi-store:dev": "nuxi dev examples/demo-multi-store",
