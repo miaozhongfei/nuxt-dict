@@ -72,7 +72,6 @@ pnpm e2e            # E2E 测试
 - [@nuxt/kit](https://github.com/nuxt/nuxt) — Nuxt 模块开发工具包
 - [defu](https://github.com/unjs/defu) — 深度合并配置
 - [consola](https://github.com/unjs/consola) — 日志工具
-- [compare-versions](https://github.com/omichelsen/compare-versions) — 版本比较
 
 ## 许可证
 
