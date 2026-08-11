@@ -106,6 +106,8 @@ export function defineDictAdapter(adapter: DictAdapter): DictAdapter;
 
 类型辅助函数，用于在独立文件中定义自定义适配器。原样返回传入的适配器对象，仅提供类型约束。
 
+> `~/` 是 Nuxt 的路径别名，指向项目源码根目录（srcDir）。Nuxt 4 默认 srcDir 为 `app/`，所以 `~/dict/dict-adapter.ts` 实际在 `app/dict/dict-adapter.ts`（`dict/` 目录需手动创建）。
+
 ```ts [~/dict/dict-adapter.ts]
 export default defineDictAdapter({
   async fetchDict(storeName, options) {

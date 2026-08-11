@@ -106,6 +106,8 @@ export function defineDictAdapter(adapter: DictAdapter): DictAdapter;
 
 تابع کمکی نوع برای تعریف آداپتورهای سفارشی در فایل‌های جداگانه. آداپتور را بدون تغییر برمی‌گرداند؛ فقط محدودیت‌های نوع را فراهم می‌کند.
 
+> `~/` نام مستعار مسیر Nuxt است که به ریشه سورس پروژه (srcDir) اشاره می‌کند. در Nuxt 4، srcDir پیش‌فرض `app/` است، بنابراین `~/dict/dict-adapter.ts` معادل `app/dict/dict-adapter.ts` است (پوشه `dict/` باید دستی ایجاد شود).
+
 ```ts [~/dict/dict-adapter.ts]
 export default defineDictAdapter({
   async fetchDict(storeName, options) {

@@ -9,7 +9,7 @@ description: 对接任意格式的字典数据源 —— GraphQL、Firestore、�
 
 适配器需要实现 `DictAdapter` 接口的两个方法。模块提供了 `defineDictAdapter()` 辅助函数，提供完整的 TypeScript 类型推导：
 
-```ts
+```ts [~/dict/dict-adapter.ts]
 // defineDictAdapter() 运行时原样返回，仅提供类型检查
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
@@ -36,7 +36,9 @@ interface DictAdapter {
 
 ### 约定路径自动发现（推荐）
 
-将适配器文件放在 `~/dict/dict-adapter.ts`，模块启动时会自动发现并加载，无需任何配置：
+> **`~/` 是什么？** `~/` 是 Nuxt 的路径别名，指向项目的源码根目录（srcDir）。Nuxt 4 默认 srcDir 是 `app/`，所以 `~/dict/dict-adapter.ts` 实际对应磁盘上的 `app/dict/dict-adapter.ts`。注意 `dict/` 目录不会自动创建，需要你手动新建。
+
+将适配器文件放在 `~/dict/dict-adapter.ts`（即 Nuxt 4 项目中的 `app/dict/dict-adapter.ts`），模块启动时会自动发现并加载，无需任何配置：
 
 ```ts [~/dict/dict-adapter.ts]
 // 模块自动发现 ~/dict/dict-adapter.ts，nuxt.config.ts 无需额外配置
