@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest'
 
 import { MemoryCache } from '../src/runtime/core/cache/memory-cache'
 
-function makeEntry(value: unknown) {
+function makeEntry<T>(value: T) {
   return { data: value, timestamp: Date.now() }
 }
 
-describe('memoryCache', () => {
+describe('memoryCache - 基础操作', () => {
   it('set 后可 get 到相同数据', () => {
     const cache = new MemoryCache<string>()
     cache.set('k1', makeEntry('v1'))
@@ -43,10 +43,12 @@ describe('memoryCache', () => {
   it('TTL 过期后 get 返回 undefined', async () => {
     const cache = new MemoryCache<string>(200, 50)
     cache.set('k1', makeEntry('v1'))
-    await new Promise((r) => setTimeout(r, 60))
+    await new Promise<void>((r) => { setTimeout(r, 60) })
     expect(cache.get('k1')).toBeUndefined()
   })
+})
 
+describe('memoryCache - 容量和前缀', () => {
   it('超出 maxSize 时淘汰最旧条目', () => {
     const cache = new MemoryCache<string>(2)
     cache.set('k1', makeEntry('v1'))

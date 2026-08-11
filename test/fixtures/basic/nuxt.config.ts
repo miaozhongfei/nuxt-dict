@@ -1,3 +1,5 @@
+import { defineNuxtConfig } from 'nuxt/config'
+
 // 测试专用迷你 Nuxt 应用：仅为 @nuxt/test-utils 提供运行环境（#imports / runtimeConfig），不渲染演示页面。
 export default defineNuxtConfig({
   // 安装本模块，使其 setup() 把配置注入 runtimeConfig.public.dict
@@ -17,4 +19,4 @@ export default defineNuxtConfig({
     },
   },
   compatibilityDate: '2025-06-10',
-})
+} as any)
