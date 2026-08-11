@@ -36,6 +36,7 @@
     "playground/dist",
     "playground/node_modules",
     "docs/.nuxt",
-    "docs/dist"
+    "docs/dist",
+    "scripts/*"
   ]
 }
