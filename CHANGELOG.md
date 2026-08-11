@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.18
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.17...v0.0.18)
+
+### 🩹 Fixes
+
+- Deploy-docs CI 增加 nuxt prepare 步骤，生成 tsconfig 防止 Vite 编译失败 ([228ff9b](https://github.com/miaozhongfei/nuxt-dict/commit/228ff9b))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.17
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.16...v0.0.17)
