@@ -96,11 +96,14 @@
     "ws": "^8.21.0"
   },
   "engines": {
-    "node": ">=22.0.0",
-    "npm": ">=10.0.0",
-    "pnpm": ">=10.22.0",
-    "yarn": ">=1.22.22"
+    "node": ">=25.0.0",
+    "pnpm": ">=11.20.0"
   },
-  "packageManager": "pnpm@10.22.0",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.20.0"
+    }
+  },
   "documentation": "https://miaozhongfei.github.io/nuxt-dict/"
 }
