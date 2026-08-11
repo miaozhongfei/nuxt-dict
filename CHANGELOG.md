@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.19
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.18...v0.0.19)
+
+### 🩹 Fixes
+
+- Deploy-docs CI 改为先执行 dev:prepare 生成根 .nuxt/tsconfig.json ([1021ece](https://github.com/miaozhongfei/nuxt-dict/commit/1021ece))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.18
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.17...v0.0.18)
