@@ -16,7 +16,7 @@ description: اتصال به هر فرمت منبع داده دیکشنری — 
 
 آداپتور سفارشی باید رابط `DictAdapter` را پیاده‌سازی کند. ماژول تابع کمکی `defineDictAdapter()` را برای استنتاج کامل نوع TypeScript فراهم می‌کند:
 
-```ts
+```ts [~/dict/dict-adapter.ts]
 // defineDictAdapter() در زمان اجرا شیء را بدون تغییر برمی‌گرداند، فقط بررسی نوع ارائه می‌دهد
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
@@ -79,7 +79,9 @@ interface TreeNode extends DictItem {
 
 ### کشف خودکار مسیر قراردادی (توصیه شده)
 
-فایل آداپتور را در `~/dict/dict-adapter.ts` قرار دهید و ماژول آن را به طور خودکار کشف می‌کند — نیازی به پیکربندی نیست:
+> **`~/` چیست؟** `~/` یک نام مستعار (alias) مسیر در Nuxt است که به ریشه سورس پروژه (srcDir) اشاره می‌کند. در Nuxt 4، srcDir پیش‌فرض `app/` است، بنابراین `~/dict/dict-adapter.ts` در واقع معادل `app/dict/dict-adapter.ts` روی دیسک است. توجه کنید که پوشه `dict/` به صورت خودکار ساخته نمی‌شود و باید آن را دستی ایجاد کنید.
+
+فایل آداپتور را در `~/dict/dict-adapter.ts` (یعنی `app/dict/dict-adapter.ts` در پروژه Nuxt 4) قرار دهید و ماژول آن را به طور خودکار کشف می‌کند — نیازی به پیکربندی نیست:
 
 ```ts [~/dict/dict-adapter.ts]
 // ماژول به طور خودکار ~/dict/dict-adapter.ts را کشف می‌کند، نیازی به تنظیم nuxt.config.ts نیست

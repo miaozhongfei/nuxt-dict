@@ -1,15 +1,40 @@
+# 在 Windows 上模拟 Unix shell 行为
 shellEmulator: true
+# 不校验依赖安全策略
 trustPolicy: off
+# 备选：禁止降级安装
 # trustPolicy: no-downgrade
 
+# 以下设置在 pnpm 11+ 中必须写在 pnpm-workspace.yaml，.npmrc 中已失效
+# 强制匹配 engines 字段（Node 版本不符则安装失败）
+engineStrict: true
+# 扁平化 node_modules，解决幽灵依赖问题
+shamefullyHoist: true
+# peerDependency 缺失时安装失败
+strictPeerDependencies: true
+
+# ── 工作区包路径 ──
 packages:
+  # 根包（模块本体）
   - ./
+  # 文档站点
   - ./docs
+  # 各示例项目
   - ./examples/*
+  # 开发调试 playground
   - ./playground
 
-onlyBuiltDependencies:
-  - better-sqlite3
-  - esbuild
-  - sharp
-  - unrs-resolver
+# ── 允许的构建脚本（安全白名单）──
+allowBuilds:
+  # Nuxt Content v3 SQLite 存储
+  better-sqlite3: true
+  # Vite / 打包器依赖
+  esbuild: true
+  # 图片处理
+  sharp: true
+  # Nuxt 模块解析
+  unrs-resolver: true
+  # 文件监听
+  '@parcel/watcher': true
+  # Vue 2/3 兼容层
+  vue-demi: true

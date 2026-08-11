@@ -69,6 +69,8 @@ Unconfigured fields inherit from the global `api`. For `logistics`:
 
 Each named store can configure its own custom adapter file (pass a file path string to the `adapter` field), replacing the default REST request. Adapter files are defined using `defineDictAdapter()`, and the convention path `~/dict/{storeName}-adapter.ts` is auto-discovered by the module. This is useful when:
 
+> `~/` is a Nuxt path alias pointing to the project source root (srcDir). In Nuxt 4, the default srcDir is `app/`, so `~/dict/{storeName}-adapter.ts` maps to `app/dict/{storeName}-adapter.ts` on disk — and the `dict/` directory must be created manually. See [Custom Adapter](/advanced/custom-adapter).
+
 - Dictionary data comes from local files or static config, no HTTP needed
 - Different stores have very different backend formats, requiring independent adapter logic
 - You need mock data for development and debugging

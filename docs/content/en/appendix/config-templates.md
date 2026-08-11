@@ -73,7 +73,7 @@ export default defineNuxtConfig({
 
 ## GraphQL Adapter
 
-Adapters are defined in separate files using `defineDictAdapter()`. Place the file at `~/dict/dict-adapter.ts` (the convention path for global adapters), and the module auto-discovers it.
+Adapters are defined in separate files using `defineDictAdapter()`. Place the file at `~/dict/dict-adapter.ts` (the convention path for global adapters), and the module auto-discovers it. `~/` is Nuxt's srcDir alias (Nuxt 4 defaults srcDir to `app/`, so the actual path is `app/dict/dict-adapter.ts`, and the `dict/` directory must be created manually).
 
 ::code-group
 

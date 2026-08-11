@@ -1,5 +1,32 @@
 # Changelog
 
+## v0.0.15
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.14...v0.0.15)
+
+### 🚀 Enhancements
+
+- 新增 vitest 单元测试基础设施，含 MemoryCache 示例测试 ([440e59c](https://github.com/miaozhongfei/nuxt-dict/commit/440e59c))
+
+### 📖 Documentation
+
+- 从 README 致谢中移除 compare-versions ([a9ebb03](https://github.com/miaozhongfei/nuxt-dict/commit/a9ebb03))
+- 补充自定义适配器目录说明，解释 ~ 别名指向 srcDir ([33ba7e5](https://github.com/miaozhongfei/nuxt-dict/commit/33ba7e5))
+
+### 🏡 Chore
+
+- 同步 .nuxtrc 版本号 ([9305282](https://github.com/miaozhongfei/nuxt-dict/commit/9305282))
+- 新增 demo:cleanup 脚本，并在 clean:install 中加入清理步骤 ([a25e4e4](https://github.com/miaozhongfei/nuxt-dict/commit/a25e4e4))
+- 合并 demo:cleanup 脚本 (#chore/add-demo-cleanup) ([68350be](https://github.com/miaozhongfei/nuxt-dict/commit/68350be))
+- 调整 oxlint 规则，为函数与文件行数增加限制 ([a9db556](https://github.com/miaozhongfei/nuxt-dict/commit/a9db556))
+- 将 .nuxtrc 加入 .gitignore，移除 git 跟踪 ([092bd85](https://github.com/miaozhongfei/nuxt-dict/commit/092bd85))
+- 将发版流程改为两阶段（PR→合并→发布），新增 release:publish 脚本 ([e84410a](https://github.com/miaozhongfei/nuxt-dict/commit/e84410a))
+- 更新依赖与工作区配置 ([2410688](https://github.com/miaozhongfei/nuxt-dict/commit/2410688))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.14
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.13...v0.0.14)

@@ -73,7 +73,7 @@ export default defineNuxtConfig({
 
 ## GraphQL 适配器
 
-适配器定义在独立文件中，使用 `defineDictAdapter()` 创建。文件放在 `~/dict/dict-adapter.ts`（全局适配器约定路径），模块自动发现。
+适配器定义在独立文件中，使用 `defineDictAdapter()` 创建。文件放在 `~/dict/dict-adapter.ts`（全局适配器约定路径），模块自动发现。`~/` 是 Nuxt 的 srcDir 别名（Nuxt 4 默认 srcDir 为 `app/`，实际路径即 `app/dict/dict-adapter.ts`，`dict/` 目录需手动创建）。
 
 ::code-group
 

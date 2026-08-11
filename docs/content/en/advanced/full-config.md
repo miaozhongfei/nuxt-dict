@@ -41,6 +41,8 @@ This chapter lists all fields in the `dict` configuration of `nuxt.config.ts`.
 | --------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `string \| undefined` | `undefined` | File path to a custom adapter (e.g. `'~/dict/dict-adapter.ts'`). If a file exists at the convention path `~/dict/dict-adapter.ts`, the module auto-discovers and registers it without manual config. Named stores use `stores.xxx.adapter`. See [Custom Adapter](/advanced/custom-adapter) |
 
+> `~/` is a Nuxt path alias pointing to the project source root (srcDir). Nuxt 4 defaults srcDir to `app/`, so `~/dict/dict-adapter.ts` maps to `app/dict/dict-adapter.ts` (the `dict/` directory must be created manually).
+
 ## api.lazy
 
 | Type      | Default | Description                                                                                                                  |

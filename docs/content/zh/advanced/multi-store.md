@@ -74,6 +74,8 @@ export default defineDictAdapter({
 
 每个命名仓库都可以配置独立的自定义适配器文件（`adapter` 字段传入文件路径字符串），代替默认的 REST 请求。适配器文件使用 `defineDictAdapter()` 定义，约定路径 `~/dict/{storeName}-adapter.ts` 可被模块自动发现。适用于以下场景：
 
+> `~/` 是 Nuxt 的路径别名，指向项目源码根目录（srcDir）。Nuxt 4 默认 srcDir 是 `app/`，所以 `~/dict/{storeName}-adapter.ts` 实际在 `app/dict/{storeName}-adapter.ts`，且 `dict/` 目录需要手动创建。详见 [自定义适配器](/advanced/custom-adapter)。
+
 - 字典数据来自本地文件或静态配置，不需要 HTTP 请求
 - 不同仓库的后端接口格式差异大，需要各自独立的适配逻辑
 - 需要模拟数据进行开发调试

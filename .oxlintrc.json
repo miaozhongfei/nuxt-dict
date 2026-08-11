@@ -12,7 +12,9 @@
   },
   "rules": {
     "no-console": "warn",
-    "unicorn/prefer-node-protocol": "off"
+    "unicorn/prefer-node-protocol": "off",
+    "max-lines-per-function": ["warn", { "max": 50, "skipComments": true, "skipBlankLines": true }],
+    "max-lines": ["warn", { "max": 300, "skipComments": true, "skipBlankLines": true }]
   },
   "ignorePatterns": [
     "node_modules",
@@ -34,6 +36,7 @@
     "playground/dist",
     "playground/node_modules",
     "docs/.nuxt",
-    "docs/dist"
+    "docs/dist",
+    "scripts/*"
   ]
 }

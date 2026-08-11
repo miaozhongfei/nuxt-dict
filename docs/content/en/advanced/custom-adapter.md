@@ -9,7 +9,7 @@ description: Connect to any dictionary data source format — GraphQL, Firestore
 
 An adapter implements two methods from the `DictAdapter` interface. The module provides a `defineDictAdapter()` helper for full TypeScript type inference:
 
-```ts
+```ts [~/dict/dict-adapter.ts]
 // defineDictAdapter() returns the object as-is at runtime, only provides type checking
 export default defineDictAdapter({
   async fetchDict(storeName, { types, locale }) {
@@ -36,7 +36,9 @@ Adapters are defined in separate files. There are two ways to register them:
 
 ### Convention Path Auto-Discovery (Recommended)
 
-Place the adapter file at `~/dict/dict-adapter.ts` and the module discovers it automatically — no configuration needed:
+> **What is `~/`?** `~/` is a Nuxt path alias that points to the project source root (srcDir). In Nuxt 4, the default srcDir is `app/`, so `~/dict/dict-adapter.ts` actually maps to `app/dict/dict-adapter.ts` on disk. Note that the `dict/` directory is not created automatically — you need to create it yourself.
+
+Place the adapter file at `~/dict/dict-adapter.ts` (i.e. `app/dict/dict-adapter.ts` in a Nuxt 4 project) and the module discovers it automatically — no configuration needed:
 
 ```ts [~/dict/dict-adapter.ts]
 // Module auto-discovers ~/dict/dict-adapter.ts, no nuxt.config.ts setup required

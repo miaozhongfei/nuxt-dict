@@ -106,6 +106,8 @@ export function defineDictAdapter(adapter: DictAdapter): DictAdapter;
 
 Type helper for defining custom adapters in separate files. Returns the adapter as-is; only provides type constraints.
 
+> `~/` is a Nuxt path alias pointing to the project source root (srcDir). Nuxt 4 defaults srcDir to `app/`, so `~/dict/dict-adapter.ts` maps to `app/dict/dict-adapter.ts` (the `dict/` directory must be created manually).
+
 ```ts [~/dict/dict-adapter.ts]
 export default defineDictAdapter({
   async fetchDict(storeName, options) {

@@ -53,6 +53,8 @@ description: مرجع کامل تمام گزینه‌های پیکربندی dic
 | پیش‌فرض | `undefined`                                                                                                                                                                                                                                                                             |
 | توضیح   | مسیر فایل آداپتور سفارشی (مثلاً `'~/dict/dict-adapter.ts'`). اگر فایل در مسیر قراردادی `~/dict/dict-adapter.ts` وجود داشته باشد، ماژول به طور خودکار آن را شناسایی و ثبت می‌کند. مخازن نام‌گذاری شده از `stores.xxx.adapter` استفاده می‌کنند. [مشاهده جزئیات](/advanced/custom-adapter) |
 
+> `~/` نام مستعار مسیر Nuxt است که به ریشه سورس پروژه (srcDir) اشاره می‌کند. در Nuxt 4، srcDir پیش‌فرض `app/` است، بنابراین `~/dict/dict-adapter.ts` معادل `app/dict/dict-adapter.ts` است (پوشه `dict/` باید دستی ایجاد شود).
+
 ## api.lazy
 
 | ویژگی   | مقدار                                                                                                                       |
