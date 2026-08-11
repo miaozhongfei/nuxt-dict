@@ -35,9 +35,8 @@ jobs:
       # 安装所有 workspace 依赖（docs 依赖 nuxt 等包）
       - run: pnpm install
 
-      # 生成 .nuxt/tsconfig.json（否则 Vite Vue 插件编译 .vue 失败）
-      - run: npx nuxi prepare
-        working-directory: docs
+      # 生成根目录 .nuxt/tsconfig.json（根 tsconfig.json extends 了它，oxc 编译 .vue 需要）
+      - run: pnpm dev:prepare
 
       # 生成静态站点到 docs/.output/public
       - run: pnpm run generate
