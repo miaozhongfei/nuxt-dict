@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.0.17
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.16...v0.0.17)
+
+### 🩹 Fixes
+
+- 将 deploy-docs CI 的 pnpm 版本从 10.22.0 更新为 11.21.0 ([08c5185](https://github.com/miaozhongfei/nuxt-dict/commit/08c5185))
+- Deploy-docs CI Node 版本从 24 更新为 26 ([7b9f83a](https://github.com/miaozhongfei/nuxt-dict/commit/7b9f83a))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.16
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.15...v0.0.16)
