@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.0.16
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.15...v0.0.16)
+
+### 🩹 Fixes
+
+- 修复 test 目录下 lint warning 和 typecheck error ([d2237d0](https://github.com/miaozhongfei/nuxt-dict/commit/d2237d0))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.15
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.14...v0.0.15)
