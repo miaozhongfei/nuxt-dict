@@ -26,6 +26,7 @@ export type {
   DictAdapter,
   DictTranslator,
   DictItem,
+  DictEntry,
   TreeNode,
   TranslateOptions,
   TranslatePathOptions,
@@ -47,6 +48,7 @@ function registerTypeTemplates(resolver: Resolver, stores: ModuleOptions['stores
     // eslint-disable max-lines-per-function
     getContents: () => `
 import type { StoreKey } from '#build/types/nuxt-dict-store-names'
+import type { DictEntry, DictItem } from '@lacqjs/nuxt-dict'
 
 declare module '#app' {
   interface NuxtApp {
@@ -108,6 +110,18 @@ declare module '#app' {
         * $dict.getDictItem('gender', 'male', { storeName: 'dicts2' })
         */
        getDictItem(type: string, code: string | number, opts?: { storeName?: StoreKey }): DictItem | undefined
+       /**
+        * 从内存缓存中同步读取整个字典类型的数据。
+        * @description 从内存缓存中同步读取整个字典类型的数据（含 items 和可选 tree），与 getDictItem 一致不触发请求。必须先通过 useDict / useDictTree 等加载过该类型。
+        * @param type - 字典类型名，如 'gender'
+        * @param opts - 可选配置对象
+        * @param {StoreKey} [opts.storeName] - 指定仓库名
+        * @returns {DictEntry | undefined} 字典条目，缓存未命中时返回 undefined
+        * @example
+        * $dict.getDictData('gender')
+        * $dict.getDictData('gender', { storeName: 'dicts2' })
+        */
+       getDictData(type: string, opts?: { storeName?: StoreKey }): DictEntry | undefined
      }
    }
  }
@@ -172,6 +186,18 @@ declare module '#app' {
         * $dict.getDictItem('gender', 'male', { storeName: 'dicts2' })
         */
        getDictItem(type: string, code: string | number, opts?: { storeName?: StoreKey }): DictItem | undefined
+       /**
+        * 从内存缓存中同步读取整个字典类型的数据。
+        * @description 从内存缓存中同步读取整个字典类型的数据（含 items 和可选 tree），与 getDictItem 一致不触发请求。必须先通过 useDict / useDictTree 等加载过该类型。
+        * @param type - 字典类型名，如 'gender'
+        * @param opts - 可选配置对象
+        * @param {StoreKey} [opts.storeName] - 指定仓库名
+        * @returns {DictEntry | undefined} 字典条目，缓存未命中时返回 undefined
+        * @example
+        * $dict.getDictData('gender')
+        * $dict.getDictData('gender', { storeName: 'dicts2' })
+        */
+       getDictData(type: string, opts?: { storeName?: StoreKey }): DictEntry | undefined
      }
    }
  }

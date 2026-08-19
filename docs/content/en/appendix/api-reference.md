@@ -58,6 +58,7 @@ useLocale(): { locale, setLocale, locales }
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })`        |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → returns new object with translated fields appended                 |
 | `getDictItem`   | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → returns full DictItem object |
+| `getDictData`   | `$dict.getDictData(type)` / `$dict.getDictData(type, { storeName? })` → returns the full DictEntry object (items/tree) |
 
 **Scope**: Global, synchronous, non-reactive. Reads directly from the manager's memory cache; no Vue re-render. Best for computed properties and table formatters. Requires data to be loaded via `useDict` / `useDictTree` first.
 

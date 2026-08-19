@@ -38,6 +38,11 @@ $dict.translateData(data: Record<string, unknown>, mapping: Record<string, strin
 $dict.getDictItem(type: string, value: string | number): DictItem | undefined
 // 指定仓库
 $dict.getDictItem(type: string, value: string | number, opts: { storeName?: string }): DictItem | undefined
+
+// 同步获取整个字典类型数据（返回 DictEntry，含 items 和可选 tree）
+$dict.getDictData(type: string): DictEntry | undefined
+// 指定仓库
+$dict.getDictData(type: string, opts: { storeName?: string }): DictEntry | undefined
 ```
 
 ## 使用示例
@@ -125,6 +130,36 @@ const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 
 > 返回值是 `DictItem | undefined`。缓存未命中时返回 `undefined`，与 `translate()` 返回 code 原文的行为不同。
 
+## getDictData —— 同步获取完整字典数据
+
+当需要在事件回调、工具函数中一次性拿到整类字典数据（`items` / `tree`）时使用，不必引入 `useDict` 的响应式生命周期。
+
+```vue
+<script setup>
+// 注意：$dict 是 NuxtApp 的 globalProperties，script setup 中需用 useNuxtApp() 解构（模板中可直接用）
+import { useNuxtApp } from '#imports';
+const { $dict } = useNuxtApp();
+
+// 第 1 步：先加载字典数据（useDict / useDictTree / SSR 预取均可）
+useDict('gender');
+
+// 第 2 步：事件回调中同步读取缓存中的完整 DictEntry
+function handleClick() {
+  const entry = $dict.getDictData('gender');
+  if (entry) {
+    console.log(entry.items); // [{ value: 'male', label: '男' }, ...]
+    console.log(entry.tree);  // 树形字典才有，扁平字典为 undefined
+  }
+}
+</script>
+
+<template>
+  <button @click="handleClick">获取字典数据</button>
+</template>
+```
+
+> 返回值是 `DictEntry | undefined`。未加载过该类型时返回 `undefined`，且**不会触发网络请求**——`getDictData` 只读内存缓存。需要强制拉取最新数据请用 `useDict().refresh()`。
+
 ## translateData —— 批量翻译数据对象
 
 当需要一次性翻译数据对象中的多个编码字段时，使用 `translateData`。
@@ -178,4 +213,5 @@ $dict.translateData(
 - [ ] 在模板中使用 `$dict.translate()` 做同步翻译
 - [ ] 使用 `$dict.translatePath()` 获取树形字典的层级路径
 - [ ] 使用 `$dict.getDictItem()` 获取完整字典项对象
+- [ ] 使用 `$dict.getDictData()` 在事件回调中同步获取完整字典数据
 - [ ] 理解 `$dict` 与 `useDict().translate` 的适用场景差异

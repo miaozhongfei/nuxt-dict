@@ -1,5 +1,33 @@
 # Changelog
 
+## v0.0.20
+
+[compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.19...v0.0.20)
+
+### 🚀 Enhancements
+
+- DictManager 新增同步 getDictData 方法 ([370ae83](https://github.com/miaozhongfei/nuxt-dict/commit/370ae83))
+- $dict 新增 getDictData 全局方法及类型声明 ([604b0d9](https://github.com/miaozhongfei/nuxt-dict/commit/604b0d9))
+- Examples 三个 demo 包补充 $dict.getDictData 示例 ([c875e80](https://github.com/miaozhongfei/nuxt-dict/commit/c875e80))
+
+### 🩹 Fixes
+
+- 导出 DictEntry 类型并补齐类型模板导入 ([e365cb6](https://github.com/miaozhongfei/nuxt-dict/commit/e365cb6))
+
+### 📖 Documentation
+
+- 补充 getDictData 中文文档 ([b94f344](https://github.com/miaozhongfei/nuxt-dict/commit/b94f344))
+- 补充 getDictData 英文文档 ([5408135](https://github.com/miaozhongfei/nuxt-dict/commit/5408135))
+- 补充 getDictData 波斯语文档 ([89f8a6e](https://github.com/miaozhongfei/nuxt-dict/commit/89f8a6e))
+
+### ✅ Tests
+
+- Playground 演示并补充 $dict.getDictData e2e 用例 ([4232797](https://github.com/miaozhongfei/nuxt-dict/commit/4232797))
+
+### ❤️ Contributors
+
+- Miaozhongfei ([@miaozhongfei](https://github.com/miaozhongfei))
+
 ## v0.0.19
 
 [compare changes](https://github.com/miaozhongfei/nuxt-dict/compare/v0.0.18...v0.0.19)

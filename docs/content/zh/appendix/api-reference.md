@@ -58,6 +58,7 @@ useLocale(): { locale, setLocale, locales }
 | `translatePath` | `$dict.translatePath(type, value)` / `$dict.translatePath(type, value, { storeName?, field?, separator? })`  |
 | `translateData` | `$dict.translateData(data, mapping, suffix?)` → 返回追加了翻译字段的新对象                                   |
 | `getDictItem`   | `$dict.getDictItem(type, value)` / `$dict.getDictItem(type, value, { storeName? })` → 返回完整 DictItem 对象 |
+| `getDictData`   | `$dict.getDictData(type)` / `$dict.getDictData(type, { storeName? })` → 返回完整 DictEntry 对象（含 items/tree） |
 
 **作用域**：全局同步非响应式。直接读取管理器内存缓存，不触发 Vue 重渲染。适合 computed、表格 formatter 等场景。使用前需通过 `useDict` / `useDictTree` 加载数据。
 
