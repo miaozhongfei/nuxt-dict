@@ -26,6 +26,7 @@ export type {
   DictAdapter,
   DictTranslator,
   DictItem,
+  DictEntry,
   TreeNode,
   TranslateOptions,
   TranslatePathOptions,
@@ -47,6 +48,7 @@ function registerTypeTemplates(resolver: Resolver, stores: ModuleOptions['stores
     // eslint-disable max-lines-per-function
     getContents: () => `
 import type { StoreKey } from '#build/types/nuxt-dict-store-names'
+import type { DictEntry, DictItem } from '@lacqjs/nuxt-dict'
 
 declare module '#app' {
   interface NuxtApp {
