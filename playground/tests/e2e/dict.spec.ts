@@ -57,3 +57,16 @@ test('language switcher buttons exist', async ({ page }) => {
   await expect(page.locator('button:has-text("中文")')).toBeVisible();
   await expect(page.locator('button:has-text("English")')).toBeVisible();
 });
+
+test('$dict.getDictData reads cached entry synchronously', async ({ page }) => {
+  await page.goto('/vanilla/basic');
+
+  // Wait for dict data to load, then click the getDictData button
+  const maleText = page.locator('text=男').first();
+  await maleText.waitFor({ state: 'visible', timeout: 10000 });
+
+  await page.locator('button:has-text("getDictData")').click();
+
+  // Expect the entry summary to appear
+  await expect(page.getByText(/gender 共 3 项/u)).toBeVisible();
+});

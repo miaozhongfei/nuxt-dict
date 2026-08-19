@@ -36,13 +36,29 @@
         <button @click="doRefresh" style="cursor: pointer">刷新字典</button>
         <span style="margin-left: 8px; color: #666">data 长度: {{ data?.length }}</span>
       </div>
+
+      <div style="margin-top: 8px">
+        <button @click="handleGetDictData" style="cursor: pointer">获取完整字典（$dict.getDictData）</button>
+        <span v-if="entryData" style="margin-left: 8px; color: #666">
+          {{ entryData.type }} 共 {{ entryData.items.length }} 项
+        </span>
+        <span v-else style="margin-left: 8px; color: #999">未加载（undefined）</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { DictEntry } from '@lacqjs/nuxt-dict';
+
+const { $dict } = useNuxtApp();
 const { data, translate, loading, error } = useDict('gender');
 function doRefresh() {
   useDict('gender').refresh();
+}
+
+const entryData = ref<DictEntry | undefined>();
+function handleGetDictData() {
+  entryData.value = $dict.getDictData('gender');
 }
 </script>
