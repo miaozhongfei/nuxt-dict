@@ -38,6 +38,11 @@ $dict.translateData(data: Record<string, unknown>, mapping: Record<string, strin
 $dict.getDictItem(type: string, value: string | number): DictItem | undefined
 // Specify store
 $dict.getDictItem(type: string, value: string | number, opts: { storeName?: string }): DictItem | undefined
+
+// Synchronously get the entire dictionary entry (returns DictEntry with items and optional tree)
+$dict.getDictData(type: string): DictEntry | undefined
+// With a custom store
+$dict.getDictData(type: string, opts: { storeName?: string }): DictEntry | undefined
 ```
 
 ## Usage Examples
@@ -119,6 +124,37 @@ const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 
 > Returns `DictItem | undefined`. On cache miss it returns `undefined`, unlike `translate()` which returns the code as a string.
 
+## getDictData — Getting the Full Dictionary Data Synchronously
+
+Use this when you need the whole dictionary entry (`items` / `tree`) in an event callback or a utility function, without the reactive lifecycle of `useDict`.
+
+```vue
+<script setup>
+// Note: $dict lives on NuxtApp's globalProperties — destructure it in script setup
+// (it works directly in templates only)
+import { useNuxtApp } from '#imports';
+const { $dict } = useNuxtApp();
+
+// Step 1: Load the dict data first (useDict / useDictTree / SSR prefetch all work)
+useDict('gender');
+
+// Step 2: Read the cached DictEntry synchronously in an event callback
+function handleClick() {
+  const entry = $dict.getDictData('gender');
+  if (entry) {
+    console.log(entry.items); // [{ value: 'male', label: 'Male' }, ...]
+    console.log(entry.tree);  // only for tree dicts; undefined for flat dicts
+  }
+}
+</script>
+
+<template>
+  <button @click="handleClick">Get dict data</button>
+</template>
+```
+
+> The return value is `DictEntry | undefined`. It returns `undefined` if the type has not been loaded, and **never triggers a network request** — `getDictData` only reads the in-memory cache. Use `useDict().refresh()` to force-fetch the latest data.
+
 ## translateData — Batch Translate Data Objects
 
 Use `translateData` when you need to translate multiple code fields in a data object at once.
@@ -174,4 +210,5 @@ $dict.translateData(
 - [ ] Use `$dict.translate()` for synchronous translation in templates
 - [ ] Use `$dict.translatePath()` for tree dictionary path hierarchies
 - [ ] Use `$dict.getDictItem()` to get full dictionary item objects
+- [ ] Use `$dict.getDictData()` to synchronously get the full dict data in an event callback
 - [ ] Understand the difference between `$dict` and `useDict().translate`
