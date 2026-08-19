@@ -329,6 +329,7 @@ export interface UseDictReturn {
  * @property {(type: string, code: string | number, opts?: TranslatePathOptions) => string} translatePath - 树形字典编码 → 层级路径，用分隔符拼接
  * @property {(data, mapping, suffix?) => Record<string, unknown>} translateData - 批量翻译对象中的多个编码字段，返回追加了翻译字段的新对象
  * @property {(type: string, code: string | number, opts?: GetDictItemOptions) => DictItem | undefined} getDictItem - 获取完整字典项对象，缓存未命中返回 undefined
+ * @property {(type: string, opts?: GetDictItemOptions) => DictEntry | undefined} getDictData - 同步获取整个字典类型数据（含 items/tree），缓存未命中返回 undefined
  *
  * @example
  * $dict.translate('gender', 'male')
@@ -414,6 +415,23 @@ export interface DictTranslator {
    * // → { value: 1, label: '启用', color: '#67C23A' }
    */
   getDictItem(type: string, code: string | number, opts?: GetDictItemOptions): DictItem | undefined;
+
+  /**
+   * 同步获取整个字典类型的数据，从内存缓存查找。
+   *
+   * @description 与 getDictItem 一致，只读内存缓存，返回整个 DictEntry（含 items 和可选 tree）。
+   * 需先通过 useDict / useDictTree 等加载该类型，缓存未命中时返回 undefined。
+   * @param {string} type - 字典类型名，如 'gender'、'status'
+   * @param {GetDictItemOptions} [opts] - 可选配置
+   * @param {StoreKey} [opts.storeName] - 仓库名，默认 'dicts'
+   * @returns {DictEntry | undefined} 完整的字典条目，缓存未命中时返回 undefined
+   *
+   * @example
+   * $dict.getDictData('gender')
+   * // → { type: 'gender', items: [{ value: 'male', label: '男' }] }
+   * $dict.getDictData('pay_status', { storeName: 'payment' })
+   */
+  getDictData(type: string, opts?: GetDictItemOptions): DictEntry | undefined;
 }
 
 /**

@@ -1,6 +1,7 @@
 import type { DictManager } from '../core/dict-manager';
 import type {
   DictTranslator,
+  DictEntry,
   DictItem,
   TranslateOptions,
   TranslatePathOptions,
@@ -52,6 +53,19 @@ function getDictItem(
   opts?: GetDictItemOptions,
 ): DictItem | undefined {
   return manager.getDictItem(type, code, opts);
+}
+
+/**
+ * 从内存缓存中同步读取整个字典类型的数据。
+ * 与 getDictItem 一致，只读缓存，未加载过返回 undefined。
+ * 由 createDictTranslator 内部委托，独立为函数以控制长度。
+ */
+function getDictData(
+  manager: DictManager,
+  type: string,
+  opts?: GetDictItemOptions,
+): DictEntry | undefined {
+  return manager.getDictData(type, opts?.storeName);
 }
 
 /**
@@ -199,6 +213,25 @@ export function createDictTranslator(manager: DictManager): DictTranslator {
       opts?: GetDictItemOptions,
     ): DictItem | undefined {
       return getDictItem(manager, type, code, opts);
+    },
+
+    /**
+     * 从内存缓存中同步读取整个字典类型的数据。
+     *
+     * @description 与 getDictItem 一致，只读内存缓存，不触发任何网络或 IndexedDB 请求。
+     * 必须通过 useDict / useDictTree / SSR 预取加载过该类型，否则返回 undefined。
+     * @param {string} type - 字典类型名，如 'gender'、'status'
+     * @param {GetDictItemOptions} [opts] - 可选配置（storeName 指定仓库）
+     * @returns {DictEntry | undefined} 包含 items 和可选 tree 的字典条目，缓存未命中时返回 undefined
+     *
+     * @example
+     * // 需先加载：useDict('gender') 或 SSR 预取
+     * const entry = $dict.getDictData('gender')
+     * // → { type: 'gender', items: [{ value: 'male', label: '男' }, ...] }
+     * const entry2 = $dict.getDictData('pay_status', { storeName: 'payment' })
+     */
+    getDictData(type: string, opts?: GetDictItemOptions): DictEntry | undefined {
+      return getDictData(manager, type, opts);
     },
   };
 }
