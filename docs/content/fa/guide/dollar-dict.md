@@ -56,6 +56,15 @@ $dict.getDictItem(type: string, value: string | number): DictItem | undefined
 $dict.getDictItem(type: string, value: string | number, opts: { storeName?: string }): DictItem | undefined
 ```
 
+### $dict.getDictData()
+
+```ts
+// دریافت همزمان کل داده‌های دیکشنری (DictEntry با items و tree اختیاری برمی‌گرداند)
+$dict.getDictData(type: string): DictEntry | undefined
+// تعیین مخزن
+$dict.getDictData(type: string, opts: { storeName?: string }): DictEntry | undefined
+```
+
 ## مثال‌های استفاده
 
 ::code-group
@@ -189,6 +198,36 @@ const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 
 > مقدار بازگشتی `DictItem | undefined` است. در صورت عدم وجود در کش `undefined` برمی‌گرداند، برخلاف `translate()` که کد اصلی را برمی‌گرداند.
 
+## getDictData — دریافت همزمان کل داده‌های دیکشنری
+
+وقتی در یک callback رویداد یا تابع کمکی به کل داده‌های یک نوع دیکشنری (`items` / `tree`) به‌صورت یک‌جا نیاز دارید، از این متد استفاده کنید؛ بدون نیاز به چرخه حیات واکنش‌گرای `useDict`.
+
+```vue
+<script setup>
+// نکته: $dict روی globalProperties موجودیت NuxtApp است؛ در script setup باید با useNuxtApp() استخراج شود (در قالب مستقیم قابل استفاده است)
+import { useNuxtApp } from '#imports';
+const { $dict } = useNuxtApp();
+
+// مرحله 1: ابتدا داده‌های دیکشنری را بارگذاری کنید (useDict / useDictTree / پیش‌بارگذاری SSR همگی کار می‌کنند)
+useDict('gender');
+
+// مرحله 2: خواندن همزمان DictEntry کامل از کش در callback رویداد
+function handleClick() {
+  const entry = $dict.getDictData('gender');
+  if (entry) {
+    console.log(entry.items); // [{ value: 'male', label: 'مرد' }, ...]
+    console.log(entry.tree);  // فقط برای دیکشنری‌های درختی؛ برای دیکشنری تخت undefined است
+  }
+}
+</script>
+
+<template>
+  <button @click="handleClick">دریافت داده‌های دیکشنری</button>
+</template>
+```
+
+> مقدار بازگشتی `DictEntry | undefined` است. اگر آن نوع هنوز بارگذاری نشده باشد `undefined` برمی‌گرداند و **هرگز درخواست شبکه‌ای راه نمی‌اندازد** — `getDictData` فقط از کش حافظه می‌خواند. برای واکشی اجباری آخرین داده‌ها از `useDict().refresh()` استفاده کنید.
+
 ## محدوده: useDict در مقابل $dict
 
 | ویژگی            | useDict                           | $dict                          |
@@ -212,4 +251,5 @@ const item2 = $dict.getDictItem('status', 1, { storeName: 'dicts2' });
 - [ ] استفاده از `$dict.translate()` برای ترجمه همزمان در قالب
 - [ ] استفاده از `$dict.translatePath()` برای دریافت مسیر سلسله‌مراتبی
 - [ ] استفاده از `$dict.getDictItem()` برای دریافت آیتم کامل دیکشنری
+- [ ] استفاده از `$dict.getDictData()` برای دریافت همزمان کل داده‌های دیکشنری در callback رویداد
 - [ ] درک تفاوت `$dict` و `useDict().translate` و موارد کاربرد هر کدام
