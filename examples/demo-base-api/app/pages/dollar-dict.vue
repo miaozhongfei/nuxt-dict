@@ -189,6 +189,57 @@
           </tbody>
         </table>
       </div>
+
+      <!-- 5. getDictData -->
+      <div class="demo-card">
+        <div class="demo-card__header">
+          <span class="demo-card__badge">$dict.getDictData(type)</span>
+          <span style="color: #6b7280; font-size: 0.85rem">— 获取完整字典数据</span>
+        </div>
+        <p class="demo-card__desc">
+          返回完整 <code>DictEntry</code> 对象（含 <code>items</code> 列表和可选
+          <code>tree</code> 树形结构），未命中返回 <code>undefined</code>，且不触发网络请求
+          （只读内存缓存，使用前需先加载）。
+        </p>
+
+        <table class="demo-table">
+          <thead>
+            <tr>
+              <th>调用</th>
+              <th>返回值</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>$dict.getDictData('gender')</code></td>
+              <td
+                class="demo-result--info"
+                style="border: none; border-radius: 0; padding: 0.25rem 0.5rem"
+              >
+                {{ genderEntry }}
+              </td>
+            </tr>
+            <tr>
+              <td><code>$dict.getDictData('region')</code></td>
+              <td
+                class="demo-result--info"
+                style="border: none; border-radius: 0; padding: 0.25rem 0.5rem"
+              >
+                {{ regionEntry }}
+              </td>
+            </tr>
+            <tr>
+              <td><code>$dict.getDictData('not_loaded')</code></td>
+              <td
+                class="demo-result--info"
+                style="border: none; border-radius: 0; padding: 0.25rem 0.5rem"
+              >
+                {{ notLoadedEntry }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </template>
   </div>
 </template>
@@ -216,5 +267,18 @@ const statusItem = computed(() => {
 const industryItem = computed(() => {
   if (dictLoading.value) return 'null';
   return JSON.stringify($dict.getDictItem('industry', 'it'));
+});
+
+const genderEntry = computed(() => {
+  if (dictLoading.value) return 'null';
+  return JSON.stringify($dict.getDictData('gender'));
+});
+const regionEntry = computed(() => {
+  if (dictLoading.value) return 'null';
+  return JSON.stringify($dict.getDictData('region'));
+});
+const notLoadedEntry = computed(() => {
+  if (dictLoading.value) return 'null';
+  return String($dict.getDictData('not_loaded'));
 });
 </script>
